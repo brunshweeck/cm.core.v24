@@ -1,0 +1,18 @@
+//
+// Created by brunshweeck on 1 sept. 2024.
+//
+
+#include <core/misc/Unsafe.h>
+#include <core/charset/CharacterCodingException.h>
+
+namespace core {
+    namespace charset {
+        Object& CharacterCodingException::clone() const {
+            try {
+                return UNSAFE::newInstance<CharacterCodingException>(*this);
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
+        }
+
+        void CharacterCodingException::selfThrow() const { throw CharacterCodingException(*this); }
+    } // text
+} // core

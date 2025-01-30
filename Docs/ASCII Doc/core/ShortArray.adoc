@@ -1,0 +1,148 @@
+== Docs
+
+.ShortArray
+****
+La classe *ShortArray* represente un tableau pouvant contenir un certain nombre de valeurs entiere de 16 bits definie par l'utilisateur. Ce type represente aussi une version objet du tableaux primitif de type *gshort*.
+_Ce type d'objet est suscriptible._
+****
+
+
+=== Inclusion
+[source, c++]
+--
+#include <core/ShortArray.h>
+--
+
+
+=== Bases
+* xref:Object.adoc[core::Object]
+
+=== Constructeurs
+
+[source, c++]
+--
+public:
+    ShortArray(gint length);
+--
+_Crée un nouvel objet de type ShortArray contenant un nombre de valeurs données, toute initialiser par la valeur *0*._
+
+[source, c++]
+--
+public:
+    ShortArray(gint length, gshort b)
+--
+_Crée un nouvel objet de type ShortArray contenant un nombre de valeurs données, toute initialiser par la valeur initial donnée._
+
+=== Destructeurs
+
+[source, c++]
+--
+public:
+    ~ShortArray();
+--
+
+_Libere l'espace memoire occuper par les element de ce object. Apres cette operation l'object devient vide._
+
+=== Methodes
+
+* Methodes Propres
+
+[#_get]
+[source, c++]
+.Get
+--
+public:
+    ShortArray::get(gint index);
+--
+_Retourne la valeur situé a une position donnée. Cette methodes peut lever une exception si et seulement si la position donnée est hors des limites de cette instance c'est a dire si la position donnée est negative ou superieur ou egale au nombre de valeurs contenue dans cet objet._
+
+[#_set]
+[source, c++]
+.Set
+--
+public:
+    ShortArray::set(gint index, gshort b);
+--
+_Modifie la valeur situé a une position donnée. Cette methodes peut lever une exception si et seulement si la position donnée est hors des limites de cette instance c'est a dire si la position donnée est negative ou superieur ou egale au nombre de valeurs contenue dans cet objet._
+
+* Methodes Heritées
+
+[#_equals]
+[source, c++]
+.Equals
+--
+public:
+    ShortArray::equals(Object o);
+--
+_Test si un objet non null est de type *ShortArray* et possede les mêmes valeurs que celles de l'instance de type *ShortArray* en cours et aux même positions._
+
+[#_to_string]
+[source, c++]
+.To String
+--
+public:
+    ShortArray::toString();
+--
+
+_Retourne la representation en chaine de caractère de la valeur d'une instance de type *ShortArray*._
+
+* Methodes Statiques
+
+[#_of_shorts]
+[source, c++]
+.Of 
+--
+public:
+    ShortArray::of(gshort...bs);
+--
+_Retourne un objet de type *ShortArray* nouvellement crée et initialiser avec les valeurs entieres données. A la fin de l'operation la taille de l'objet retourné est egale au nombres de valeurs données._
+
+[#_of_array]
+[source, c++]
+.Of
+--
+public:
+    ShortArray::of(gshort[])
+--
+_Retourne un objet de type *ShortArray* nouvellement crée et initialiser avec les valeurs entieres contenue dans le tableau donné. A la fin de l'operation la taille de l'objet retourné est egale a la taille du tableau donné._
+
+[#_of_range_1]
+[source, c++]
+.Of Range
+--
+public:
+    ShortArray::ofRange(gshort stop)
+--
+_Retourne un objet de type *ShortArray* nouvellement crée representant une sequence de valeurs entiere allant de *0* à *stop-1*, avec un decalage de *1* entre les valeurs. c'est à dire que *ofRange(i)* 0, 1, 2, ..., i-1._
+
+[#_of_range_2]
+[source, c++]
+.Of Range
+--
+public:
+    ShortArray::ofRange(gshort start, gshort stop)
+--
+_Retourne un objet de type *ShortArray* nouvellement crée representant une sequence de valeurs entiere allant de *start* à *stop-1*, avec un decalage de *1* entre les valeurs. c'est à dire que *ofRange(i, j)* i, i+1, i+2, ..., j-1._
+
+[#_of_range_3]
+[source, c++]
+.Of Range
+--
+public:
+    ShortArray::ofRange(gshort start, gshort stop, gint step)
+--
+_Retourne un objet de type *ShortArray* nouvellement crée representant une sequence de valeurs entiere allant de *start* à *stop-1*, avec un decalage de *step* entre les valeurs. c'est à dire que *ofRange(i, j, k)* i, i+k, i+2k, ..., i+nk (avec i+nk < j)._
+
+=== Sous Types
+_aucun sous types définies_
+
+=== Constantes
+|===
+| Constantes | Valeurs | Description
+| SOFT_MAX_LENGTH
+| 2^31^- 2^3^ - 2^0^
+| Nombre d'element maximal supporté par ce type
+|===
+
+=== Macros
+_aucunes macros définies_

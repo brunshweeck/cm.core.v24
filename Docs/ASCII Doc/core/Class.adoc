@@ -1,0 +1,747 @@
+== Docs
+
+.Class
+****
+La type *Class* represente un puissant et rapide outil definissant de multiples methodes statiques permettant etudier les caracteristiques d'un type
+donnée, de le transformé, etc. Cette classe n'est pas instantiable
+****
+
+=== inclusion
+[source,c++]
+----
+#include <core/Class.h>
+----
+
+=== Bases
+* xref:Object.adoc[core::Object]
+
+=== Constructeurs
+_cette classe n'est pas instantiable._
+
+=== Destructeurs
+[source,c++]
+----
+public: 
+    Class::~Class();
+----
+
+=== Methodes
+
+* Methodes Propres
+
+_cette classe ne definie aucune methodes._
+
+* Methodes Hérités
+
+_Aucune methodes héritées_
+
+* Methodes Statiques
+
+[#_is_constant]
+[source,c++]
+.Constant
+----
+public:
+    template <class T>
+    Class::isConstant();
+
+// Usage
+    constexpr auto a = 123;
+    const auto b = 456;
+    auto c = 789;
+    ClassOf(a)::isConstant() // vrai
+    ClassOf(b)::isConstant() // vrai
+    ClassOf(c)::isConstant() // faux
+----
+_Test si un type specifique possède comme qualificateur *const* en externe._
+
+[#_is_volatile]
+[source,c++]
+.Volatile
+----
+public:
+    template <class T>
+    Class::isVolatile();
+
+// Usage
+    auto volatile a = 1234;
+    auto b = 5678;
+    ClassOf(a)::isVolatile() // vrai
+    ClassOf(b)::isVolatile() // faux
+----
+_Test si un type specifique possède comme qualificateur *volatile* en externe._
+
+[#_is_pointer]
+[source,c++]
+.Pointer
+----
+public:
+    template <class T>
+    Class::isPointer();
+
+// Example
+    auto a = 23;
+    auto b = &a;
+    auto c = &b;
+    auto d = NULL;
+    ClassOf(a)::isPointer() // faux
+    ClassOf(b)::isPointer() // vrai
+    ClassOf(c)::isPointer() // vrai
+    ClassOf(d)::isPointer() // vrai
+----
+_Test si un type specifique possède comme qualificateur &#42; en externe._
+
+[#_is_reference]
+[source,c++]
+.Reference (Lvalue et Rvalue)
+----
+public:
+    template <class T>
+    Class::isReference();
+
+// Example
+    auto a = 23;
+    auto &&b = 23;
+    auto &c = a;
+    auto &d = b;
+    ClassOf(a)::isReference() // faux
+    ClassOf(b)::isReference() // vrai
+    ClassOf(c)::isReference() // vrai
+    ClassOf(d)::isReference() // vrai
+----
+_Test si un type specifique possède comme qualificateur *&* ou *&&* en externe._
+
+[#_is_rvalue]
+[source,c++]
+.Reference (Rvalue)
+----
+public:
+    template <class T>
+    Class::isRvalue();
+
+// Example
+    auto a = 23;
+    auto &&b = 23;
+    auto &c = a;
+    auto &d = b;
+    ClassOf(a)::isRvalue() // faux
+    ClassOf(b)::isRvalue() // vrai
+    ClassOf(c)::isRvalue() // faux
+    ClassOf(d)::isRvalue() // vrai
+----
+_Test si un type specifique possède comme qualificateur *&&* en externe._
+
+[#_is_array]
+[source,c++]
+.Array
+----
+public:
+    template <class T>
+    Class::isArray();
+
+// Example
+    int a[];
+    int b[] = {};
+    int c[] = {1,2,3,4};
+    int d[0];
+    int e[100];
+    // need #include <initializer_list>
+    auto f = {1,2,3,4};
+
+    ClassOf(a)::isArray() // vrai
+    ClassOf(b)::isArray() // vrai
+    ClassOf(c)::isArray() // vrai
+    ClassOf(d)::isArray() // vrai
+    ClassOf(e)::isArray() // vrai
+    ClassOf(f)::isArray() // faux
+----
+_Test si un type specifique est un tableau static native au langage *C*._
+
+[#_is_complete]
+[source,c++]
+.Complete
+----
+public:
+    template <class T>
+    Class::isComplete();
+
+// Example
+    Class<int>::isComplete() // vrai
+    class MyClass; // seulement declarer
+    Class<MyClass>::isComplete() // faux
+    class MyClass2 { /* ... */ }
+    Class<MyClass2>::isComplete() // vrai
+    class MyClass3; // declarer et definie plutard
+    Class<MyClass>::isComplete() // vrai
+    class MyClass3 { /* ... */ };
+----
+_Test si un type specifique est instantiable. en d'autre terme s'il est possible de calculer la taille memoire q'occuperait une instance de ce type si cette derniere etait crée (si il est possible d'utiliser la fonction *sizeof* sur ce type et si le resutat produit par *sizeof(T)* est non null)_
+
+[#_is_template]
+[source,c++]
+.Template
+----
+public:
+    template <class T>
+    Class::isTemplate();
+
+// Example
+    template <class T> class MyClass;
+    class MyClass2;
+    Class<MyClass<String>>::isTemplate() // vrai
+    Class<MyClass2>::isTemplate() // faux
+----
+_Test si un type specifique est un modéle de type._
+
+[#_is_function]
+[source,c++]
+.Function
+----
+public:
+    template <class T>
+    Class::isFunction();
+
+// Example
+    int function1() { return 0; }
+    auto function2(String str) { return str; }
+
+    auto function3 = []() { return 0; }
+    auto function4 = [&]() { return 0; }
+    auto function5 = [=]() { return 0; }
+
+    ClassOf(function1)::isFunction() // vrai
+    ClassOf(function2)::isFunction() // vrai
+    ClassOf(function3)::isFunction() // vrai (is considered as class by certain compiler)
+    ClassOf(function4)::isFunction() // faux (is considered as class by certain compiler)
+    ClassOf(function5)::isFunction() // faux (is considered as class by certain compiler)
+----
+_Test si un type specifique est un function standard ou une fonction lambda simple._
+
+[#_is_member]
+[source,c++]
+.Member
+----
+public:
+    template <class T>
+    Class::isMember();
+
+// Example
+    class MyClass {
+    public:
+        void method() {}
+        static void staticMethod() {}
+    };
+    
+    ClassOf(&MyClass::method)::isMember() // vrai
+    ClassOf(&MyClass::staticMethod)::isMember() // vrai
+----
+_Test si un type specifique est celui d'un des membre (attributs, methodes, etc.) d'une structure non-enumerable c++ (class, union, struct)._
+
+[#_is_function_member]
+[source,c++]
+.Function Member (Methods)
+----
+public:
+    template <class T>
+    Class::isFunctionMember();
+
+// Example
+    class MyClass {
+    public:
+        void method() {}
+        static void staticMethod() {}
+    };
+    ClassOf(&MyClass::method)::isMember() // vrai
+    ClassOf(&MyClass::staticMethod)::isMember() // faux
+----
+_Test si un type specifique est celui d'une function membre (methodes non-statiques) d'une structure non-enumerable c++ (class, union, struct)._
+
+[#_is_abstract]
+[source,c++]
+.Abstract
+----
+public:
+    template <class T>
+    Class::isAbstract();
+----
+_Test si un type specifique est type abstrait (un type donc certaines des methods sont purement virtuelle)._
+
+[#_is_class]
+[source,c++]
+.Class
+----
+public:
+    template <class T>
+    Class::isClass();
+----
+_Test si un type specifique est une structure non-enumerable c++ (class, union, struct)._
+
+[#_is_enum]
+[source,c++]
+.Enum
+----
+public:
+    template <class T>
+    Class::isEnum();
+----
+_Test si un type specifique est une structure enumerable c++ (enum, enum class)._
+
+[#_is_detructible]
+[source,c++]
+.Destructible
+----
+public:
+    template <class T>
+    Class::isDestructible();
+----
+_Test si un type specifique definie ou herite d'un destructeur._
+
+[#_is_final]
+[source,c++]
+.Final
+----
+public:
+    template <class T>
+    Class::isFinal();
+----
+_Test si un type specifique est final (ne peut plus être la base d'aucune classe)._
+
+[#_is_empty]
+[source,c++]
+.Empty
+----
+public:
+    template <class T>
+    Class::isEmpty();
+----
+_Test si un type specifique est vide (une structure vide, sans attributes, ni methodes)._
+
+[#_is_literal]
+[source,c++]
+.Literal
+----
+public:
+    template <class T>
+    Class::isLiteral();
+----
+_Test si un type specifique est un type literal._
+
+[#_is_polymorphic]
+[source,c++]
+.Polymorphic
+----
+public:
+    template <class T>
+    Class::isPolymorphic();
+----
+_Test si un type specifique est un type polymorphique._
+
+[#_is_trivial]
+[source,c++]
+.Trivial
+----
+public:
+    template <class T>
+    Class::isTrivial();
+----
+_Test si un type specifique est un type trivale._
+
+[#_is_integer]
+[source,c++]
+.Integer
+----
+public:
+    template <class T>
+    Class::isInteger();
+----
+_Test si un type specifique est un numbre entier (int, long, long long, unsigned ...)._
+
+[#_is_floating]
+[source,c++]
+.Floating
+----
+public:
+    template <class T>
+    Class::isFloating();
+----
+_Test si un type specifique est un nombre à virgule flotante (float, double, long double, ...)._
+
+[#_is_number]
+[source,c++]
+.Number
+----
+public:
+    template <class T>
+    Class::isNumber();
+----
+_Test si un type specifique est un nombre entier ou à virgule flotante._
+
+[#_is_integral]
+[source,c++]
+.Integral
+----
+public:
+    template <class T>
+    Class::isIntegral();
+----
+_Test si un type specifique est une valeur enumerable (xref:_is_integer[entier], xref:_is_enum[enumeration], xref:_is_boolean[booléen], xref:_is_character[caractères]). en d'autre terme
+un type supporté par la structure de controle *switch(...) { case: ... }*._
+
+[#_is_boolean]
+[source,c++]
+.Boolean
+----
+public:
+    template <class T>
+    Class::isBoolean();
+----
+_Test si un type specifique est une valeur booléenne (gbool)._
+
+[#_is_character]
+[source,c++]
+.Character
+----
+public:
+    template <class T>
+    Class::isCharacter();
+----
+_Test si un type specifique est un caractère (char, unsigned char, char8_t, char16_t, char32_t, wchar_t, etc.)._
+
+[#_is_void]
+[source,c++]
+.Void
+----
+public:
+    template <class T>
+    Class::isVoid();
+----
+_Test si un type specifique est le vide (void)._
+
+[#_is_primitive]
+[source,c++]
+.Primitive
+----
+public:
+    template <class T>
+    Class::isPrimitive();
+----
+_Test si un type specifique est type primitif au language *C++* (entier, flotant, caractère, booléen, etc.)._
+
+[#_is_string]
+[source,c++]
+.String
+----
+public:
+    template <class T>
+    Class::isString;
+----
+_Test si un type specifique est chaine de caractère primitive du language *C++*.
+Une chaine de caractère est un xref:_is_pointer[pointeur vers un caractère] ou un xref:_is_array[tableau de caractères]_
+
+[#_is_slimed]
+[source,c++]
+.Slimed
+----
+public:
+    template <class T>
+    Class::isSlimed();
+
+// Example
+Class<int>::isSlimmed() // vrai
+Class<int*>::isSlimmed() // vrai
+Class<int[100]>::isSlimmed() // vrai
+Class<int const>::isSlimmed() // faux
+Class<int const *>::isSlimmed() // faux
+Class<int* const**>::isSlimmed() // faux
+----
+_Test si un type specifique est ne possède aucun qualificateurs comme xref:_is_constant[*const*], xref:_is_volatile[*volatile*], xref:_is_reference[*&*], xref:_is_rvalue[*&&*] en interne et en externe._
+
+[#_support_eq]
+[source,c++]
+.Support Equal operator
+----
+public:
+    template <class T>
+    Class::supportEQ();
+----
+_Test si un type specifique support (ou implemente) l'operateur equal to (*operator==*)._
+
+[#_support_lt]
+[source,c++]
+.Support Less Than operator
+----
+public:
+    template <class T>
+    Class::supportLT();
+----
+_Test si un type specifique support (ou implemente) l'operateur less than (*operator<*)._
+
+[#_is_contructible]
+[source,c++]
+.Default Constructible
+----
+public:
+    template <class T>
+    Class::isConstructible();
+----
+_Test si un type specifique implemente un constructeur par defaut._
+
+[#_is_constructible_args]
+[source,c++]
+.Constructible
+----
+public:
+    template <class T>
+    Class::isConstructible<Args...>();
+----
+_Test si un type specifique implemente un constructeur qui accepte les valeurs specifiques comment argument._
+
+[#_is_assignable]
+[source,c++]
+.Assignable
+----
+public:
+    template <class T>
+    Class::isAssignable<To>();
+----
+_Test si la valeur d'un type specifique peut être assigner à la valeur d'un autre type specifique._
+
+[#_is_convertible]
+[source,c++]
+.Convertible
+----
+public:
+    template <class T>
+    Class::isConvertible<To>();
+----
+_Test si la valeur d'un type specifique peut être convertir en une valeur d'un autre type specifique._
+
+[#_is_same]
+[source,c++]
+.Same To
+----
+public:
+    template <class T>
+    Class::isSame<To>();
+----
+_Test si un type specifique similaire a un autre type._
+
+[#_is_super]
+[source,c++]
+.Super (Base)
+----
+public:
+    template <class T>
+    Class::isSuper<ExtendsClass>();
+----
+_Test si un type specifique est la base d'un autre type specifique._
+
+[#_is_extends]
+[source,c++]
+.Extends (Inherit)
+----
+public:
+    template <class T>
+    Class::isExtends<SuperClass>();
+----
+_Test si un type specifique est une implementation d'un autre type specifique._
+
+[#_is_callable]
+[source,c++]
+.Default Callable
+----
+public:
+    template <class T>
+    Class::isCallable();
+----
+_Test si un type specifique est function ou une methode capable d'accepter des valeurs specifique comme arguments ou
+que est une structure implementant l'operateur d'appel fonctionnelle (*operator()*) qui n'accepte pas d'arguments._
+
+[#_is_callable_args]
+[source,c++]
+.Callable
+----
+public:
+    template <class T>
+    Class::isCallable<Args...>();
+----
+_Test si un type specifique est function ou une methode capable d'accepter des valeurs specifique comme arguments ou
+que est une structure implementant l'operateur d'appel fonctionnelle (*operator()*) qui accepte des valeurs specifiques comme arguments._
+
+[#_instance_of]
+[source,c++]
+.Has Instance
+----
+public:
+    template <class T>
+    Class::hasInstance(V);
+
+// Example
+Class<Object>::hasInstance(23) //  faux
+Class<Object>::hasInstance((Integer)23) //  vrai
+Class<Object>::hasInstance<Integer>(23) //  vrai
+----
+_Test si la valeur un type specifique appartient est aussi une instance d'un autre type specifique._
+
+[#_is_all_is_true]
+[source,c++]
+.All Is True
+----
+public:
+    Class::allIsTrue<bool...>();
+----
+_Test si toute les valeurs booléennes données sont vrai._
+
+[#_one_is_true]
+[source,c++]
+.One Is True
+----
+public:
+    Class::oneIsTrue<bool...>();
+----
+_Test si au moins une des valeurs booléennes données est vrai._
+
+=== Sous types
+
+|===
+| Alias | Description
+
+| Class::Constant +
+Class::Const
+| Ajoute le qualificateur xref:_is_constant[*const*] a une type specifique
+
+
+| Class::NoConstant +
+Class::NConst +
+Class::Mutable
+| Supprime le qualificateur xref:_is_constant[*const*] a une type specifique
+
+| Class::Volatile +
+Class::Vol
+| Ajoute le qualificateur xref:_is_volatile[*volatile*] a un type specifique
+
+| Class::NoVolatile +
+Class::NVol
+| Supprime le qualificateur xref:_is_volatile[*volatile*] a un type specifique
+
+| Class::ConstVolatile +
+Class::CVol
+| Ajoute les qualificateur xref:_is_constant[*const*] et xref:_is_volatile[*volatile*] a un type specifique
+
+| Class::NoConstVolatile +
+Class::NCVol
+| Supprime les qualificateur xref:_is_constant[*const*] et xref:_is_volatile[*volatile*] a un type specifique
+
+| Class::Pointer +
+Class::Ptr
+| Ajoute le qualificateur xref:_is_pointer[*&#42;*] a un type specifique
+
+| Class::NoPointer +
+Class::NPtr
+| Supprime le qualificateur xref:_is_pointer[*&#42;*] a un type specifique
+
+| Class::PointerTarget
+| Le type cible par le pointeur
+
+| Class::Reference +
+Class::Ref
+| Ajoute le qualificateur xref:_is_reference[*&*] a un type specifique
+
+| Class::NoReference +
+Class::NRef
+| Supprime les qualificateurs xref:_is_reference[*&*] et *&&* a un type specifique
+
+| Class::ConstReference +
+Class::CRef
+| Ajoute les qualificateurs xref:_is_constant[*const*] et xref:_is_reference[*&*] a un type specifique
+
+| Class::NoConstReference +
+Class::NCRef
+| Supprime les qualificateurs xref:_is_constant[*const*] et xref:_is_reference[*&*] et xref:_is_rvalue[*&&*] a un type specifique
+
+| Class::VolReference +
+Class::VRef
+| Ajoute les qualificateurs xref:_is_constant[*const*] et xref:_is_reference[*&*] a un type specifique
+
+| Class::NoVolReference +
+Class::NVRef
+| Supprime les qualificateurs xref:_is_volatile[*volatile*] et xref:_is_reference[*&*] et xref:_is_rvalue[*&&*] a un type specifique
+
+| Class::ConstVolReference +
+Class::CVRef
+| Ajoute les qualificateurs xref:_is_constant[*const*] et xref:_is_volatile[*volatile*] et xref:_is_reference[*&*] a un type specifique
+
+| Class::NoConstVolReference +
+Class::NCVRef
+| Supprime les qualificateurs xref:_is_constant[*const*] et xref:_is_volatile[*volatile*] et xref:_is_reference[*&*] et xref:_is_rvalue[*&&*] a un type specifique
+
+| Class::Rvalue
+| Ajoute le qualificateur xref:_is_rvalue[*&&*] a un type specifique
+
+| Class::Array
+| Ajoute le qualificateur xref:_is_array[*[n]*] a un type specifique (où *n* represente la taille du tableau)
+
+| Class::ArrayElement
+| Le type d'element dans un tableau
+
+| Class::Slim
+| Supprime tout les qualificateurs (sauf xref:_is_pointer[*&#42;*] et xref:_is_array[*[n]*]) sur type specifique
+
+| Class::Prim
+| Type primitive compatible avec xref:_is_class[un type objet] specifique
+
+| Class::Obj
+| Type objet compatible avec xref:_is_primitive[un type primitif] specifique
+
+| Class::Return
+| Type de la valeur retouné par un appel d'une instance d'un type specifique (xref:_is_function[fonctions], xref:_is_function_member[methodes], etc.) avec des valeurs specifiques
+|===
+
+Type Conditionnelle
+|===
+| Alias | Description
+| Class::OnlyIf
+| Ce modèle correspond a un type specifique si et seulement si la condition donnée est vrai.
+Dans le cas contraire une erreur est donnée par le compilateur.
+
+| Class::IfElse
+| Ce modèle correspond a un type specifique si et seulement si la condition donnée est vrai.
+Dans le cas contraire il correspond au second type specifique.
+|===
+
+=== Constantes
+|===
+| Declaration | Description
+
+| MEMORY_SIZE
+| La taille memoire en octet que peut occuper une instance d'un type specifique. Cette valeur peut etre *0* si le type est incomplet ou void
+
+|===
+
+=== Macro
+[#_class_of]
+.ClassOf
+[source, c++]
+--
+#define ClassOf(expr)
+#define ClassOf(exprOrType) // Only for compiler able to support *typeof* or *__typeof*
+
+// Example
+ClassOf(23) // Class<int>
+ClassOf(23L) // Class<long>
+ClassOf(23LL) // Class<long long>
+ClassOf("23") // Class<char[3]> ('2', '3', '\0')
+ClassOf(true) // Class<bool>
+
+ClassOf(45)::hasInstance(12) // vrai
+ClassOf(45)::hasInstance(23.5) // vrai
+ClassOf(45)::hasInstance("23") // faux
+
+ClassOf("23")::isArray() // vrai
+ClassOf("23")::isPointer() // faux
+ClassOf("23")::isString() // vrai
+ClassOf("23"s)::isString() // faux
+
+// for compiler able to support *typeof* or *__typeof*
+ClassOf(int) // Class<int>
+--

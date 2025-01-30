@@ -1,0 +1,71 @@
+== Docs
+
+.Comparable
+****
+La classe abstraite *Comparable* impose un ordre total entre les objets qui en hérite. Toutes les classe implementant cette classe sont dite _Naturellement ordonnable_.
+De ce fait les collections d'objet qui implemente cette classe peuvent être ordonnées automatiquement par appel de la methode *Collection::sort*. De plus les objets implementant cette classe peuvent être utiliser comme clé dans les listes associatives ordonnées tel que les objets de type *SortedMap* et les ensembles ordonné tel que les *SortedSet*
+****
+
+
+=== Inclusion
+[source, c++]
+--
+#include <core/Comparable.h>
+--
+
+
+=== Bases
+* xref:Object.adoc[core::Object]
+
+=== Constructeurs
+_Cette classe n'est pas instantiable._
+
+=== Destructeurs
+_Hérité des classes parentes._
+
+=== Methodes
+
+* Methodes Propres
+
+[#_compare_to]
+[source, c++]
+.Compare To
+--
+public:
+    Comparable::compareTo(T t);
+--
+_Compare l'objet en cours avec un autre objet pour connaitre l'ordre. Cette methode retourne une valeur entiere negative, nulle ou positive si cet objet est respectivement plus petit, egale ou plus grand que l'objet donnée_. Cette methode doit s'assurer que le sign du resultat de _x.compareTo(y)_ est l'opposé de
+celui du resultat de _y.compareTo(x)_ pour tout _objets x et y_.
+
+* Methodes Heritées
+
+[#_equals]
+[source, c++]
+.Equals
+--
+public:
+    Comparable::equals(Object o);
+--
+_Test si un objet non null est de type *Comparable* et possede les mêmes valeurs que celles de l'instance de type *Comparable* en cours et aux même positions._
+
+[#_to_string]
+[source, c++]
+.To String
+--
+public:
+    Comparable::toString();
+--
+
+_Retourne la representation en chaine de caractère de la valeur d'une instance de type *Comparable*._
+
+* Methodes Statiques
+_Aucune methodes statiques implementées._
+
+=== Sous Types
+_aucun sous types définies_
+
+=== Constantes
+_Aucune constantes definies._
+
+=== Macros
+_aucunes macros définies_

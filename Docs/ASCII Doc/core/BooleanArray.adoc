@@ -1,0 +1,121 @@
+== Docs
+
+.BooleanArray
+****
+La classe *BooleanArray* represente un tableau pouvant contenir un certain nombre de valeurs booléene definie par l'utilisateur. Ce type represente aussi une version objet du tableaux primitif de type *gbool*.
+_Ce type d'objet est suscriptible._
+****
+
+
+=== Inclusion
+[source, c++]
+--
+#include <core/BooleanArray.h>
+--
+
+
+=== Bases
+* xref:Object.adoc[core::Object]
+
+=== Constructeurs
+
+[source, c++]
+--
+public:
+    BooleanArray(gint length);
+--
+_Crée un nouvel objet de type BooleanArray contenant un nombre de valeurs données, toute initialiser par la valeur *false*._
+
+[source, c++]
+--
+public:
+    BooleanArray(gint length, gbool b)
+--
+_Crée un nouvel objet de type BooleanArray contenant un nombre de valeurs données, toute initialiser par la valeur initial donnée._
+
+=== Destructeurs
+
+[source, c++]
+--
+public:
+    ~BooleanArray();
+--
+
+_Libere l'espace memoire occuper par les element de ce object. Apres cette operation l'object devient vide._
+
+=== Methodes
+
+* Methodes Propres
+
+[#_get]
+[source, c++]
+.Get
+--
+public:
+    BooleanArray::get(gint index);
+--
+_Retourne la valeur situé a une position donnée. Cette methodes peut lever une exception si et seulement si la position donnée est hors des limites de cette instance c'est a dire si la position donnée est negative ou superieur ou egale au nombre de valeurs contenue dans cet objet._
+
+[#_set]
+[source, c++]
+.Set
+--
+public:
+    BooleanArray::set(gint index, gbool b);
+--
+_Modifie la valeur situé a une position donnée. Cette methodes peut lever une exception si et seulement si la position donnée est hors des limites de cette instance c'est a dire si la position donnée est negative ou superieur ou egale au nombre de valeurs contenue dans cet objet._
+
+* Methodes Heritées
+
+[#_equals]
+[source, c++]
+.Equals
+--
+public:
+    BooleanArray::equals(Object o);
+--
+_Test si un objet non null est de type *BooleanArray* et possede les mêmes valeurs que celles de l'instance de type *BooleanArray* en cours et aux même positions._
+
+[#_to_string]
+[source, c++]
+.To String
+--
+public:
+    BooleanArray::toString();
+--
+
+_Retourne la representation en chaine de caractère de la valeur d'une instance de type *BooleanArray*._
+
+* Methodes Statiques
+
+[#_of_bools]
+[source, c++]
+.Of 
+--
+public:
+    BooleanArray::of(gbool...bs);
+--
+_Retourne un objet de type *BooleanArray* nouvellement crée et initialiser avec les valeurs booléenes données. A la fin de l'operation la taille de l'objet retourné est egale au nombres de valeurs données._
+
+[#_of_array]
+[source, c++]
+.Of
+--
+public:
+    BooleanArray::of(gbool[])
+--
+_Retourne un objet de type *BooleanArray* nouvellement crée et initialiser avec les valeurs booléenes contenue dans le tableau donné. A la fin de l'operation la taille de l'objet retourné est egale a la taille du tableau donné._
+
+=== Sous Types
+_aucun sous types définies_
+
+=== Constantes
+|===
+| Constantes | Valeurs | Description
+| SOFT_MAX_LENGTH
+| 2^31^- 2^3^ - 2^0^
+| Nombre d'element maximal supporté par ce type
+|===
+
+=== Macros
+_aucunes macros définies_

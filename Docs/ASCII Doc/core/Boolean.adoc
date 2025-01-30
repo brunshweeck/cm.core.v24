@@ -1,0 +1,170 @@
+
+.Boolean
+****
+Le type *Boolean* represent une version objet du xref:Class.adoc#_is_primitive[type primitif] *gbool*.
+****
+
+== Inclusion
+[source, c++]
+--
+#include <core/Boolean.h>
+--
+
+== Bases
+* xref:Object.adoc[core::Object]
+* xref:Comparable.adoc[core::Comparable]
+
+== Constructeurs
+[source, c++]
+--
+public:
+    Boolean(gbool b);
+--
+_Un objet de type *Boolean* est constructible uniquement avec une valeur booléene (*true* ou *false*)_
+
+== Destructeurs
+_hérité des classes parentes._
+
+== Methodes
+=== Methodes Propres
+[source, c++]
+--
+public:
+    Boolean::booleanValue();
+--
+_Retourne la valeur booléen contenue dans une instance de type *Boolean*._
+
+=== Methodes Héritées
+
+[#_compare_to]
+[source, c++]
+--
+public:
+    Boolean::compareTo(Boolean b);
+--
+_Compares les valeurs de deux objets de types *Boolean* et retourne un entier representant de resultat de cette comparaison._
+
+[#_equals]
+[source, c++]
+--
+public:
+    Boolean::equals(Object o);
+--
+_Test si un objet non null est de type *Boolean* et possede une valeur equivalente celle de l'instance de type *Boolean* en cours._
+
+[#_to_string]
+[source, c++]
+--
+public:
+    Boolean::toString();
+--
+_Retourne la representation en chaine de caractère de la valeur d'une instance de type *Boolean*._
+
+=== Methodes Statiques
+
+[#_logical_and]
+[source, c++]
+.Logical AND
+--
+public:
+    Boolean::logicalAnd(gbool a, gbool b);
+--
+_applique l'operateur AND ( *operator &&* ou *operator &* ) entre deux valeurs booléenes_
+
+[#_logical_or]
+[source, c++]
+.Logical OR
+--
+public:
+    Boolean::logicalOr(gbool a, gbool b);
+--
+_applique l'operateur OR ( *operator ||* ou *operator |* ) entre deux valeurs booléenes_
+
+[#_logical_xor]
+[source, c++]
+.Logical XOR
+--
+public:
+    Boolean::logicalXor(gbool a, gbool b);
+--
+_applique l'operateur XOR ( *operator ^* ) entre deux valeurs booléenes_
+
+[#_compare]
+[source, c++]
+.Compare
+--
+public:
+    Boolean::compare(gbool a, gbool b);
+--
+_compares deux valeurs booléenes_
+
+[#_hash]
+[source, c++]
+.Hash
+--
+public:
+    Boolean::hash(gbool b);
+--
+_retourne un entier representant le code de hachage d'une valeur booléen donnée._
+
+[#_to_string_boolean]
+[source, c++]
+.Hash
+--
+public:
+    Boolean::toString(gbool b);
+--
+_retourne une chaine de character representant une valeur booléen donnée._
+
+[#_value_of_boolean]
+[source, c++]
+.ValueOf
+--
+public:
+    Boolean::valueOf(gbool b);
+--
+_retourne un objet de type *Boolean* representant une valeur booléen donnée._
+
+[#_value_of_string]
+[source, c++]
+.ValueOf
+--
+public:
+    Boolean::valueOf(String s);
+--
+_retourne un objet de type *Boolean* representé une chaine de caractère donnée._
+
+[#_parse_boolean]
+[source, c++]
+.ParseBoolean
+--
+public:
+    Boolean::parseBoolean(String s);
+--
+_retourne la valeur booléene representé une chaine de caractère donnée._
+
+== Sous Types
+_aucun sous types définies_
+
+== Constantes
+|===
+| Constantes | Valeurs | Description
+| TRUE 
+| true
+| Objet representant la valeur *vrai*
+
+| FALSE 
+| false
+| Objet representant la valeur *faux*
+
+| BYTES 
+| 1
+| nombre d'octets utiliser pour representer une instance du type *gbool* dans la memoire.
+
+| SIZE 
+| 2^3^
+| nombre de bits utiliser pour representer une instance du type *gbool* dans la memoire.
+|===
+
+== Macros
+_aucunes macros définies_

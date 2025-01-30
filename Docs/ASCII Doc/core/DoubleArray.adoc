@@ -1,0 +1,148 @@
+== Docs
+
+.DoubleArray
+****
+La classe *DoubleArray* represente un tableau pouvant contenir un certain nombre de valeurs decimale de 64 bits definie par l'utilisateur. Ce type represente aussi une version objet du tableaux primitif de type *gdouble*.
+_Ce type d'objet est suscriptible._
+****
+
+
+=== Inclusion
+[source, c++]
+--
+#include <core/DoubleArray.h>
+--
+
+
+=== Bases
+* xref:Object.adoc[core::Object]
+
+=== Constructeurs
+
+[source, c++]
+--
+public:
+    DoubleArray(gint length);
+--
+_Crée un nouvel objet de type DoubleArray contenant un nombre de valeurs données, toute initialiser par la valeur *0.0*._
+
+[source, c++]
+--
+public:
+    DoubleArray(gint length, gdouble b)
+--
+_Crée un nouvel objet de type DoubleArray contenant un nombre de valeurs données, toute initialiser par la valeur initial donnée._
+
+=== Destructeurs
+
+[source, c++]
+--
+public:
+    ~DoubleArray();
+--
+
+_Libere l'espace memoire occuper par les element de ce object. Apres cette operation l'object devient vide._
+
+=== Methodes
+
+* Methodes Propres
+
+[#_get]
+[source, c++]
+.Get
+--
+public:
+    DoubleArray::get(gint index);
+--
+_Retourne la valeur situé a une position donnée. Cette methodes peut lever une exception si et seulement si la position donnée est hors des limites de cette instance c'est a dire si la position donnée est negative ou superieur ou egale au nombre de valeurs contenue dans cet objet._
+
+[#_set]
+[source, c++]
+.Set
+--
+public:
+    DoubleArray::set(gint index, gdouble b);
+--
+_Modifie la valeur situé a une position donnée. Cette methodes peut lever une exception si et seulement si la position donnée est hors des limites de cette instance c'est a dire si la position donnée est negative ou superieur ou egale au nombre de valeurs contenue dans cet objet._
+
+* Methodes Heritées
+
+[#_equals]
+[source, c++]
+.Equals
+--
+public:
+    DoubleArray::equals(Object o);
+--
+_Test si un objet non null est de type *DoubleArray* et possede les mêmes valeurs que celles de l'instance de type *DoubleArray* en cours et aux même positions._
+
+[#_to_string]
+[source, c++]
+.To String
+--
+public:
+    DoubleArray::toString();
+--
+
+_Retourne la representation en chaine de caractère de la valeur d'une instance de type *DoubleArray*._
+
+* Methodes Statiques
+
+[#_of_doubles]
+[source, c++]
+.Of 
+--
+public:
+    DoubleArray::of(gdouble...bs);
+--
+_Retourne un objet de type *DoubleArray* nouvellement crée et initialiser avec les valeurs decimales données. A la fin de l'operation la taille de l'objet retourné est egale au nombres de valeurs données._
+
+[#_of_array]
+[source, c++]
+.Of
+--
+public:
+    DoubleArray::of(gdouble[])
+--
+_Retourne un objet de type *DoubleArray* nouvellement crée et initialiser avec les valeurs decimales contenue dans le tableau donné. A la fin de l'operation la taille de l'objet retourné est egale a la taille du tableau donné._
+
+[#_of_range_1]
+[source, c++]
+.Of Range
+--
+public:
+    DoubleArray::ofRange(gdouble stop)
+--
+_Retourne un objet de type *DoubleArray* nouvellement crée representant une sequence de valeurs decimale allant de *0.0* à *stop-1*, avec un decalage de *1.0* entre les valeurs. c'est à dire que *ofRange(i)* 0.0, 1.0, 2.0, ..., i-1._
+
+[#_of_range_2]
+[source, c++]
+.Of Range
+--
+public:
+    DoubleArray::ofRange(gdouble start, gdouble stop)
+--
+_Retourne un objet de type *DoubleArray* nouvellement crée representant une sequence de valeurs decimale allant de *start* à *stop-1*, avec un decalage de *1.0* entre les valeurs. c'est à dire que *ofRange(i, j)* i, i+1, i+2, ..., j-1._
+
+[#_of_range_3]
+[source, c++]
+.Of Range
+--
+public:
+    DoubleArray::ofRange(gdouble start, gdouble stop, gint step)
+--
+_Retourne un objet de type *DoubleArray* nouvellement crée representant une sequence de valeurs decimale allant de *start* à *stop-1*, avec un decalage de *step* entre les valeurs. c'est à dire que *ofRange(i, j, k)* i, i+k, i+2k, ..., i+nk (avec i+nk < j)._
+
+=== Sous Types
+_aucun sous types définies_
+
+=== Constantes
+|===
+| Constantes | Valeurs | Description
+| SOFT_MAX_LENGTH
+| 2^31^- 2^3^ - 2^0^
+| Nombre d'element maximal supporté par ce type
+|===
+
+=== Macros
+_aucunes macros définies_

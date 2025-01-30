@@ -1,0 +1,114 @@
+== Docs
+
+.Number
+****
+La classe abstraite *Number* est la base des classes representant une valeur numerique convertible en *gbyte*, *gshort*, *gint*, *glong*, *gfloat* et *gdouble*
+****
+
+
+=== Inclusion
+[source, c++]
+--
+#include <core/Number.h>
+--
+
+
+=== Bases
+* xref:Object.adoc[core::Object]
+
+=== Constructeurs
+_Cette classe n'est pas instantiable._
+
+=== Destructeurs
+_Hérité des classes parentes._
+
+=== Methodes
+
+* Methodes Propres
+
+[#_byte_value]
+[source, c++]
+.Byte Value
+--
+public:
+    Number::byteValue();
+--
+_Retourne la valeur de cet instance convertir en *gbyte*._
+
+[#_short_value]
+[source, c++]
+.Short Value
+--
+public:
+    Number::shortValue();
+--
+_Retourne la valeur de cet instance convertir en *gshort*._
+
+[#_int_value]
+[source, c++]
+.Int Value
+--
+public:
+    Number::intValue();
+--
+_Retourne la valeur de cet instance convertir en *gint*._
+
+[#_long_value]
+[source, c++]
+.Long Value
+--
+public:
+    Number::longValue();
+--
+_Retourne la valeur de cet instance convertir en *glong*._
+
+[#_float_value]
+[source, c++]
+.Float Value
+--
+public:
+    Number::floatValue();
+--
+_Retourne la valeur de cet instance convertir en *gfloat*._
+
+[#_double_value]
+[source, c++]
+.Double Value
+--
+public:
+    Number::doubleValue();
+--
+_Retourne la valeur de cet instance convertir en *gdouble*._
+
+* Methodes Heritées
+
+[#_equals]
+[source, c++]
+.Equals
+--
+public:
+    Number::equals(Object o);
+--
+_Test si un objet non null est de type *Number* et possede les mêmes valeurs que celles de l'instance de type *Number* en cours et aux même positions._
+
+[#_to_string]
+[source, c++]
+.To String
+--
+public:
+    Number::toString();
+--
+
+_Retourne la representation en chaine de caractère de la valeur d'une instance de type *Number*._
+
+* Methodes Statiques
+_Aucune methodes statiques implementées._
+
+=== Sous Types
+_Aucun sous types définies_
+
+=== Constantes
+_Aucune constantes definies._
+
+=== Macros
+_Aucunes macros définies_

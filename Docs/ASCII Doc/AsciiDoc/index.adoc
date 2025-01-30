@@ -1,0 +1,21 @@
+= Documentation
+:reproducible: true
+:copyright: CETTE BIBLIOTHÈQUE EST À USAGE PRIVÉE
+:author: Brunshweeck Tazeussong
+
+Ce document à été rédiger par {author}
+
+*Core24* est une bibliothèque écrit avec le langage C++ pour optimser le codage et se conformer exclusivement au concept de programmation oriantée objet sans faire usage des pointers.
+
+== Modules
+
+La bibliothèque *Core24* se divise en plusieurs modules
+
+* Core24 (base)
+* Core24 (ui)
+
+=== Core24 (base)
+C'est un module contenant les elements de base nécessaires à la création de votre programme.
+
+
+*{copyright}*
