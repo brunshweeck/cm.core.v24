@@ -946,7 +946,7 @@ namespace core {
                 return null;
             }
 
-            void foreach(const function::BiConsumer<K&, V&>& action) override {
+            void forEach(const function::BiConsumer<K&, V&>& action) override {
                 gint mc = modCount;
                 try {
                     for (NODE x = firstNode(); x != null && mc == modCount; x = successor(x))
@@ -957,7 +957,7 @@ namespace core {
                     ConcurrentModificationException().throws($ftrace());
             }
 
-            void foreach(const function::BiConsumer<K, V>& action) const override {
+            void forEach(const function::BiConsumer<K, V>& action) const override {
                 gint mc = modCount;
                 try {
                     for (NODE x = firstNode(); x != null && mc == modCount; x = successor(x))
@@ -3329,7 +3329,7 @@ namespace core {
                 return *view;
             }
 
-            void foreach(const function::BiConsumer<K&, V&>& action) override {
+            void forEach(const function::BiConsumer<K&, V&>& action) override {
                 if (Class<TreeMap>::hasInstance(map)) {
                     TreeMap& tree = CORE_XCAST(TreeMap, map);
                     gint mc = tree.modCount;
@@ -3349,7 +3349,7 @@ namespace core {
                 }
             }
 
-            void foreach(const function::BiConsumer<K, V>& action) const override {
+            void forEach(const function::BiConsumer<K, V>& action) const override {
                 if (Class<TreeMap>::hasInstance(map)) {
                     TreeMap& tree = CORE_XCAST(TreeMap, map);
                     gint mc = tree.modCount;
@@ -3886,7 +3886,7 @@ namespace core {
                 try { return descendingMap(); } catch (Throwable const& ex) { ex.throws($ftrace()); }
             }
 
-            void foreach(const function::BiConsumer<K&, V&>& action) override {
+            void forEach(const function::BiConsumer<K&, V&>& action) override {
                 try {
                     check();
                     for (NODE x = lowestNode(), end = successor(highestNode()); x != end; x = successor(x)) {
@@ -3896,7 +3896,7 @@ namespace core {
                 } catch (Throwable const& ex) { ex.throws($ftrace()); }
             }
 
-            void foreach(const function::BiConsumer<K, V>& action) const override {
+            void forEach(const function::BiConsumer<K, V>& action) const override {
                 try {
                     check();
                     for (NODE x = lowestNode(), end = successor(highestNode()); x != end; x = successor(x)) {
@@ -4774,7 +4774,7 @@ namespace core {
                 IllegalArgumentException("Key too low").throws($ftrace());
             }
 
-            void foreach(const function::BiConsumer<K&, V&>& action) override {
+            void forEach(const function::BiConsumer<K&, V&>& action) override {
                 gint mc = modCount;
                 for (NODE x = lowestNode(); x != null; x = successor(x)) {
                     if (mc != tree().modCount)
@@ -4785,7 +4785,7 @@ namespace core {
                 }
             }
 
-            void foreach(const function::BiConsumer<K, V>& action) const override {
+            void forEach(const function::BiConsumer<K, V>& action) const override {
                 gint mc = modCount;
                 for (NODE x = lowestNode(); x != null; x = successor(x)) {
                     if (mc != tree().modCount)

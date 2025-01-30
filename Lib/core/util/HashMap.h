@@ -772,7 +772,7 @@ namespace core {
                 return null;
             }
 
-            void foreach(const function::BiConsumer<K&, V&>& action) override {
+            void forEach(const function::BiConsumer<K&, V&>& action) override {
                 gint modCount2 = modCount;
                 gint len = table.length();
                 gint index = 0;
@@ -789,7 +789,7 @@ namespace core {
                 }
             }
 
-            void foreach(const function::BiConsumer<K, V>& action) const override {
+            void forEach(const function::BiConsumer<K, V>& action) const override {
                 gint modCount2 = modCount;
                 gint len = table.length();
                 gint index = 0;

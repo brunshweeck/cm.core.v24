@@ -24,6 +24,7 @@ Cmake/
 Debug/
 .debug/
 cmake-*/
+Utilities
 
 
 ### IntelliJ IDEA ###

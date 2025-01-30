@@ -728,7 +728,7 @@ namespace core {
              * @throws ConcurrentModificationException if an entry is found to be
              * removed during iteration
              */
-            virtual void foreach(function::BiConsumer<K&, V&> const& action) {
+            virtual void forEach(function::BiConsumer<K&, V&> const& action) {
                 KEY k = null;
                 VALUE v = null;
                 for (Entry& entry : entrySet()) {
@@ -770,7 +770,7 @@ namespace core {
              * @throws ConcurrentModificationException if an entry is found to be
              * removed during iteration
              */
-            virtual void foreach(function::BiConsumer<K, V> const& action) const {
+            virtual void forEach(function::BiConsumer<K, V> const& action) const {
                 KEY k = null;
                 VALUE v = null;
                 for (Entry const& entry : entrySet()) {
@@ -1056,6 +1056,346 @@ namespace core {
             }
 
             /**
+             * If the specified key is not already associated with a value (or is mapped
+             * to @c null), attempts to compute its value using the given mapping
+             * function and enters it into this map unless @c null.
+             *
+             * <p>
+             * If the mapping function returns @c null, no mapping is recorded.
+             * If the mapping function itself throws an (unchecked) exception, the
+             * exception is rethrown, and no mapping is recorded.  The most
+             * common usage is to construct a new object serving as an initial
+             * mapped value or memoized result, as in:
+             *
+             * @code
+             * map.computeIfAbsent(key, [](auto& k) { return Value(f(k)); });
+             * @endcode
+             * </p>
+             * <p>
+             * Or to implement a multi-value map, @c Map<K,Collection<V>>,
+             * supporting multiple values per key:
+             *
+             * @code
+             * map.computeIfAbsent(key, [](auto& k) { return HashSet<V>(); }).add(v);
+             * @endcode
+             * </p>
+             * <p>
+             * The mapping function should not modify this map during computation.
+             * </p>
+             * @note
+             * The default implementation is equivalent to the following steps for this
+             * @c map, then returning the current value or @c null if now
+             * absent:
+             *
+             * @code
+             * if (map.getOrNull(key) == null) {
+             *     auto& newValue = mappingFunction.apply(key);
+             *     if (newValue != null)
+             *         map.put(key, newValue);
+             * }
+             * @endcode
+             *
+             * <p>
+             * The default implementation makes no guarantees about detecting if the
+             * mapping function modifies this map during computation and, if
+             * appropriate, reporting an error. Non-concurrent implementations should
+             * override this method and, on a best-effort basis, throw a
+             * @c ConcurrentModificationException if it is detected that the
+             * mapping function modifies this map during computation. Concurrent
+             * implementations should override this method and, on a best-effort basis,
+             * throw an @c IllegalStateException if it is detected that the
+             * mapping function modifies this map during computation and as a result
+             * computation would never complete.
+             * </p>
+             * <p>
+             * The default implementation makes no guarantees about synchronization
+             * or atomicity properties of this method. Any implementation providing
+             * atomicity guarantees must override this method and document its
+             * concurrency properties. In particular, all implementations of
+             * sub-interface @b concurrent::ConcurrentMap must document
+             * whether the mapping function is applied once atomically only if the value
+             * is not present.
+             * </p>
+             * @param key key with which the specified value is to be associated
+             * @param mappingFunction the mapping function to compute a value
+             * @return the current (existing or computed) value associated with
+             *         the specified key, or null if the computed value is null
+             * @throws NullPointerException if the specified key is null and
+             *         this map does not support null keys, or the mappingFunction
+             *         is null
+             * @throws UnsupportedOperationException if the @c put operation
+             *         is not supported by this map (@em optional )
+             * @throws ClassCastException if the class of the specified key or value
+             *         prevents it from being stored in this map (@em optional )
+             * @throws IllegalArgumentException if some property of the specified key
+             *         or value prevents it from being stored in this map (@em optional )
+             */
+            virtual Object& computeIfAbsent(K const& key, function::Function<K, V> const& mappingFunction) {
+                Object& v = getOrNull(key);
+                if (v == null) {
+                    try {
+                        Object& newValue = UNSAFE::copyInstance(mappingFunction.apply(key));
+                        CORE_ASSERT(newValue == null || Class<V>::hasInstance(newValue));
+                        if (newValue != null) {
+                            put(key, CORE_XCAST(V, newValue));
+                            return newValue;
+                        }
+                    } catch (Throwable const& ex) { ex.throws($ftrace()); }
+                }
+                return v;
+            }
+
+            /**
+             * If the value for the specified key is present and non-null, attempts to
+             * compute a new mapping given the key and its current mapped value.
+             *
+             * <p>
+             * If the remapping function returns @c null, the mapping is removed.
+             * If the remapping function itself throws an (unchecked) exception, the
+             * exception is rethrown, and the current mapping is left unchanged.
+             * </p>
+             * <p>
+             * The remapping function should not modify this map during computation.
+             * </p>
+             * @note
+             * The default implementation is equivalent to performing the following
+             * steps for this @c map, then returning the current value or
+             * @c null if now absent:
+             *
+             * @code
+             * if (map.get(key) != null) {
+             *     auto& oldValue = map.getOrNull(key);
+             *     auto& newValue = remappingFunction.apply(key, oldValue);
+             *     if (newValue != null)
+             *         map.put(key, newValue);
+             *     else
+             *         map.remove(key);
+             * }
+             * @endcode
+             *
+             * <p>
+             * The default implementation makes no guarantees about detecting if the
+             * remapping function modifies this map during computation and, if
+             * appropriate, reporting an error. Non-concurrent implementations should
+             * override this method and, on a best-effort basis, throw a
+             * @c ConcurrentModificationException if it is detected that the
+             * remapping function modifies this map during computation. Concurrent
+             * implementations should override this method and, on a best-effort basis,
+             * throw an @c IllegalStateException if it is detected that the
+             * remapping function modifies this map during computation and as a result
+             * computation would never complete.
+             * </p>
+             * <p>
+             * The default implementation makes no guarantees about synchronization
+             * or atomicity properties of this method. Any implementation providing
+             * atomicity guarantees must override this method and document its
+             * concurrency properties. In particular, all implementations of
+             * sub-interface @b concurrent::ConcurrentMap must document
+             * whether the remapping function is applied once atomically only if the
+             * value is not present.
+             * </p>
+             * @param key key with which the specified value is to be associated
+             * @param remappingFunction the remapping function to compute a value
+             * @return the new value associated with the specified key, or null if none
+             * @throws UnsupportedOperationException if the @c put operation
+             *         is not supported by this map (@em optional )
+             * @throws ClassCastException if the class of the specified key or value
+             *         prevents it from being stored in this map (@em optional )
+             * @throws IllegalArgumentException if some property of the specified key
+             *         or value prevents it from being stored in this map (@em optional )
+             * @since 1.8
+             */
+            virtual Object& computeIfPresent(K const& key, function::BiFunction<K, V&, V> const& remappingFunction) {
+                Object& oldValue = getOrNull(key);
+                if (oldValue != null) {
+                    V& value = CORE_XCAST(V, oldValue);
+                    Object& newValue = UNSAFE::copyInstance(remappingFunction.apply(key, value));
+                    if (newValue != null) {
+                        put(key, CORE_XCAST(V, newValue));
+                        return newValue;
+                    }
+                    remove(key);
+                }
+                return null;
+            }
+
+            /**
+             * Attempts to compute a mapping for the specified key and its current
+             * mapped value (or @c null if there is no current mapping). For
+             * example, to either create or append a @c String msg to a value
+             * mapping:
+             *
+             * @code
+             * map.compute(key, [](auto &k, auto &v) { return (v == null) ? msg : v.concat(msg); })
+             * @endcode
+             * (Method @b merge() is often simpler to use for such purposes.)
+             *
+             * <p>
+             * If the remapping function returns @c null, the mapping is removed
+             * (or remains absent if initially absent).  If the remapping function
+             * itself throws an (unchecked) exception, the exception is rethrown, and
+             * the current mapping is left unchanged.
+             * </p>
+             * <p>
+             * The remapping function should not modify this map during computation.
+             * </p>
+             * @note
+             * The default implementation is equivalent to performing the following
+             * steps for this @c map:
+             *
+             * @code
+             * auto& oldValue = map.getOrNull(key);
+             * auto& newValue = remappingFunction.apply(key, oldValue);
+             * if (newValue != null) {
+             *     map.put(key, newValue);
+             * } else if (oldValue != null || map.containsKey(key)) {
+             *     map.remove(key);
+             * }
+             * return newValue;
+             * @endcode
+             *
+             * <p>
+             * The default implementation makes no guarantees about detecting if the
+             * remapping function modifies this map during computation and, if
+             * appropriate, reporting an error. Non-concurrent implementations should
+             * override this method and, on a best-effort basis, throw a
+             * @c ConcurrentModificationException if it is detected that the
+             * remapping function modifies this map during computation. Concurrent
+             * implementations should override this method and, on a best-effort basis,
+             * throw an @c IllegalStateException if it is detected that the
+             * remapping function modifies this map during computation and as a result
+             * computation would never complete.
+             * </p>
+             * <p>
+             * The default implementation makes no guarantees about synchronization
+             * or atomicity properties of this method. Any implementation providing
+             * atomicity guarantees must override this method and document its
+             * concurrency properties. In particular, all implementations of
+             * subinterface @b concurrent::ConcurrentMap must document
+             * whether the remapping function is applied once atomically only if the
+             * value is not present.
+             * </p>
+             * @param key key with which the specified value is to be associated
+             * @param remappingFunction the remapping function to compute a value
+             * @return the new value associated with the specified key, or null if none
+             * @throws UnsupportedOperationException if the @c put operation
+             *         is not supported by this map (@em optional )
+             * @throws ClassCastException if the class of the specified key or value
+             *         prevents it from being stored in this map (@em optional )
+             * @throws IllegalArgumentException if some property of the specified key
+             *         or value prevents it from being stored in this map (@em optional )
+             */
+            virtual Object& compute(K const& key, function::BiFunction<K, V&, V> const& remappingFunction) {
+                Object& oldValue = getOrNull(key);
+                Object& newValue = oldValue == null && !Class<V>::hasInstance(oldValue)
+                                       ? null
+                                       : UNSAFE::copyInstance(remappingFunction.apply(key, CORE_XCAST(V, oldValue)));
+                if (newValue == null) {
+                    // delete mapping
+                    if (oldValue != null || containsKey(key)) {
+                        // something to remove
+                        remove(key);
+                        return null;
+                    } else {
+                        // nothing to do. Leave things as they were.
+                        return null;
+                    }
+                } else {
+                    // add or replace old mapping
+                    put(key, newValue);
+                    return newValue;
+                }
+            }
+
+            /**
+             * If the specified key is not already associated with a value or is
+             * associated with null, associates it with the given non-null value.
+             * Otherwise, replaces the associated value with the results of the given
+             * remapping function, or removes if the result is @c null. This
+             * method may be of use when combining multiple mapped values for a key.
+             * For example, to either create or append a @c String msg to a
+             * value mapping:
+             *
+             * @code
+             * map.merge(key, msg, {&String::concat})
+             * @endcode
+             *
+             * <p>
+             * If the remapping function returns @c null, the mapping is removed.
+             * If the remapping function itself throws an (unchecked) exception, the
+             * exception is rethrown, and the current mapping is left unchanged.
+             * </p>
+             * <p>
+             * The remapping function should not modify this map during computation.
+             * </p>
+             * @note
+             * The default implementation is equivalent to performing the following
+             * steps for this @c map, then returning the current value or
+             * @c null if absent:
+             *
+             * @code
+             * auto& oldValue = map.getOrNull(key);
+             * auto& newValue = (oldValue == null) ? value :
+             *              remappingFunction.apply(oldValue, value);
+             * if (newValue == null)
+             *     map.remove(key);
+             * else
+             *     map.put(key, newValue);
+             * @endcode
+             *
+             * <p>
+             * The default implementation makes no guarantees about detecting if the
+             * remapping function modifies this map during computation and, if
+             * appropriate, reporting an error. Non-concurrent implementations should
+             * override this method and, on a best-effort basis, throw a
+             * @c ConcurrentModificationException if it is detected that the
+             * remapping function modifies this map during computation. Concurrent
+             * implementations should override this method and, on a best-effort basis,
+             * throw an @c IllegalStateException if it is detected that the
+             * remapping function modifies this map during computation and as a result
+             * computation would never complete.
+             * </p>
+             * <p>
+             * The default implementation makes no guarantees about synchronization
+             * or atomicity properties of this method. Any implementation providing
+             * atomicity guarantees must override this method and document its
+             * concurrency properties. In particular, all implementations of
+             * sub-interface @b concurrent::ConcurrentMap must document
+             * whether the remapping function is applied once atomically only if the
+             * value is not present.
+             * </p>
+             * @param key key with which the resulting value is to be associated
+             * @param value the non-null value to be merged with the existing value
+             *        associated with the key or, if no existing value or a null value
+             *        is associated with the key, to be associated with the key
+             * @param remappingFunction the remapping function to recompute a value if
+             *        present
+             * @return the new value associated with the specified key, or null if no
+             *         value is associated with the key
+             * @throws UnsupportedOperationException if the @c put operation
+             *         is not supported by this map (@em optional )
+             * @throws ClassCastException if the class of the specified key or value
+             *         prevents it from being stored in this map (@em optional )
+             * @throws IllegalArgumentException if some property of the specified key
+             *         or value prevents it from being stored in this map (@em optional )
+             */
+            virtual Object& merge(K const& key, V const& value,
+                                  function::BiFunction<V, V, V> const& remappingFunction) {
+                Object& oldValue = getOrNull(key);
+                V const& newValue = (oldValue == null)
+                                        ? value
+                                        : remappingFunction.apply(CORE_XCAST(V, oldValue), value);
+                if (newValue == null) {
+                    remove(key);
+                } else {
+                    V& value = UNSAFE::copyInstance(newValue);
+                    put(key, value);
+                    return value;
+                }
+                return UNSAFE::copyInstance(newValue);
+            }
+
+            /**
              * Returns an unmodifiable map containing zero mappings.
              * See <em>Unmodifiable Maps</em> for details.
              *
@@ -1088,12 +1428,12 @@ namespace core {
              * @throw AssertionError If the number of argument is not pair.
              * @throws IllegalArgumentException if there are any duplicate keys
              */
-            template <class... Entries>
-            static Map<K, V>& of(Entries&&... entries) {
-                // assert sizeof...(Entries) % 2 == 0
-                CORE_FAST_XASSERT(VarArgs<Entries...>::check(), "Illegal Arguments");
+            template <class... Args>
+            static Map& of(Args&&... entries) {
+                // assert sizeof...(Args) % 2 == 0
+                CORE_FAST_XASSERT(VarArgs<Args...>::check(), "Illegal Arguments");
 
-                CORE_FAST gint len = (sizeof...(Entries) >> 1) * 2;
+                CORE_FAST gint len = (sizeof...(Args) >> 1) * 2;
                 if (len < 0)
                     OutOfMemoryError("Number of mapping is too large.").throws($ftrace());
 
@@ -1101,7 +1441,7 @@ namespace core {
                 BooleanArray b = BooleanArray(len);
 
                 // Store inline entries
-                VarArgs<Entries...>::init(0, a, b, UNSAFE::forwardInstance<Entries>(entries)...);
+                VarArgs<Args...>::init(0, a, b, UNSAFE::forwardInstance<Args>(entries)...);
 
                 // Organize entries
                 Array<Entry> table = organize(a, b);
@@ -1122,7 +1462,9 @@ namespace core {
              * @see Map::entry()
              */
             static Map& ofEntries() {
-                try { return emptyMap(); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+                try {
+                    return emptyMap();
+                } catch (Throwable const& ex) { ex.throws($ftrace()); }
             }
 
             /**
@@ -1269,7 +1611,9 @@ namespace core {
              * @return an empty map
              */
             static Map& emptyMap() {
-                try { return UNSAFE::newInstance<EmptyMap>(); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+                try {
+                    return UNSAFE::newInstance<EmptyMap>();
+                } catch (Throwable const& ex) { ex.throws($ftrace()); }
             }
 
             /**
@@ -1981,9 +2325,9 @@ namespace core {
 
             const Object& getOrNull(const K&) const override { return null; }
 
-            void foreach(const function::BiConsumer<K&, V&>&) override {}
+            void forEach(const function::BiConsumer<K&, V&>&) override {}
 
-            void foreach(const function::BiConsumer<K, V>&) const override {}
+            void forEach(const function::BiConsumer<K, V>&) const override {}
 
             ~EmptyMap() override {
                 if (keys != null) {
@@ -2298,13 +2642,13 @@ namespace core {
                 } catch (Throwable const& ex) { ex.throws($ftrace()); }
             }
 
-            void foreach(const function::BiConsumer<K&, V&>& action) override {
+            void forEach(const function::BiConsumer<K&, V&>& action) override {
                 try {
                     action.accept(e.key, e.value);
                 } catch (Throwable const& ex) { ex.throws($ftrace()); }
             }
 
-            void foreach(const function::BiConsumer<K, V>& action) const override {
+            void forEach(const function::BiConsumer<K, V>& action) const override {
                 try {
                     action.accept(e.key, e.value);
                 } catch (Throwable const& ex) { ex.throws($ftrace()); }
@@ -2892,14 +3236,14 @@ namespace core {
                 } catch (Throwable const& ex) { ex.throws($ftrace()); }
             }
 
-            void foreach(const function::BiConsumer<K&, V&>& action) override {
+            void forEach(const function::BiConsumer<K&, V&>& action) override {
                 try {
                     for (Entry& entry : table)
                         action.accept(entry.getKey(), entry.getValue());
                 } catch (Throwable const& ex) { ex.throws($ftrace()); }
             }
 
-            void foreach(const function::BiConsumer<K, V>& action) const override {
+            void forEach(const function::BiConsumer<K, V>& action) const override {
                 try {
                     for (Entry const& entry : table)
                         action.accept(entry.getKey(), entry.getValue());

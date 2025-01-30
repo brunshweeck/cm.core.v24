@@ -18,54 +18,32 @@ ELSE ()
     SET(SYSTEM "Unix")
 ENDIF (WIN32)
 
-FILE(GLOB CORE_HEADERS
-        "Lib/core/*.h"
-        "Lib/core/*/*.h")
-FILE(GLOB CORE_SOURCES
-        "Lib/core/*.cpp"
-        "Lib/core/*/*.cpp")
-FILE(GLOB META_HEADERS
-        "Lib/meta/*.h"
-        "Lib/meta/*/*.h"
-        "Lib/meta/*/*/*.h"
-        "Lib/meta/*/*/*/*.h")
-FILE(GLOB META_SOURCES
-        "Lib/meta/*.cpp"
-        "Lib/meta/*/*.cpp"
-        "Lib/meta/*/*/*.cpp"
-        "Lib/meta/*/*/*/*.cpp")
-FILE(GLOB SYSTEM_HEADERS
-        "Internal/${SYSTEM}/core/*.h"
-        "Internal/${SYSTEM}/core/*/*.h")
-FILE(GLOB SYSTEM_SOURCES
-        "Internal/${SYSTEM}/core/*.cpp"
-        "Internal/${SYSTEM}/core/*/*.cpp")
+FILE(GLOB ALL
+        "Lib/**/*.h" "Lib/**/*.cpp"
+        "Lib/**/*/*.h" "Lib/**/*/*.cpp"
+        "Lib/**/*/*/*.h" "Lib/**/*/*/*.cpp"
+        "Lib/**/*/*/*/*.h" "Lib/**/*/*/*/*.cpp"
+)
+FILE(GLOB SYS
+        "Internal/${SYSTEM}/**/*.h" "Internal/${SYSTEM}/**/*.cpp"
+        "Internal/${SYSTEM}/**/**/*.h" "Internal/${SYSTEM}/**/**/*.cpp"
+)
 
-SET(FILES
-        ${CORE_HEADERS}
-        ${META_HEADERS}
-        ${SYSTEM_HEADERS}
-        ${CORE_SOURCES}
-        ${META_SOURCES}
-        ${SYSTEM_SOURCES}
-        Lib/core/concurrent/ConcurrentLinkedQueue.cpp
-        Lib/core/concurrent/ConcurrentLinkedQueue.h
-        Lib/core/concurrent/ConcurrentLinkedDeque.cpp
-        Lib/core/concurrent/ConcurrentLinkedDeque.h)
+SET(ANY ${ALL} ${SYS})
 
 INCLUDE(GNUInstallDirs)
 
 INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/Lib")
 INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/Internal/${SYSTEM}")
 
-ADD_LIBRARY(Core24 SHARED ${FILES})
-ADD_EXECUTABLE(Main "Src/Main.cpp")
+ADD_LIBRARY(Core-24 SHARED ${ANY})
+ADD_EXECUTABLE(Main "${PROJECT_SOURCE_DIR}/Src/Main.cpp")
 
-TARGET_LINK_LIBRARIES(Main PUBLIC Core24)
+TARGET_LINK_LIBRARIES(Main PRIVATE Core-24)
 
-INSTALL(TARGETS Core24
-        EXPORT Core24Core
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+#INSTALL(TARGETS Core24
+#        EXPORT Core24Core
+#        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+#        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

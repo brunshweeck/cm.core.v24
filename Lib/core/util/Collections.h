@@ -3906,12 +3906,12 @@ namespace core {
                 try { return map.getOrNull(key); } catch (Throwable const& ex) { ex.throws($ftrace()); }
             }
 
-            void foreach(function::BiConsumer<K&, V&> const& action) override {
-                try { return map.foreach(action); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            void forEach(function::BiConsumer<K&, V&> const& action) override {
+                try { return map.forEach(action); } catch (Throwable const& ex) { ex.throws($ftrace()); }
             }
 
-            void foreach(function::BiConsumer<K, V> const& action) const override {
-                try { return map.foreach(action); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            void forEach(function::BiConsumer<K, V> const& action) const override {
+                try { return map.forEach(action); } catch (Throwable const& ex) { ex.throws($ftrace()); }
             }
 
             void replaceAll(function::BiFunction<K&, V&, V> const& function) override {

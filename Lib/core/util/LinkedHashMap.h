@@ -563,7 +563,7 @@ namespace core {
             /**
              *
              */
-            void foreach(const function::BiConsumer<K&, V&>& action) override {
+            void forEach(const function::BiConsumer<K&, V&>& action) override {
                 gint mc = HashMap::modCount;
                 try {
                     for (LINKEDNODE x = head; x != null && mc == HashMap::modCount; x = HashMap::afterOf(x))
@@ -573,7 +573,7 @@ namespace core {
                     ConcurrentModificationException().throws($ftrace());
             }
 
-            void foreach(const function::BiConsumer<K, V>& action) const override {
+            void forEach(const function::BiConsumer<K, V>& action) const override {
                 gint mc = HashMap::modCount;
                 for (LINKEDNODE x = head; x != null && mc == HashMap::modCount; x = HashMap::afterOf(x))
                     action.accept(HashMap::keyOf(x), HashMap::valueOf(x));
@@ -1891,7 +1891,7 @@ namespace core {
                 try { return map.getOrNull(key); } catch (Throwable const& ex) { ex.throws($ftrace()); }
             }
 
-            void foreach(function::BiConsumer<K&, V&> const& action) override {
+            void forEach(function::BiConsumer<K&, V&> const& action) override {
                 gint modCount = map.modCount;
                 for (LINKEDNODE node = map.tail; node != null; node = prevOf(node)) {
                     if (modCount != map.modCount)
@@ -1902,7 +1902,7 @@ namespace core {
                 }
             }
 
-            void foreach(function::BiConsumer<K, V> const& action) const override {
+            void forEach(function::BiConsumer<K, V> const& action) const override {
                 gint modCount = map.modCount;
                 for (LINKEDNODE node = map.tail; node != null; node = prevOf(node)) {
                     if (modCount != map.modCount)
