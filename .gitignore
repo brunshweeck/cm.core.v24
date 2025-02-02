@@ -1,47 +1,22 @@
-HELP.md
-.gradle
-build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
-
 ### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+.bin/
 bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
 
 ### CLion ###
+.idea
+*.iws
+*.iml
+*.ipr
 Cmake/
 .cmake/
 .build/
 Debug/
 .debug/
 cmake-*/
-Utilities
-
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+Utilities/
+cmake-*/
 
 ### VS Code ###
 .vscode/
+build/
+.build/

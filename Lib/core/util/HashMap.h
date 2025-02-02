@@ -149,7 +149,7 @@ namespace core {
              * </p>
              * <p>
              * Tree bins (i.e., bins whose elements are all TreeNodes) are
-             * ordered primarily by hashCode, but in the case of ties, if two
+             * ordered primarily by hash, but in the case of ties, if two
              * elements are of the same "class C implements Comparable<C>",
              * type then their compareTo method is used for ordering. (We
              * conservatively check generic types via reflection to validate
@@ -157,9 +157,9 @@ namespace core {
              * of tree bins is worthwhile in providing worst-case O(log n)
              * operations when keys either have distinct hashes or are
              * orderable, Thus, performance degrades gracefully under
-             * accidental or malicious usages in which hashCode() methods
+             * accidental or malicious usages in which hash() methods
              * return values that are poorly distributed, as well as those in
-             * which many keys share a hashCode, so long as they are also
+             * which many keys share a hash, so long as they are also
              * Comparable. (If neither of these apply, we may waste about a
              * factor of two in time and space compared to taking no
              * precautions. But the only known cases stem from poor user
@@ -171,8 +171,8 @@ namespace core {
              * use them only when bins contain enough nodes to warrant use
              * (see TREEIFY_THRESHOLD). And when they become too small (due to
              * removal or resizing) they are converted back to plain bins.  In
-             * usages with well-distributed user hashCodes, tree bins are
-             * rarely used.  Ideally, under random hashCodes, the frequency of
+             * usages with well-distributed user hashs, tree bins are
+             * rarely used.  Ideally, under random hashs, the frequency of
              * nodes in bins follows a Poisson distribution
              * (http://en.wikipedia.org/wiki/Poisson_distribution) with a
              * parameter of about 0.5 on average for the default resizing
@@ -202,7 +202,7 @@ namespace core {
              * <p>
              * All applicable internal methods accept a hash code as an
              * argument (as normally supplied from a public method), allowing
-             * them to call each other without recomputing user hashCodes.
+             * them to call each other without recomputing user hashs.
              * Most internal methods also accept a "tab" argument, that is
              * normally the current table, but may be a new or old one when
              * resizing or converting.
@@ -860,7 +860,7 @@ namespace core {
             // ::::::::::::::::::::::::::: HashMap Utility ::::::::::::::::::::::::::::::::::::::
 
             /**
-             * Computes key.hashCode() and spreads (XORs) higher bits of hash
+             * Computes key.hash() and spreads (XORs) higher bits of hash
              * to lower.  Because the table uses power-of-two masking, sets of
              * hashes that vary only in bits above the current mask will
              * always collide. (Among known examples are sets of Float keys
@@ -1357,7 +1357,7 @@ namespace core {
 
                 /**
                  * Tie-breaking utility for ordering insertions when equal
-                 * hashCodes and non-comparable. We don't require a total
+                 * hashs and non-comparable. We don't require a total
                  * order, just a consistent insertion rule to maintain
                  * equivalence across rebalancings. Tie-breaking further than
                  * necessary simplifies testing a bit.

@@ -131,7 +131,7 @@ namespace core {
              * Returns the hash code value for this set.
              *
              * @return the hash code value for this set.
-             * @see java.lang.Object#hashCode()
+             * @see java.lang.Object#hash()
              * @stable ICU 2.6
              */
             gint hash() const override;

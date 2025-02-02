@@ -100,7 +100,7 @@ namespace core {
          *
          * @tparam E the type of elements maintained by this set
          *
-         * @see     Object::hashCode()
+         * @see     Object::hash()
          * @see     Collection
          * @see     Set
          * @see     HashSet

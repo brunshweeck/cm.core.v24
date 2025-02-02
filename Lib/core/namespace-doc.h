@@ -20,7 +20,7 @@
  * representing that value in such a way that a reference to it can be
  * stored in a variable of reference type.  These classes also provide
  * a number of methods for converting among primitive values, as well
- * as supporting such standard methods as equals and hashCode.  The
+ * as supporting such standard methods as equals and hash.  The
  * @c Void class is a non-instantiable class that holds a
  * reference to a @c Class object representing the type void.
  * </p>

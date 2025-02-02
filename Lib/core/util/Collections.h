@@ -845,7 +845,7 @@ namespace core {
              * collection, whether direct or via its iterator, result in an
              * @c UnsupportedOperationException.
              * <p>
-             * The returned collection does <i>not</i> pass the hashCode and equals
+             * The returned collection does <i>not</i> pass the hash and equals
              * operations through to the backing collection, but relies on
              * @c Object's @c equals and @c hash methods.  This
              * is necessary to preserve the contracts of these operations in the case
@@ -1132,7 +1132,7 @@ namespace core {
              *
              * <p>The returned collection does <i>not</i> pass the @c hash
              * and @c equals operations through to the backing collection, but
-             * relies on @c Object's equals and hashCode methods.  This is
+             * relies on @c Object's equals and hash methods.  This is
              * necessary to preserve the contracts of these operations in the case
              * that the backing collection is a set or a list.<p>
              *
@@ -1516,7 +1516,7 @@ namespace core {
 
                     gint hash() const override {
                         if (n == 0) return 1;
-                        // hashCode of n repeating elements is 31^n + elementHash * Sum(31^k, k = 0..n-1)
+                        // hash of n repeating elements is 31^n + elementHash * Sum(31^k, k = 0..n-1)
                         // this implementation completes in O(log(n)) steps taking advantage of
                         // 31^(2*n) = (31^n)^2 and Sum(31^k, k = 0..(2*n-1)) = Sum(31^k, k = 0..n-1) * (31^n + 1)
                         gint pow = 31;

@@ -1161,7 +1161,7 @@ namespace core {
         }
 
         gint WinNTFileSystem::hash(const File &f) {
-            /* Could make this more efficient: String.hashCodeIgnoreCase */
+            /* Could make this more efficient: String.hashIgnoreCase */
             return f.path().toLowerCase().hash() ^ 1234321;
         }
 

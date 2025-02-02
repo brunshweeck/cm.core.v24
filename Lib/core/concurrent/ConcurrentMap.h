@@ -43,7 +43,7 @@ namespace core {
             /**
              *
              * @note This implementation assumes that the ConcurrentMap cannot
-             * contain null values and @c get() returning null unambiguously means
+             * contain null values and @c getOrNull() returning null unambiguously means
              * the key is absent. Implementations which support null values
              * <b>must</b> override this default implementation.
              *
@@ -51,8 +51,8 @@ namespace core {
              */
             V& getOrDefault(K const& key, V const& defaultValue) override {
                 try {
-                    Object& value = getOrNull(key);
-                    return CORE_XCAST(V, value != null ? value : UNSAFE::copyInstance(defaultValue));
+                    ANY v = null;
+                    return (v = toAny(this->getrOrNull(key)) != null) ? toValue(v) : UNSAFE::copyInstance(defaultValue);
                 } catch (Throwable const& ex) { ex.throws($ftrace()); }
             }
 
@@ -60,7 +60,7 @@ namespace core {
              *
              *
              * @note This implementation assumes that the ConcurrentMap cannot
-             * contain null values and @c get() returning null unambiguously means
+             * contain null values and @c getOrNull() returning null unambiguously means
              * the key is absent. Implementations which support null values
              * <b>must</b> override this default implementation.
              *
@@ -68,8 +68,8 @@ namespace core {
              */
             V const& getOrDefault(K const& key, V const& defaultValue) const override {
                 try {
-                    Object const& value = getOrNull(key);
-                    return CORE_XCAST(V, value != null ? value : UNSAFE::copyInstance(defaultValue));
+                    ANY v = null;
+                    return (v = toAny(this->getrOrNull(key)) != null) ? toValue(v) : UNSAFE::copyInstance(defaultValue);
                 } catch (Throwable const& ex) { ex.throws($ftrace()); }
             }
 
@@ -90,17 +90,17 @@ namespace core {
              * be processed. Operation continues for subsequent entries.
              */
             void forEach(function::BiConsumer<K&, V&> const& action) override {
-                for (util::Entry<K, V>& entry : entrySet()) {
-                    KEY key = null;
-                    VALUE value = null;
+                for (util::Entry<K, V>& entry : this->entrySet()) {
+                    ANY key = null;
+                    ANY value = null;
                     try {
-                        key = (KEY) &entry.getKey();
-                        value = (VALUE) &entry.getValue();
+                        key = toAny(entry.getKey());
+                        value = toAny(entry.getValue());
                     } catch (IllegalStateException const& ise) {
                         // this usually means the entry is no longer in the map.
                         continue;
                     } catch (Throwable const& ex) { ex.throws($ftrace()); }
-                    action.accept(*key, *value);
+                    action.accept(toKey(key), toValue(value));
                 }
             }
 
@@ -110,7 +110,7 @@ namespace core {
              * @details The default implementation is equivalent to, for this
              * @c map:
              * @code
-             * for (Entry<K, V> const &entry : map.entrySet()) {
+             * for (Entry<K, V> entry : map.entrySet()) {
              *   action.accept(entry.getKey(), entry.getValue());
              * }
              * @endcode
@@ -121,17 +121,17 @@ namespace core {
              * be processed. Operation continues for subsequent entries.
              */
             void forEach(function::BiConsumer<K, V> const& action) const override {
-                for (util::Entry<K, V> const& entry : entrySet()) {
-                    KEY key = null;
-                    VALUE value = null;
+                for (util::Entry<K, V>& entry : this->entrySet()) {
+                    ANY key = null;
+                    ANY value = null;
                     try {
-                        key = (KEY) &entry.getKey();
-                        value = (VALUE) &entry.getValue();
+                        key = toAny(entry.getKey());
+                        value = toAny(entry.getValue());
                     } catch (IllegalStateException const& ise) {
                         // this usually means the entry is no longer in the map.
                         continue;
                     } catch (Throwable const& ex) { ex.throws($ftrace()); }
-                    action.accept(*key, *value);
+                    action.accept(toKey(key), toValue(value));
                 }
             }
 
@@ -266,8 +266,9 @@ namespace core {
             /**
              *
              *
-             * @implSpec
-             * <p>The default implementation is equivalent to, for this @c map:
+             * @details
+             * <p>
+             * The default implementation is equivalent to, for this @c map:
              * @code
              * for (Entry<K,V> &entry : map.entrySet()) {
              *   K k;
@@ -282,26 +283,25 @@ namespace core {
              * The default implementation may retry these steps when multiple
              * threads attempt updates including potentially calling the function
              * repeatedly for a given key.
-             *
-             * <p>This implementation assumes that the ConcurrentMap cannot contain null
+             * </p>
+             * <p>
+             * This implementation assumes that the ConcurrentMap cannot contain null
              * values and @c get() returning null unambiguously means the key is
              * absent. Implementations which support null values <strong>must</strong>
              * override this default implementation.
-             *
+             * </p>
              * @throws UnsupportedOperationException
              * @throws ClassCastException
              * @throws IllegalArgumentException
              */
             void replaceAll(function::BiFunction<K&, V&, V> const& function) override {
                 try {
-                    forEach([&](K const& key, V const& value) {
-                        VALUE v = (VALUE) &value;
-                        while (!replace(key, *v, function.apply(key, value))) {
+                    forEach([&](K& key, V& value) {
+                        ANY v = toAny(value);
+                        while (!replace(key, toValue(v), function.apply(key, value))) {
                             // v changed or k is gone
-                            Object& obj = getOrNull(key);
-                            if (obj == null)
+                            if ((v = toAny(this->getOrNull(key))) == null)
                                 break;
-                            v = (VALUE) &CORE_XCAST(V, obj);
                         }
                     });
                 } catch (Throwable const& ex) { ex.throws($ftrace()); }
@@ -310,10 +310,9 @@ namespace core {
             /**
              *
              *
-             * @implSpec
+             * @details
              * The default implementation is equivalent to the following steps for this
              * @c map:
-             *
              * @code
              * V oldValue, newValue;
              * return ((oldValue = map.get(key)) == null
@@ -323,35 +322,31 @@ namespace core {
              *   : oldValue;
              * @endcode
              *
-             * <p>This implementation assumes that the ConcurrentMap cannot contain null
+             * <p>
+             * This implementation assumes that the ConcurrentMap cannot contain null
              * values and @c get() returning null unambiguously means the key is
              * absent. Implementations which support null values <strong>must</strong>
              * override this default implementation.
-             *
+             * </p>
              * @throws UnsupportedOperationException
              * @throws ClassCastException
              * @throws IllegalArgumentException
              */
-            Object& computeIfAbsent(K const& key, function::Function<K, V> const& mappingFunction) override {
+            Object& computeIfAbsent(K const& key, function::Function<K, V&> const& mappingFunction) override {
+                ANY oldValue = null, newValue = null;
                 try {
-                    Object& oldValue = getOrNull(key);
-                    if (oldValue == null) {
-                        V& newValue = UNSAFE::copyInstance(mappingFunction.apply(key));
-                        if (newValue != null) {
-                            Object& old = putIfAbsent(key, newValue);
-                            if (old == null)
-                                return newValue;
-                            return old;
-                        }
-                    }
-                    return oldValue;
+                    return ((oldValue = toAny(this->getOrNull(key)) == null)
+                               && (newValue = toAny(UNSAFE::copyInstance(mappingFunction.apply(key)))) != null
+                               && (oldValue = toAny(putIfAbsent(key, toValue(newValue)))) == null)
+                               ? toValue(newValue)
+                               : toValue(oldValue);
                 } catch (Throwable const& ex) { ex.throws($ftrace()); }
             }
 
             /**
              *
              *
-             * @implSpec
+             * @details
              * The default implementation is equivalent to performing the following
              * steps for this @c map:
              *
@@ -368,26 +363,25 @@ namespace core {
              * When multiple threads attempt updates, map operations and the
              * remapping function may be called multiple times.
              *
-             * <p>This implementation assumes that the ConcurrentMap cannot contain null
+             * <p>
+             * This implementation assumes that the ConcurrentMap cannot contain null
              * values and @c get() returning null unambiguously means the key is
              * absent. Implementations which support null values <strong>must</strong>
              * override this default implementation.
-             *
+             * </p>
              * @throws UnsupportedOperationException
              * @throws ClassCastException
              * @throws IllegalArgumentException
              */
             Object& computeIfPresent(K const& key, function::BiFunction<K, V&, V> const& remappingFunction) override {
-                for (;;) {
-                    Object& oldValue = getOrNull(key);
-                    if (oldValue == null)
-                        break;
+                for (ANY oldValue = null, newValue = null; (oldValue = toAny(this->getOrNull(key))) != null;) {
                     try {
-                        V& value = CORE_XCAST(V, oldValue);
-                        V& newValue = UNSAFE::copyInstance(remappingFunction.apply(key, value));
-                        if (newValue != null ? replace(key, value, newValue) : remove(key, value))
-                            return newValue;
+                        newValue = toAny(UNSAFE::copyInstance(remappingFunction.apply(key, toValue(oldValue))));
                     } catch (Throwable const& ex) { ex.throws($ftrace()); }
+                    if ((newValue == null)
+                            ? remove(key, toValue(oldValue))
+                            : replace(key, toValue(oldValue), toValue(newValue)))
+                        return toValue(newValue);
                 }
                 return null;
             }
@@ -395,10 +389,9 @@ namespace core {
             /**
              *
              *
-             * @implSpec
+             * @details
              * The default implementation is equivalent to performing the following
              * steps for this @c map:
-             *
              * @code
              * for (;;) {
              *   V oldValue = map.get(key);
@@ -416,11 +409,12 @@ namespace core {
              * When multiple threads attempt updates, map operations and the
              * remapping function may be called multiple times.
              *
-             * <p>This implementation assumes that the ConcurrentMap cannot contain null
+             * <p>
+             * This implementation assumes that the ConcurrentMap cannot contain null
              * values and @c get() returning null unambiguously means the key is
              * absent. Implementations which support null values <strong>must</strong>
              * override this default implementation.
-             *
+             * </p>
              * @throws UnsupportedOperationException
              * @throws ClassCastException
              * @throws IllegalArgumentException
@@ -432,17 +426,16 @@ namespace core {
                     // if putIfAbsent fails, opportunistically use its return value
                 HAVE_OLD:
                     for (;;) {
-                        Object& newValue = old == null && !Class<V>::hasInstance(null)
-                                               ? null
-                                               : UNSAFE::copyInstance(remappingFunction.apply(key, toValue(old)));
+                        ANY newValue = (old == null)
+                                           ? old
+                                           : toAny(UNSAFE::copyInstance(remappingFunction.apply(key, toValue(old))));
                         if (newValue != null) {
                             if (old != null) {
-                                if (replace(key, toValue(old), CORE_XCAST(V, newValue)))
-                                    return newValue;
+                                if (replace(key, toValue(old), toValue(newValue)))
+                                    return toValue(newValue);
                             }
-                            old = toAny(putIfAbsent(key, CORE_XCAST(V, newValue)));
-                            if (old == null)
-                                return newValue;
+                            if ((old = toAny(putIfAbsent(key, toValue(newValue)))) == null)
+                                return toValue(newValue);
                             goto HAVE_OLD;
                         } else if (old == null || remove(key, toValue(old)))
                             return null;
@@ -454,10 +447,9 @@ namespace core {
             /**
              *
              *
-             * @implSpec
+             * @details
              * The default implementation is equivalent to performing the following
              * steps for this @c map:
-             *
              * @code
              * for (;;) {
              *   V oldValue = map.get(key);
@@ -477,11 +469,12 @@ namespace core {
              * When multiple threads attempt updates, map operations and the
              * remapping function may be called multiple times.
              *
-             * <p>This implementation assumes that the ConcurrentMap cannot contain null
+             * <p>
+             * This implementation assumes that the ConcurrentMap cannot contain null
              * values and @c get() returning null unambiguously means the key is
              * absent. Implementations which support null values <strong>must</strong>
              * override this default implementation.
-             *
+             * </p>
              * @throws UnsupportedOperationException
              * @throws ClassCastException
              * @throws IllegalArgumentException
@@ -495,31 +488,26 @@ namespace core {
                 HAVE_OLD:
                     for (;;) {
                         if (old != null) {
-                            Object& newValue = old == null && !Class<V>::hasInstance(null)
-                                                   ? null
-                                                   : UNSAFE::copyInstance(remappingFunction.apply(key, toValue(old)));
-                            if (newValue != null) {
+                            ANY new_ = (old == null)
+                                           ? old
+                                           : toAny(UNSAFE::copyInstance(remappingFunction.apply(key, toValue(old))));
+                            if (new_ != null) {
                                 if (old != null) {
-                                    if (replace(key, toValue(old), CORE_XCAST(V, newValue)))
-                                        return newValue;
+                                    if (replace(key, toValue(old), toValue(new_)))
+                                        return toValue(new_);
                                 }
                             } else if (remove(key, toValue(old)))
                                 return null;
                             goto RESTART;
                         }
                         V& val = UNSAFE::copyInstance(value);
-                        old = toAny(putIfAbsent(key, val));
-                        if (old == null)
+                        if ((old = toAny(putIfAbsent(key, val))) == null)
                             return val;
-                        UNSAFE::deleteRegInstance(val);
+                        if (toAny(val) != toAny(value)) UNSAFE::deleteRegInstance(val);
                         goto RESTART;
                     }
                 }
             }
-
-
-            CORE_IMPORT_FIELD_OR_METHOD($(util::Map<K, V>), getOrNull);
-            CORE_IMPORT_FIELD_OR_METHOD($(util::Map<K, V>), entrySet);
 
         private:
             static ANY toAny(Object const& obj) {

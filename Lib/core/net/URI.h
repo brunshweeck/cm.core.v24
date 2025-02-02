@@ -1369,7 +1369,7 @@ namespace core {
             // -- Utility methods for string-field comparison and hashing --
 
             // These methods return appropriate values for null string arguments,
-            // thereby simplifying the equals, hashCode, and compareTo methods.
+            // thereby simplifying the equals, hash, and compareTo methods.
             //
             // The case-ignoring methods should only be applied to strings whose
             // characters are all known to be US-ASCII.  Because of this restriction,

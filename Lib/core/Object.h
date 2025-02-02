@@ -155,7 +155,7 @@ namespace core {
          * whether the given object's class overrides hash().
          * The hash code for the null reference is zero.
          *
-         * @param x object for which the hashCode is to be calculated
+         * @param x object for which the hash is to be calculated
          * @return  the hash code
          * @see Object::hash
          */

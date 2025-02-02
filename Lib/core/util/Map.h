@@ -568,7 +568,7 @@ namespace core {
              * Returns the hash code value for this map.  The hash code of a map is
              * defined to be the sum of the hash codes of each entry in the map's
              * @c entrySet() view.  This ensures that @c m1.equals(m2)
-             * implies that @code m1.hashCode() == m2.hashCode() @endcode for any two maps
+             * implies that @code m1.hash() == m2.hash() @endcode for any two maps
              * @c m1 and @c m2, as required by the general contract of @c Object::hash.
              *
              * @return the hash code value for this map
@@ -1130,7 +1130,7 @@ namespace core {
              * @throws IllegalArgumentException if some property of the specified key
              *         or value prevents it from being stored in this map (@em optional )
              */
-            virtual Object& computeIfAbsent(K const& key, function::Function<K, V> const& mappingFunction) {
+            virtual Object& computeIfAbsent(K const& key, function::Function<K, V&> const& mappingFunction) {
                 Object& v = getOrNull(key);
                 if (v == null) {
                     try {

@@ -50,7 +50,7 @@ namespace core {
              * @param obj an object
              * @return the hash code of a non-@c null argument and 0 for
              * a @c null argument
-             * @see Object#hashCode
+             * @see Object#hash
              */
             static gint hash(Object const& obj);
 
@@ -58,27 +58,27 @@ namespace core {
              * Generates a hash code for a sequence of input values. The hash
              * code is generated as if all the input values were placed into an
              * array, and that array were hashed by calling {@link
-             * Arrays#hashCode(Object[])}.
+             * Arrays#hash(Object[])}.
              *
              * <p>This method is useful for implementing {@link
-             * Object#hashCode()} on objects containing multiple fields. For
+             * Object#hash()} on objects containing multiple fields. For
              * example, if an object that has three fields, @c x, {@code
              * y}, and {@code z}, one could write:
              *
              * <blockquote><pre>
-             * &#064;Override public int hashCode() {
+             * &#064;Override public int hash() {
              *     return Objects.hash(x, y, z);
              * }
              * </pre></blockquote>
              *
              * <b>Warning: When a single object reference is supplied, the returned
              * value does not equal the hash code of that object reference.</b> This
-             * value can be computed by calling {@link #hashCode(Object)}.
+             * value can be computed by calling {@link #hash(Object)}.
              *
              * @param values the values to be hashed
              * @return a hash value of the sequence of input values
-             * @see Arrays#hashCode(Object[])
-             * @see List#hashCode
+             * @see Arrays#hash(Object[])
+             * @see List#hash
              */
             template <class... Args>
             static gint hash(Args const&... values);
