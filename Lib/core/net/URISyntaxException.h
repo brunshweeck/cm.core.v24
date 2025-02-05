@@ -4,7 +4,8 @@
 
 #ifndef CORE24_URISYNTAXEXCEPTION_H
 #define CORE24_URISYNTAXEXCEPTION_H
-#include "core/Exception.h"
+
+#include <core/Exception.h>
 
 namespace core {
     namespace net {

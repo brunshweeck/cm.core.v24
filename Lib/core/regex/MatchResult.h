@@ -4,7 +4,8 @@
 
 #ifndef CORE24_MATCHRESULT_H
 #define CORE24_MATCHRESULT_H
-#include "core/Object.h"
+
+#include <core/Object.h>
 
 namespace core {
     namespace regex {
@@ -94,7 +95,7 @@ namespace core {
              * to obtain the group number from the @c name argument, and uses it
              * as argument to an invocation of @b #start(gint).
              */
-            virtual gint start(String const &name) const;
+            virtual gint start(String const& name) const;
 
             /**
              * Returns the offset after the last character matched.
@@ -160,7 +161,7 @@ namespace core {
              * to obtain the group number from the @c name argument, and uses it
              * as argument to an invocation of @b end(gint).
              */
-            virtual gint end(String const &name) const;
+            virtual gint end(String const& name) const;
 
             /**
              * Returns the input subsequence matched by the previous match.
@@ -262,17 +263,18 @@ namespace core {
              * to obtain the group number from the @c name argument, and uses it
              * as argument to an invocation of @b group(int).
              */
-            virtual String group(String const &name) const;
+            virtual String group(String const& name) const;
 
             /**
              * Returns the number of capturing groups in this match result's pattern.
              *
              * <p> Group zero denotes the entire pattern by convention. It is not
              * included in this count.
-             *
+             * </p>
              * <p> Any non-negative integer smaller than or equal to the value
              * returned by this method is guaranteed to be a valid group index for
-             * this matcher.  </p>
+             * this matcher.
+             * </p>
              *
              * @return The number of capturing groups in this matcher's pattern
              */
@@ -290,11 +292,11 @@ namespace core {
              * @note The default implementation of this method always throws
              *          @b UnsupportedOperationException
              *
-             * @apiNote
+             * @details
              * This method must be overridden by an implementation that supports
              * named groups.
              */
-            virtual util::Map<String, Integer> const &namedGroups() const;
+            virtual util::Map<String, Integer> const& namedGroups() const;
 
             /**
              * Returns whether @c this contains a valid match from
@@ -311,7 +313,7 @@ namespace core {
             virtual gbool hasMatch() const;
 
         private:
-            gint groupNumber(String const &name) const;
+            gint groupNumber(String const& name) const;
         };
     } // regex
 } // core

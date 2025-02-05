@@ -10,12 +10,12 @@ using namespace core::util;
 using namespace core::concurrent;
 using namespace core::random;
 
+#define CORE_LAMBDA_TRY_RETHROW(action, executionPoint) \
+    [&]() { try { action; } catch(Throwable const& ex) { ex.throws(executionPoint); } catch(...) { throw; } }()
+
+#define CORE_TRY_(action) CORE_LAMBDA_TRY_RETHROW(action, $ftrace())
+
 int main() {
-    auto queue = ConcurrentLinkedQueue();
-    auto& rng = RandomGenerator::forName("MersenneTwister");
-    for (gint i = 0; i < (1 << 15); i++) {
-        Long l = rng.nextLong();
-        queue.add(l);
-    }
-    return rng.properties().equidistribution();
+    CORE_TRY_RETHROW((IllegalArgumentException().throws($ftrace())))
+    return 0;
 }

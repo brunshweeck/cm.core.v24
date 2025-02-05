@@ -128,20 +128,20 @@ namespace core {
             }
 
             f2 = abs;
-            digit = CORE_CAST(gint, f2);
+            digit = (gint) f2;
             ca[next++] = Character::forDigit(digit, 10);
             ca[next++] = '.';
             decimalPrecision -= (decimalPrecision > 7) ? 2 : 1;
             do {
-                f2 = (f2 - CORE_CAST(gfloat, digit)) * 10.0f;
-                digit = CORE_CAST(gint, f2);
+                f2 = (f2 - (gfloat) digit) * 10.0f;
+                digit = (gint) f2;
                 ca[next++] = Character::forDigit(digit, 10);
                 decimalPrecision -= 1;
             } while (decimalPrecision > 0);
 
             // round result and remove all trailing zeros
-            f2 = (f2 - CORE_CAST(gfloat, digit)) * 10.0f;
-            digit = CORE_CAST(gint, f2);
+            f2 = (f2 - (gfloat) digit) * 10.0f;
+            digit = (gint) f2;
             if (digit >= 5) {
                 // round value and remove all trailing zeros
                 gbool finished = false;
@@ -205,8 +205,8 @@ namespace core {
 
                 // Write the Digits of Unit part
                 do {
-                    digit = CORE_CAST(gint, f2);
-                    f2 = (f2 - CORE_CAST(gfloat, digit)) * 10.0F;
+                    digit = (gint) f2;
+                    f2 = (f2 - (gfloat) digit) * 10.0F;
                     ca[next++] = Character::forDigit(digit, 10);
                     decimalPrecision -= 1;
                     exp -= 1;
@@ -216,22 +216,22 @@ namespace core {
                     decimalPrecision -= 1;
             }
 
-            // Writing the Degits of Decimal part
+            // Writing the Digits of Decimal part
             do {
-                digit = CORE_CAST(gint, f2);
-                f2 = (f2 - CORE_CAST(gfloat, digit)) * 10.0F;
+                digit = (gint) f2;
+                f2 = (f2 - (gfloat) digit) * 10.0F;
                 ca[next++] = Character::forDigit(digit, 10);
                 decimalPrecision -= 1;
             } while (decimalPrecision > 0);
 
             // Rounding
-            digit = CORE_CAST(gint, f2);
+            digit = (gint) f2;
             if (digit == 4) {
-                // Verifing the next digits while digits have value 4
+                // Verifying the next digits while digits have value 4
                 gint nextDigit = digit;
                 do {
-                    f2 = (f2 - CORE_CAST(gfloat, nextDigit)) * 10.0F;
-                    nextDigit = CORE_CAST(gint, f2);
+                    f2 = (f2 - (gfloat) nextDigit) * 10.0F;
+                    nextDigit = (gint) f2;
                 } while (nextDigit == 4);
 
                 // Rounds digit at current position
@@ -417,7 +417,7 @@ namespace core {
                     if (ch < '0' || ch > '9')
                         goto throwIllegalFormat;
                     gchar const digit = ch - '0';
-                    retVal = retVal * CORE_CAST(gfloat, base) + CORE_CAST(gfloat, digit);
+                    retVal = retVal * (gfloat) base + (gfloat) digit;
                     next += 1;
                 }
                 return (gfloat) sign * retVal;
@@ -492,16 +492,14 @@ namespace core {
                                 next += 1;
                             }
                         }
-                        return CORE_CAST(
-                            gfloat,
-                            sign * (retVal + decimal * Math::pow(10, -count)) * Math::pow(10, sign2 * exponent)
-                        );
+                        return (gfloat) ((gdouble) sign * ((gdouble) retVal + decimal * Math::pow(10, -count))
+                            * Math::pow(10, sign2 * exponent));
                     } else
                         goto throwIllegalFormat;
-                    retVal = retVal * 10 + CORE_CAST(gfloat, digit);
+                    retVal = retVal * 10 + (gfloat) digit;
                     next += 1;
                 }
-                return (gfloat) sign * retVal;
+                return sign * retVal;
             case 16: {
                 gint bit32 = 0;
                 gint shift = PRECISION - 1;
@@ -527,13 +525,13 @@ namespace core {
                     if (shift == 23) {
                         switch (digit) {
                             case 1:
-                                bit32 |= CORE_CAST(gint, digit) << 23;
+                                bit32 |= (gint) digit << 23;
                                 shift -= 4;
                                 integerBitsLen = 0;
                                 break;
                             case 2:
                             case 3:
-                                bit32 |= CORE_CAST(gint, digit) << 22;
+                                bit32 |= (gint) digit << 22;
                                 shift -= 5;
                                 integerBitsLen = 1;
                                 break;
@@ -541,32 +539,32 @@ namespace core {
                             case 5:
                             case 6:
                             case 7:
-                                bit32 |= CORE_CAST(gint, digit) << 21;
+                                bit32 |= (gint) digit << 21;
                                 shift -= 6;
                                 integerBitsLen = 2;
                                 break;
                             default:
-                                bit32 |= CORE_CAST(gint, digit) << 20;
+                                bit32 |= (gint) digit << 20;
                                 shift -= 7;
                                 integerBitsLen = 3;
                                 break;
                         }
                     } else if (shift >= 0) {
-                        bit32 |= CORE_CAST(gint, digit) << shift;
+                        bit32 |= (gint) digit << shift;
                         shift -= 4;
                     } else if (shift >= -4) {
                         switch (shift) {
                             case -1:
-                                bit32 |= (CORE_CAST(gint, digit) & 0xE) >> 1;
+                                bit32 |= ((gint) digit & 0xE) >> 1;
                                 rounded = (digit & 0x1) != 0;
                                 break;
                             case -2:
-                                bit32 |= (CORE_CAST(gint, digit) & 0xC) >> 2;
+                                bit32 |= ((gint) digit & 0xC) >> 2;
                                 rounded = (digit & 0x2) != 0;
                                 sticky = (digit & 0x1) != 0;
                                 break;
                             case -3:
-                                bit32 |= (CORE_CAST(gint, digit) & 0x8) >> 3;
+                                bit32 |= ((gint) digit & 0x8) >> 3;
                                 rounded = (digit & 0x4) != 0;
                                 sticky = (digit & 0x3) != 0;
                                 break;
@@ -601,21 +599,21 @@ namespace core {
                             else
                                 goto throwIllegalFormat;
                             if (shift >= 0) {
-                                bit32 |= CORE_CAST(gint, digit) << shift;
+                                bit32 |= (gint) digit << shift;
                                 shift -= 4;
                             } else if (shift >= -4) {
                                 switch (shift) {
                                     case -1:
-                                        bit32 |= (CORE_CAST(gint, digit) & 0xE) >> 1;
+                                        bit32 |= ((gint) digit & 0xE) >> 1;
                                         rounded = (digit & 0x1) != 0;
                                         break;
                                     case -2:
-                                        bit32 |= (CORE_CAST(gint, digit) & 0xC) >> 2;
+                                        bit32 |= ((gint) digit & 0xC) >> 2;
                                         rounded = (digit & 0x2) != 0;
                                         sticky = (digit & 0x1) != 0;
                                         break;
                                     case -3:
-                                        bit32 |= (CORE_CAST(gint, digit) & 0x8) >> 3;
+                                        bit32 |= ((gint) digit & 0x8) >> 3;
                                         rounded = (digit & 0x4) != 0;
                                         sticky = (digit & 0x3) != 0;
                                         break;
@@ -735,15 +733,15 @@ namespace core {
     }
 
     gbyte Float::byteValue() const {
-        return CORE_CAST(gbyte, value);
+        return (gbyte) value;
     }
 
     gshort Float::shortValue() const {
-        return CORE_CAST(gshort, value);
+        return (gshort) value;
     }
 
     gint Float::intValue() const {
-        return CORE_CAST(gint, value);
+        return (gint) value;
     }
 
     glong Float::longValue() const {
@@ -778,11 +776,11 @@ namespace core {
     }
 
     gint Float::toRawIntBits(gfloat value) {
-        return *CORE_CAST(Class<gint>::Pointer, &value);
+        return *(Class<gint>::Pointer) &value;
     }
 
     gfloat Float::fromIntBits(gint bits) {
-        return *CORE_CAST(Class<gfloat>::Pointer, &bits);
+        return *(Class<gfloat>::Pointer) &bits;
     }
 
     gfloat Float::fromFloat16(gshort floatBinary16) {
@@ -810,7 +808,7 @@ namespace core {
             // For subnormal binary16 values and 0, the numerical
             // value is 2^24 * the significand as an integer (no
             // implicit bit).
-            return sign * (0x1p-24F * CORE_CAST(gfloat, bin16SignificandBits));
+            return sign * (0x1p-24F * (gfloat) bin16SignificandBits);
         } else if (bin16Exp == 16) {
             return (bin16SignificandBits == 0)
                        ? sign * POSITIVE_INFINITY
@@ -827,24 +825,16 @@ namespace core {
 
     gshort Float::toFloat16(gfloat f) {
         gint bit32 = toIntBits(f);
-        gshort const sign = CORE_CAST(gshort, (bit32 & FloatConsts::SIGN_BIT_MASK) >> 16);
+        gshort const sign = (gshort) ((bit32 & FloatConsts::SIGN_BIT_MASK) >> 16);
         if (isNaN(f)) {
             // Preserve sign and attempt to preserve significand bits
-            return CORE_CAST(gshort,
-                             sign
-                             | 0x7c00 // max exponent + 1
-                             // Preserve high-order-bit of float NaN in the
-                             // binary16 result NaN (tenth bit); OR in remaining
-                             // bits into lower 9 bits of binary 16 significand.
-                             | (bit32 & 0x007fe000) >> 13 // 10 bits
-                             | (bit32 & 0x00001ff0) >> 4 //  9 bits
-                             | (bit32 & 0x0000000f) // 4 bits
-            );
+            return (gshort) (sign | 0x7c00 | (bit32 & 0x007fe000) >> 13
+                | (bit32 & 0x00001ff0) >> 4 | (bit32 & 0x0000000f));
         }
         gfloat const uVal = Math::abs(f);
         // The overflow threshold is binary16 MAX_VALUE + 1/2 ulp
         if (uVal >= (0x1.ffcp15F + 0x0.002p15F))
-            return CORE_CAST(gshort, sign | 0x7c00); // Positive or negative infinity
+            return (gshort) (sign | 0x7c00); // Positive or negative infinity
         // Smallest magnitude nonzero representable binary16 value
         // is equal to 0x1.0p-24; half-way and smaller rounds to zero.
         if (uVal <= 0x1.0p-24F * 0.5F) {
@@ -871,7 +861,7 @@ namespace core {
         gint fSignificandBits = bit32 & 0x007fffff | msb;
 
         // Significand bits as if using rounding to zero (truncation).
-        gshort significandBits = CORE_CAST(gshort, fSignificandBits >> (13 + exponentDiff));
+        gshort significandBits = (gshort) (fSignificandBits >> (13 + exponentDiff));
 
         // For round to nearest even, determining whether to
         // round up (in magnitude) is a function of the least
@@ -896,7 +886,7 @@ namespace core {
         // not just the significant; quantity is added to the exponent
         // to implement a carry-out from rounding the significand.
         //        CORE_ASSERT((0xf800 & significandBits) == 0x0);
-        return CORE_CAST(gshort, sign | (((exp + 15) << 10) + significandBits));
+        return (gshort) (sign | (exp + 15 << 10) + significandBits);
     }
 
     gint Float::compareTo(Float const& other) const {

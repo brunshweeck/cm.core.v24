@@ -2,10 +2,11 @@
 // Created by bruns on 13/10/2024.
 //
 
+#include "Pattern.h"
+
 #include <core/StringArray.h>
 #include <core/XString.h>
 #include <core/regex/Matcher.h>
-#include <core/regex/Pattern.h>
 #include <core/util/ArrayList.h>
 #include <core/util/Map.h>
 #include <meta/regex/Pattern.Self.h>
@@ -156,7 +157,7 @@ namespace core {
             xs.append("\\Q");
             gint current = 0;
             do {
-                xs.append(s, current, slashEIndex).append("\\E\\\\E\\Q");
+                xs.append(s, current, slashEIndex).append(R"(\E\\E\Q)"_Sl);
                 current = slashEIndex + 2;
             } while ((slashEIndex = s.indexOf("\\E", current)) != -1);
 

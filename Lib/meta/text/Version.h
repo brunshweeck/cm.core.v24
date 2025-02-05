@@ -407,10 +407,6 @@ namespace core {
 
         private:
             /**
-             * Map of singletons
-             */
-            static util::HashMap<Integer, Version> VERSIONS;
-            /**
              * Last byte mask
              */
             static CORE_FAST gint LAST_BYTE_MASK = 0xFF;
@@ -418,8 +414,6 @@ namespace core {
              * Error statement string
              */
             static const String INVALID_VERSION_NUMBER;
-
-            static concurrent::ReentrantLock sync;
         };
     } // text
 } // core

@@ -142,7 +142,6 @@ namespace core {
              * the mode used for matching all the input.
              */
             static CORE_FAST gint ENDANCHOR = 1;
-
             static CORE_FAST gint NOANCHOR = 0;
 
             gint mutable acceptMode = NOANCHOR;
@@ -181,7 +180,7 @@ namespace core {
             Array<HashSet> localsPos;
 
             /**
-             * Boolean indicating whether or not more input could change
+             * Boolean indicating whether more input could change
              * the results of the last match.
              *
              * If hitEnd is true, and a match was found, then more input
@@ -660,7 +659,7 @@ namespace core {
              *
              * <p>
              * Note that backslashes (@c \) and dollar signs (@c $) in
-             * the replacement string may cause the results to be different than if it
+             * the replacement string may cause the results to be different from if it
              * were being treated as a literal replacement string. Dollar signs may be
              * treated as references to captured subsequences as described above, and
              * backslashes are used to escape literal characters in the replacement
@@ -736,7 +735,7 @@ namespace core {
              * </p>
              * <p>
              * Note that backslashes (@c \) and dollar signs (@c $) in
-             * the replacement string may cause the results to be different than if it
+             * the replacement string may cause the results to be different from if it
              * were being treated as a literal replacement string. Dollar signs may be
              * treated as references to captured subsequences as described above, and
              * backslashes are used to escape literal characters in the replacement
@@ -779,7 +778,7 @@ namespace core {
              * </p>
              * <p>
              * Note that backslashes (@c \) and dollar signs (@c $) in
-             * a replacement string may cause the results to be different than if it
+             * a replacement string may cause the results to be different from if it
              * were being treated as a literal replacement string. Dollar signs may be
              * treated as references to captured subsequences as described above, and
              * backslashes are used to escape literal characters in the replacement
@@ -884,7 +883,7 @@ namespace core {
              * </p>
              * <p>
              * Note that backslashes (@c \) and dollar signs (@c $) in
-             * the replacement string may cause the results to be different than if it
+             * the replacement string may cause the results to be different from if it
              * were being treated as a literal replacement string. Dollar signs may be
              * treated as references to captured subsequences as described above, and
              * backslashes are used to escape literal characters in the replacement
@@ -992,7 +991,7 @@ namespace core {
              * </p>
              * @return @c true iff this matcher is using transparent bounds,
              *         @c false otherwise.
-             * @see regex::Matcher::useTransparentBounds(gbool)
+             * @see regex::Matcher::useTransparentBounds(bool)
              */
             gbool hasTransparentBounds() const;
 
@@ -1015,7 +1014,7 @@ namespace core {
              * region are opaque to lookahead, lookbehind, and boundary matching
              * constructs that may try to see beyond them. Those constructs cannot
              * look past the boundaries so they will fail to match anything outside
-             * of the region.
+             *  the region.
              * </p>
              * <p>
              * By default, a matcher uses opaque bounds.
@@ -1060,7 +1059,7 @@ namespace core {
              *
              * <p> By default, a matcher uses anchoring region boundaries.
              *
-             * @param  b a boolean indicating whether or not to use anchoring bounds.
+             * @param  b a boolean indicating whether to use anchoring bounds.
              * @return this matcher
              * @see java.util.regex.Matcher#hasAnchoringBounds
              */
@@ -1130,7 +1129,7 @@ namespace core {
              * of the match as it proceeds in this matcher.
              *
              * Matcher.from is not set here, because it is the "hard" boundary
-             * of the start of the search which anchors will set to. The from param
+             * of the start of the search which anchors will set to. The form param
              * is the "soft" boundary of the start of the search, meaning that the
              * regex tries to match at that index but ^ won't match there. Subsequent
              * calls to the search methods start at a new "soft" boundary which is

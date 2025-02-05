@@ -1288,7 +1288,7 @@ namespace core {
             virtual Object& compute(K const& key, function::BiFunction<K, V&, V> const& remappingFunction) {
                 Object& oldValue = getOrNull(key);
                 Object& newValue = oldValue == null && !Class<V>::hasInstance(oldValue)
-                                       ? null
+                                       ? (Object &)null
                                        : UNSAFE::copyInstance(remappingFunction.apply(key, CORE_XCAST(V, oldValue)));
                 if (newValue == null) {
                     // delete mapping
@@ -1302,7 +1302,7 @@ namespace core {
                     }
                 } else {
                     // add or replace old mapping
-                    put(key, newValue);
+                    put(key, CORE_XCAST(V, newValue));
                     return newValue;
                 }
             }
@@ -1384,13 +1384,13 @@ namespace core {
                 Object& oldValue = getOrNull(key);
                 V const& newValue = (oldValue == null)
                                         ? value
-                                        : remappingFunction.apply(CORE_XCAST(V, oldValue), value);
+                                        : UNSAFE::copyInstance(remappingFunction.apply(CORE_XCAST(V, oldValue), value));
                 if (newValue == null) {
                     remove(key);
                 } else {
-                    V& value = UNSAFE::copyInstance(newValue);
-                    put(key, value);
-                    return value;
+                    V& v = UNSAFE::copyInstance(newValue);
+                    put(key, v);
+                    return v;
                 }
                 return UNSAFE::copyInstance(newValue);
             }

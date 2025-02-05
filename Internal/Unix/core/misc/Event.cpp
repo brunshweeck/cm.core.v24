@@ -2,8 +2,9 @@
 // Created by bruns on 22/03/2024.
 //
 
+#include "Event.h"
+
 #include <errno.h>
-#include <core/misc/Event.h>
 #include <core/time/Chrono.h>
 #include <core/time/LocalDateTime.h>
 

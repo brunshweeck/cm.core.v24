@@ -2,39 +2,40 @@
 // Created by bruns on 15/10/2024.
 //
 
-#include <core/regex/Matcher.h>
+#include "Matcher.h"
 
-#include "core/io/IOException.h"
-#include "core/util/Map.h"
-#include "meta/regex/Pattern.ASCII.h"
-#include "meta/regex/Pattern.Node.h"
-#include "meta/regex/Pattern.Self.h"
-#include "core/IndexOutOfBoundsException.h"
-#include "core/util/List.h"
+#include <core/IndexOutOfBoundsException.h>
+#include <core/io/IOException.h>
+#include <core/util/List.h>
+#include <core/util/Map.h>
+#include <meta/regex/Pattern.ASCII.h>
+#include <meta/regex/Pattern.Node.h>
+#include <meta/regex/Pattern.Self.h>
 
 namespace core {
     using namespace util;
     using namespace text;
     using namespace function;
 
+    CORE_WARNING_PUSH
+    CORE_WARNING_DISABLE_DEPRECATED
+
     namespace regex {
+        Matcher::Matcher() : parent("", 0) {}
 
-        Matcher::Matcher() : parent("", 0) {
-        }
-
-        Matcher::Matcher(Pattern const &parent, CharSequence const &cs)
-                : parent(parent), text(UNSAFE::copyInstance(cs)) {
+        Matcher::Matcher(Pattern const& parent, CharSequence const& cs)
+            : parent(parent), text(UNSAFE::copyInstance(cs)) {
             gint capturingGroupCount = Math::max(parent.self->capturingGroupCount, 10);
             // Allocate state storage
             groups = IntArray(capturingGroupCount * 2);
             locals = IntArray(parent.self->localCount);
-            CORE_IGNORE_DEPRECATIONS(localsPos = Array<HashSet>(parent.self->localTCNCount);)
+            localsPos = Array<HashSet>(parent.self->localTCNCount);
 
             // Put fields into initial states
             reset();
         }
 
-        Matcher::Matcher(Matcher const &other) : parent(other.parent) {
+        Matcher::Matcher(Matcher const& other) : parent(other.parent) {
             groups = other.groups;
             from = other.from;
             to = other.to;
@@ -73,7 +74,7 @@ namespace core {
             other.modCount++;
         }
 
-        Matcher &Matcher::operator=(Matcher const &other) {
+        Matcher& Matcher::operator=(Matcher const& other) {
             if (this != &other) {
                 modCount++;
                 other.modCount++;
@@ -111,7 +112,7 @@ namespace core {
             return parent;
         }
 
-        MatchResult &Matcher::toMatchResult() const {
+        MatchResult& Matcher::toMatchResult() const {
             gint minStart;
             String capturedText;
             if (hasMatch()) {
@@ -122,7 +123,7 @@ namespace core {
                     capturedText = text.get().subSequence(minStart, maxEnd()).toString();
             } else {
                 minStart = -1;
-                capturedText = {};
+                capturedText = { };
             }
 
             class ImmutableMatchResult : public MatchResult {
@@ -131,24 +132,23 @@ namespace core {
                 gint groupCount_;
                 IntArray groups;
                 String text;
-                Map<String, Integer> const &namedGroups_;
+                Map<String, Integer> const& namedGroups_;
                 gint minStart;
 
             public:
                 CORE_EXPLICIT ImmutableMatchResult(gint first, gint last, gint groupCount,
                                                    IntArray groups, String text,
-                                                   Map<String, Integer> const &namedGroups, gint minStart)
-                        : first(first),
-                          last(last),
-                          groupCount_(groupCount),
-                          groups(UNSAFE::moveInstance(groups)),
-                          text(UNSAFE::moveInstance(text)),
-                          namedGroups_(namedGroups),
-                          minStart(minStart) {
-                }
+                                                   Map<String, Integer> const& namedGroups, gint minStart)
+                    : first(first),
+                      last(last),
+                      groupCount_(groupCount),
+                      groups(UNSAFE::moveInstance(groups)),
+                      text(UNSAFE::moveInstance(text)),
+                      namedGroups_(namedGroups),
+                      minStart(minStart) {}
 
                 gint start() const override {
-                    try { checkMatch(); } catch (Throwable const &ex) { ex.throws($xtrace()); }
+                    try { checkMatch(); } catch (Throwable const& ex) { ex.throws($xtrace()); }
                     return first;
                 }
 
@@ -156,12 +156,12 @@ namespace core {
                     try {
                         checkMatch();
                         checkGroup(group);
-                    } catch (Throwable const &ex) { ex.throws($xtrace()); }
+                    } catch (Throwable const& ex) { ex.throws($xtrace()); }
                     return groups[group << 1];
                 }
 
                 gint end() const override {
-                    try { checkMatch(); } catch (Throwable const &ex) { ex.throws($xtrace()); }
+                    try { checkMatch(); } catch (Throwable const& ex) { ex.throws($xtrace()); }
                     return last;
                 }
 
@@ -169,7 +169,7 @@ namespace core {
                     try {
                         checkMatch();
                         checkGroup(group);
-                    } catch (Throwable const &ex) { ex.throws($xtrace()); }
+                    } catch (Throwable const& ex) { ex.throws($xtrace()); }
                     return groups[(group << 1) - 1];
                 }
 
@@ -177,14 +177,14 @@ namespace core {
                     try {
                         checkMatch();
                         return group(0);
-                    } catch (Throwable const &ex) { ex.throws($xtrace()); }
+                    } catch (Throwable const& ex) { ex.throws($xtrace()); }
                 }
 
                 String group(gint group) const override {
                     try {
                         checkMatch();
                         checkGroup(group);
-                    } catch (Throwable const &ex) { ex.throws($xtrace()); }
+                    } catch (Throwable const& ex) { ex.throws($xtrace()); }
 
                     if ((groups[group * 2] == -1) || (groups[group * 2 + 1] == -1))
                         IllegalArgumentException().throws($xtrace());
@@ -195,7 +195,7 @@ namespace core {
                     return groupCount_;
                 }
 
-                util::Map<String, Integer> const &namedGroups() const override {
+                util::Map<String, Integer> const&namedGroups() const override {
                     return namedGroups_;
                 }
 
@@ -220,9 +220,9 @@ namespace core {
                                                              namedGroups(), minStart);
         }
 
-        Matcher &Matcher::setPattern(Pattern const &newPattern) {
+        Matcher& Matcher::setPattern(Pattern const& newPattern) {
             parent = newPattern;
-            namedGroups_ = {};
+            namedGroups_ = { };
 
             // Reallocate state storage
             groups = IntArray(newPattern.self->capturingGroupCount * 2);
@@ -231,12 +231,12 @@ namespace core {
                 groups[i] = -1;
             for (gint i = 0; i < locals.length(); i++)
                 locals[i] = -1;
-            CORE_IGNORE_DEPRECATIONS(localsPos = Array<HashSet>(parent.self->localTCNCount);)
+            localsPos = Array<HashSet>(parent.self->localTCNCount);
             modCount++;
             return *this;
         }
 
-        Matcher &Matcher::reset() {
+        Matcher& Matcher::reset() {
             first = -1;
             last = 0;
             oldLast = -1;
@@ -255,39 +255,38 @@ namespace core {
             return *this;
         }
 
-        Matcher &Matcher::reset(CharSequence const &input) {
+        Matcher& Matcher::reset(CharSequence const& input) {
             text = input;
             return reset();
         }
 
         gint Matcher::start() const {
-            try { checkMatch(); } catch (Throwable const &ex) { ex.throws($ftrace()); }
+            try { checkMatch(); } catch (Throwable const& ex) { ex.throws($ftrace()); }
             return first;
         }
 
         gint Matcher::start(gint group) const {
-            try { checkMatch(); } catch (Throwable const &ex) { ex.throws($ftrace()); }
+            try { checkMatch(); } catch (Throwable const& ex) { ex.throws($ftrace()); }
             checkGroup(group);
             return groups[group * 2];
         }
 
-        gint Matcher::start(String const &name) const {
+        gint Matcher::start(String const& name) const {
             return groups[getMatchedGroupIndex(name) * 2];
         }
 
         gint Matcher::end() const {
-
-            try { checkMatch(); } catch (Throwable const &ex) { ex.throws($ftrace()); }
+            try { checkMatch(); } catch (Throwable const& ex) { ex.throws($ftrace()); }
             return last;
         }
 
         gint Matcher::end(gint group) const {
-            try { checkMatch(); } catch (Throwable const &ex) { ex.throws($ftrace()); }
+            try { checkMatch(); } catch (Throwable const& ex) { ex.throws($ftrace()); }
             checkGroup(group);
             return groups[group * 2 + 1];
         }
 
-        gint Matcher::end(String const &name) const {
+        gint Matcher::end(String const& name) const {
             return groups[getMatchedGroupIndex(name) * 2 + 1];
         }
 
@@ -296,16 +295,16 @@ namespace core {
         }
 
         String Matcher::group(gint group) const {
-            try { checkMatch(); } catch (Throwable const &ex) { ex.throws($ftrace()); }
+            try { checkMatch(); } catch (Throwable const& ex) { ex.throws($ftrace()); }
             checkGroup(group);
             if ((groups[group * 2] == -1) || (groups[group * 2 + 1] == -1))
                 return ""_S;
             return subSequence(groups[group * 2], groups[group * 2 + 1]).toString();
         }
 
-        String Matcher::group(String const &name) const {
+        String Matcher::group(String const& name) const {
             gint group;
-            try { group = getMatchedGroupIndex(name); } catch (Throwable const &ex) { ex.throws($ftrace()); }
+            try { group = getMatchedGroupIndex(name); } catch (Throwable const& ex) { ex.throws($ftrace()); }
             if ((groups[group * 2] == -1) || (groups[group * 2 + 1] == -1))
                 return ""_S;
             return subSequence(groups[group * 2], groups[group * 2 + 1]).toString();
@@ -349,7 +348,7 @@ namespace core {
             return match(from, NOANCHOR);
         }
 
-        String Matcher::quoteReplacement(String const &s) {
+        String Matcher::quoteReplacement(String const& s) {
             if ((s.indexOf('\\') == -1) && (s.indexOf('$') == -1))
                 return s;
             XString sb;
@@ -363,15 +362,15 @@ namespace core {
             return sb.toString();
         }
 
-        Matcher &Matcher::appendReplacement(XString &sb, String const &replacement) {
-            try { checkMatch(); } catch (Throwable const &ex) { ex.throws($ftrace()); }
+        Matcher& Matcher::appendReplacement(XString& sb, String const& replacement) {
+            try { checkMatch(); } catch (Throwable const& ex) { ex.throws($ftrace()); }
             gint curLen = sb.length();
             try {
                 // Append the intervening text
                 sb.append(text.get(), lastAppendPosition, first);
                 // Append the match substitution
                 appendExpandedReplacement(sb, replacement);
-            } catch (IllegalArgumentException const &ex) {
+            } catch (IllegalArgumentException const& ex) {
                 sb.setLength(curLen);
                 ex.throws($ftrace());
             }
@@ -380,12 +379,12 @@ namespace core {
             return *this;
         }
 
-        XString &Matcher::appendTail(XString &sb) {
+        XString& Matcher::appendTail(XString& sb) {
             sb.append(text.get(), lastAppendPosition, getTextLength());
             return sb;
         }
 
-        String Matcher::replaceAll(String const &replacement) {
+        String Matcher::replaceAll(String const& replacement) {
             reset();
             gbool result = find();
             if (result) {
@@ -400,7 +399,7 @@ namespace core {
             return text.toString();
         }
 
-        String Matcher::replaceAll(function::Function<MatchResult, String> const &replacer) {
+        String Matcher::replaceAll(function::Function<MatchResult, String> const& replacer) {
             reset();
             gbool result = find();
             if (result) {
@@ -419,7 +418,7 @@ namespace core {
             return text.toString();
         }
 
-        String Matcher::replaceFirst(String const &replacement) {
+        String Matcher::replaceFirst(String const& replacement) {
             reset();
             if (!find())
                 return text.toString();
@@ -429,7 +428,7 @@ namespace core {
             return sb.toString();
         }
 
-        String Matcher::replaceFirst(function::Function<MatchResult, String> const &replacer) {
+        String Matcher::replaceFirst(function::Function<MatchResult, String> const& replacer) {
             reset();
             if (!find())
                 return text.toString();
@@ -443,7 +442,7 @@ namespace core {
             return sb.toString();
         }
 
-        Matcher &Matcher::region(gint start, gint end) {
+        Matcher& Matcher::region(gint start, gint end) {
             if ((start < 0) || (start > getTextLength()))
                 IndexOutOfBoundsException("start").throws($ftrace());
             if ((end < 0) || (end > getTextLength()))
@@ -468,7 +467,7 @@ namespace core {
             return transparentBounds;
         }
 
-        Matcher &Matcher::useTransparentBounds(gbool b) {
+        Matcher& Matcher::useTransparentBounds(gbool b) {
             transparentBounds = b;
             return *this;
         }
@@ -477,7 +476,7 @@ namespace core {
             return anchoringBounds;
         }
 
-        Matcher &Matcher::useAnchoringBounds(gbool b) {
+        Matcher& Matcher::useAnchoringBounds(gbool b) {
             anchoringBounds = b;
             return *this;
         }
@@ -485,10 +484,10 @@ namespace core {
         String Matcher::toString() const {
             XString sb;
             sb.append(Object::toString())
-                    .append("[pattern=").append(parent)
-                    .append(" region=")
-                    .append(regionStart()).append(',').append(regionEnd())
-                    .append(" lastmatch=");
+              .append("[pattern=").append(parent)
+              .append(" region=")
+              .append(regionStart()).append(',').append(regionEnd())
+              .append(" lastmatch=");
             if ((first >= 0) && (group() != null)) {
                 sb.append(group());
             }
@@ -504,7 +503,7 @@ namespace core {
             return requireEnd;
         }
 
-        Map<String, Integer> &Matcher::namedGroups() const {
+        Map<String, Integer>& Matcher::namedGroups() const {
             if (namedGroups_.isEmpty()) {
                 return (namedGroups_ = parent.namedGroups()).get();
             }
@@ -515,42 +514,37 @@ namespace core {
             return first >= 0;
         }
 
-        gbool Matcher::equals(const Object &o) const {
+        gbool Matcher::equals(const Object& o) const {
             if (this == &o)
                 return true;
             if (!Class<Matcher>::hasInstance(o))
                 return false;
-            Matcher const &rhs = CORE_XCAST(Matcher const, o);
+            Matcher const& rhs = CORE_XCAST(Matcher const, o);
             return parent == rhs.parent
-                   && groups == rhs.groups
-                   && from == rhs.from
-                   && to == rhs.to
-                   && lookbehindTo == rhs.lookbehindTo
-                   && text == rhs.text
-                   && acceptMode == rhs.acceptMode
-                   && first == rhs.first
-                   && last == rhs.last
-                   && oldLast == rhs.oldLast
-                   && lastAppendPosition == rhs.lastAppendPosition
-                   && locals == rhs.locals
-                   && hitEnd_ == rhs.hitEnd_
-                   && requireEnd == rhs.requireEnd
-                   && transparentBounds == rhs.transparentBounds
-                   && anchoringBounds == rhs.anchoringBounds
-                   && modCount == rhs.modCount
-                   && localsPos == rhs.localsPos
-                   && namedGroups() == rhs.namedGroups();
+                    && groups == rhs.groups
+                    && from == rhs.from
+                    && to == rhs.to
+                    && lookbehindTo == rhs.lookbehindTo
+                    && text == rhs.text
+                    && acceptMode == rhs.acceptMode
+                    && first == rhs.first
+                    && last == rhs.last
+                    && oldLast == rhs.oldLast
+                    && lastAppendPosition == rhs.lastAppendPosition
+                    && locals == rhs.locals
+                    && hitEnd_ == rhs.hitEnd_
+                    && requireEnd == rhs.requireEnd
+                    && transparentBounds == rhs.transparentBounds
+                    && anchoringBounds == rhs.anchoringBounds
+                    && modCount == rhs.modCount
+                    && localsPos == rhs.localsPos
+                    && namedGroups() == rhs.namedGroups();
         }
 
-        namespace {
-            class Holder final : public Object {
-            };
-        }
-
-        Object &Matcher::clone() const {
+        Object& Matcher::clone() const {
             try {
                 return UNSAFE::newInstance<Matcher>(*this);
-            } catch (Throwable const &ex) { ex.throws($ftrace()); }
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         gint Matcher::minStart() const {
@@ -575,7 +569,7 @@ namespace core {
             return r;
         }
 
-        void Matcher::appendExpandedReplacement(Appendable &app, String const &replacement) const {
+        void Matcher::appendExpandedReplacement(Appendable& app, String const& replacement) const {
             try {
                 gint cursor = 0;
                 while (cursor < replacement.length()) {
@@ -619,9 +613,9 @@ namespace core {
                             String gname = replacement.subString(begin, cursor);
                             if (Pattern::ASCII::isDigit(gname.charAt(0)))
                                 IllegalArgumentException("capturing group name {"_S + gname
-                                                         + "} starts with digit character"_S)
+                                            + "} starts with digit character"_S)
                                         .throws($ftrace());
-                            Object &number = namedGroups().getOrNull(gname);
+                            Object& number = namedGroups().getOrNull(gname);
                             if (number == null)
                                 IllegalArgumentException("No group with name {"_S + gname + "}")
                                         .throws($ftrace());
@@ -662,7 +656,7 @@ namespace core {
                         cursor++;
                     }
                 }
-            } catch (io::IOException const &ex) {
+            } catch (io::IOException const& ex) {
                 // cannot happen on XString
                 AssertionError(ex.message()).throws($ftrace());
             }
@@ -714,7 +708,7 @@ namespace core {
             return text.get().length();
         }
 
-        CharSequence &Matcher::subSequence(gint beginIndex, gint endIndex) const {
+        CharSequence& Matcher::subSequence(gint beginIndex, gint endIndex) const {
             return text.get().subSequence(beginIndex, endIndex);
         }
 
@@ -722,9 +716,9 @@ namespace core {
             return text.get().charAt(i);
         }
 
-        gint Matcher::getMatchedGroupIndex(String const &name) const {
-            try { checkMatch(); } catch (Throwable const &ex) { ex.throws($ftrace()); }
-            Object &number = namedGroups().getOrNull(name);
+        gint Matcher::getMatchedGroupIndex(String const& name) const {
+            try { checkMatch(); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            Object& number = namedGroups().getOrNull(name);
             if (number == null)
                 IllegalArgumentException("No group with name <"_S + name + ">")
                         .throws($ftrace());
@@ -781,7 +775,7 @@ namespace core {
         }
 
         void Matcher::HashSet::expand() {
-            IntArray &old = entries;
+            IntArray& old = entries;
             IntArray es = IntArray(old.length() << 1);
             gint hlen = (old.length() / 2) | 1;
             IntArray hs = IntArray(hlen);
@@ -800,8 +794,12 @@ namespace core {
             hashes = hs;
         }
 
-        Object &Matcher::HashSet::clone() const {
-            return Object::clone();
+        Object& Matcher::HashSet::clone() const {
+            try {
+                return UNSAFE::newInstance<HashSet>(*this);
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
+
+        CORE_WARNING_POP
     } // regex
 } // core

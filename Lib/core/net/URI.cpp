@@ -2,16 +2,17 @@
 // Created by brunshweeck on 15 sept. 2024.
 //
 
+#include "URI.h"
+
 #include <core/AssertionError.h>
 #include <core/NumberFormatException.h>
 #include <core/XString.h>
+#include <core/charset/CharacterCodingException.h>
 #include <core/charset/CharsetDecoder.h>
 #include <core/charset/CharsetEncoder.h>
-#include <core/charset/CharacterCodingException.h>
 #include <core/io/ByteBuffer.h>
 #include <core/io/CharBuffer.h>
 #include <core/misc/Unsafe.h>
-#include <core/net/URI.h>
 #include <core/net/URISyntaxException.h>
 #include <core/net/URL.h>
 #include <core/text/Normalizer.h>
@@ -49,8 +50,7 @@ namespace core {
         }
 
         URI::URI(const String& scheme, const String& host, const String& path, const String& fragment)
-            : URI(scheme, ""_S, host, -1, path, ""_S, fragment) {
-        }
+            : URI(scheme, ""_S, host, -1, path, ""_S, fragment) {}
 
         URI::URI(String const& scheme, String const& ssp, String const& fragment) {
             try {
@@ -349,10 +349,10 @@ namespace core {
             } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
-        Object & URI::clone() const {
+        Object& URI::clone() const {
             try {
                 return UNSAFE::newInstance<URI>(*this);
-            }catch (Throwable const& ex) { ex.throws($ftrace()); }
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String URI::defineString() const {
@@ -700,7 +700,7 @@ namespace core {
 
         URI URI::resolve(URI const& base, URI const& child) {
             try {
-                // check if child if opaque first.
+                // check if child is opaque first.
                 if (child.isOpaque() || base.isOpaque())
                     return child;
 
@@ -785,7 +785,7 @@ namespace core {
 
         URI URI::relativize(URI const& base, URI const& child) {
             try {
-                // check if child if opaque first.
+                // check if child is opaque first.
                 if (child.isOpaque() || base.isOpaque())
                     return child;
                 if (!equalIgnoringCase(base.uri.scheme, child.uri.scheme)
@@ -1094,7 +1094,7 @@ namespace core {
                     if (b >= 0x80)
                         appendEscape(sb, CORE_CAST(gbyte, b));
                     else
-                        sb.append((gchar)b);
+                        sb.append((gchar) b);
                 }
             } catch (CharacterCodingException const&) { CORE_ASSERT_AT(false, core::net::URI); }
             catch (Throwable const& ex) { ex.throws($ftrace()); }
@@ -1111,7 +1111,7 @@ namespace core {
                             if (sb.isEmpty())
                                 sb.append(s, 0, i);
 
-                            appendEscape(sb, (gbyte)c);
+                            appendEscape(sb, (gbyte) c);
                         } else {
                             if (!sb.isEmpty())
                                 sb.append(c);
@@ -1158,10 +1158,10 @@ namespace core {
                     if (b >= 0x80)
                         appendEscape(sb, CORE_CAST(gbyte, b));
                     else
-                        sb.append((gchar)b);
+                        sb.append((gchar) b);
                 }
                 return sb.toString();
-            } catch (CharacterCodingException const& ) { CORE_ASSERT_AT(false, core::net::URI); }
+            } catch (CharacterCodingException const&) { CORE_ASSERT_AT(false, core::net::URI); }
             catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
@@ -1180,7 +1180,7 @@ namespace core {
 
         gbyte URI::decode(gchar c1, gchar c2) {
             try {
-                return (gbyte)(((decode(c1) & 0xf) << 4)
+                return (gbyte) (((decode(c1) & 0xf) << 4)
                     | ((decode(c2) & 0xf) << 0));
             } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
@@ -1250,8 +1250,7 @@ namespace core {
             } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
-        URI::Parser::Parser(URI& uri, String  input): uri(uri), input(UNSAFE::moveInstance(input)) {
-        }
+        URI::Parser::Parser(URI& uri, String input): uri(uri), input(UNSAFE::moveInstance(input)) {}
 
         void URI::Parser::parse(gbool rsa) {
             try {
@@ -1355,8 +1354,8 @@ namespace core {
                         q = parseServer(p, n, skipParseException);
                         if (q < n) {
                             if (skipParseException) {
-                                uri.uri.userInfo = {};
-                                uri.uri.host = {};
+                                uri.uri.userInfo = { };
+                                uri.uri.host = { };
                                 uri.uri.port = -1;
                                 q = p;
                             } else {
@@ -1367,8 +1366,8 @@ namespace core {
                         }
                     } catch (URISyntaxException const& x) {
                         // Undo results of failed parse
-                        uri.uri.userInfo = {};
-                        uri.uri.host = {};
+                        uri.uri.userInfo = { };
+                        uri.uri.host = { };
                         uri.uri.port = -1;
                         if (requireServerAuthority) {
                             // If we're insisting upon a server-based authority,
@@ -1454,7 +1453,7 @@ namespace core {
                         checkChars(p, q, L_DIGIT, H_DIGIT, "port number"_S);
                         try {
                             uri.uri.port = Integer::parseInt(input, p, q, 10);
-                        } catch (NumberFormatException const& ) {
+                        } catch (NumberFormatException const&) {
                             fail("Malformed port number"_S, p);
                         }
                         p = q;
@@ -1490,13 +1489,20 @@ namespace core {
                 for (;;) {
                     // Per RFC2732: At most three digits per byte
                     // Further constraint: Each element fits in a byte
-                    if ((q = scanByte(p, m)) <= p) break;   p = q;
-                    if ((q = scan(p, m, '.')) <= p) break;  p = q;
-                    if ((q = scanByte(p, m)) <= p) break;   p = q;
-                    if ((q = scan(p, m, '.')) <= p) break;  p = q;
-                    if ((q = scanByte(p, m)) <= p) break;   p = q;
-                    if ((q = scan(p, m, '.')) <= p) break;  p = q;
-                    if ((q = scanByte(p, m)) <= p) break;   p = q;
+                    if ((q = scanByte(p, m)) <= p) break;
+                    p = q;
+                    if ((q = scan(p, m, '.')) <= p) break;
+                    p = q;
+                    if ((q = scanByte(p, m)) <= p) break;
+                    p = q;
+                    if ((q = scan(p, m, '.')) <= p) break;
+                    p = q;
+                    if ((q = scanByte(p, m)) <= p) break;
+                    p = q;
+                    if ((q = scan(p, m, '.')) <= p) break;
+                    p = q;
+                    if ((q = scanByte(p, m)) <= p) break;
+                    p = q;
                     if (q < m) break;
                     return q;
                 }
@@ -1520,9 +1526,9 @@ namespace core {
 
                 try {
                     p = scanIPv4Address(start, n, false);
-                } catch (URISyntaxException const& ) {
+                } catch (URISyntaxException const&) {
                     return -1;
-                } catch (NumberFormatException const& ) {
+                } catch (NumberFormatException const&) {
                     return -1;
                 }
 
@@ -1545,7 +1551,7 @@ namespace core {
         gint URI::Parser::parseHostName(gint start, gint n, gbool skipParseException) const {
             try {
                 gint p = start;
-                gint q;
+                gint q = 0;
                 gint l = -1; // Start of last parsed label
 
                 do {
@@ -1590,7 +1596,7 @@ namespace core {
         gint URI::Parser::parseIPv6Reference(gint start, gint n) {
             try {
                 gint p = start;
-                gint q;
+                gint q = 0;
                 gbool compressedZeros = false;
 
                 q = scanHexSeq(p, n);
@@ -1624,7 +1630,7 @@ namespace core {
         gint URI::Parser::scanHexPost(gint start, gint n) {
             try {
                 gint p = start;
-                gint q;
+                gint q = 0;
 
                 if (p == n)
                     return p;
@@ -1648,7 +1654,7 @@ namespace core {
         gint URI::Parser::scanHexSeq(gint start, gint n) {
             try {
                 gint p = start;
-                gint q;
+                gint q = 0;
 
                 q = scan(p, n, L_HEX, H_HEX);
                 if (q <= p)

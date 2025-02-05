@@ -8,11 +8,7 @@
 #include <core/util/HashMap.h>
 #include <meta/random/RandomSupport.h>
 
-#ifdef CORE_SYSTEM_WINDOWS
-  #include <core/Windows.h>
-#else
-  #include <core/Unix.h>
-#endif
+#include <native/System.h>
 
 
 namespace core {

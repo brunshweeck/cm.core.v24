@@ -5,8 +5,8 @@
 #include "Version.h"
 
 #include "AutoSync.h"
-#include "core/concurrent/ReentrantLock.h"
-#include "core/util/HashMap.h"
+#include <core/concurrent/ReentrantLock.h>
+#include <core/util/HashMap.h>
 
 namespace core {
     using namespace util;
@@ -14,8 +14,16 @@ namespace core {
 
     namespace text {
 
-        ReentrantLock Version::sync = {};
-        HashMap<Integer, Version> Version::VERSIONS = {};
+        static Map<Integer, Version> &getVersions() {
+            static HashMap<Integer, Version> VERSIONS = {};
+            return VERSIONS;
+        }
+
+        static ReentrantLock &getVersionsLock() {
+            static ReentrantLock LOCK = {};
+            return LOCK;
+        }
+
         String const Version::INVALID_VERSION_NUMBER = "Invalid version number: Version number may be negative or greater than 255";
 
         Version const& Version::UNICODE_1_0 = get(1, 0, 0, 0);
@@ -117,13 +125,13 @@ namespace core {
                 milli < 0 || milli > 255 || micro < 0 || micro > 255) {
                 IllegalArgumentException(INVALID_VERSION_NUMBER).throws($ftrace());
             }
-            AutoSync sync = Version::sync;
+            AutoSync sync = getVersionsLock();
             gint version = compact(major, minor, milli, micro);
             Integer key = version;
-            Object& ver = VERSIONS.getOrNull(key);
+            Object& ver = getVersions().getOrNull(key);
             if (ver == null) {
                 Version& v = UNSAFE::newInstance<Version>(version);
-                VERSIONS.putIfAbsent(key, v);
+                getVersions().putIfAbsent(key, v);
                 return v;
             }
             CORE_IGNORE(sync);

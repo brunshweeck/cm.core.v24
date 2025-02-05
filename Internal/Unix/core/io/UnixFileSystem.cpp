@@ -2,17 +2,19 @@
 // Created by brunshweeck on 07/10/24.
 //
 
-#include <core/Unix.h>
 
 #ifdef BIG_ENDIAN
 #undef BIG_ENDIAN
 #endif
 
+#include "UnixFileSystem.h"
+
 #include <core/StringArray.h>
 #include <core/XString.h>
 #include <core/io/FileArray.h>
-#include <core/io/UnixFileSystem.h>
 #include <core/util/Arrays.h>
+#include <native/System.h>
+
 #include "Trash.h"
 
 #ifndef PATH_MAX

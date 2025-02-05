@@ -4,9 +4,9 @@
 
 #include <core/IllegalThreadStateException.h>
 #include <core/Thread.h>
-#include <core/ThreadSupport.h>
+#include <native/ThreadSupport.h>
 #include <core/concurrent/ReentrantLock.h>
-#include <core/misc/Event.h>
+#include <native/Event.h>
 #include <core/time/Chrono.h>
 #include <core/time/Duration.h>
 #include <core/util/ArrayList.h>
@@ -23,9 +23,9 @@ namespace core {
     static String GenerateThreadName() {
         // static gint volatile threadID = -1;
 
-        gint tid = ++threadID;
+        gint tid = UNSAFE::getAndAddInt(null, (glong) &threadID, 1) + 1;
         while (tid <= 0)
-            tid = ++threadID;
+            tid = UNSAFE::getAndAddInt(null, (glong) &threadID, 1) + 1;
 
         // if (tid == 1)
         //     return "Main"_S;
@@ -117,12 +117,15 @@ namespace core {
         };
     }
 
-    static ThreadList& THREAD_LIST = UNSAFE::newInstance<ThreadList>();
+    static ThreadList &getThreads() {
+        static ThreadList& THREAD_LIST = UNSAFE::newInstance<ThreadList>();
+        return THREAD_LIST;
+    }
 
     Thread& Thread::currentThread() {
         glong threadID = ThreadSupport::CurrentThread();
 
-        ThreadList& threads = THREAD_LIST;
+        ThreadList& threads = getThreads();
         if (UNSAFE::threadCount() == 0 && threads.isEmpty()) {
             Thread& thread = *new Thread();
             UNSAFE::storeReference(thread);
@@ -365,7 +368,7 @@ namespace core {
             t.holder.task = r == task ? null : CORE_DCAST(TASK, &task.clone());
             t.monitor = new concurrent::ReentrantLock();
 
-            ThreadList& threads = THREAD_LIST;
+            ThreadList& threads = getThreads();
             threads.add(t);
             return t;
         } catch (Throwable const& ex) { ex.throws($ftrace()); }

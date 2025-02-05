@@ -2,12 +2,10 @@
 // Created by admin on 23/01/25.
 //
 
-#include <gtest/gtest.h>
-
+#include <core/util/ArrayList.h>
+#include <core/util/Optional.h>
 #include <core/util/Vector.h>
-
-#include "core/util/ArrayList.h"
-#include "core/util/Optional.h"
+#include <gtest/gtest.h>
 
 namespace core {
     using misc::Unsafe;

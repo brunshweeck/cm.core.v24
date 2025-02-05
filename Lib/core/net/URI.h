@@ -5,7 +5,6 @@
 #ifndef CORE24_URI_H
 #define CORE24_URI_H
 
-#include <core/Comparable.h>
 #include <core/String.h>
 
 namespace core {
@@ -26,14 +25,14 @@ namespace core {
          * their components or by parsing their string forms, methods for accessing the
          * various components of an instance, and methods for normalizing, resolving,
          * and relativizing URI instances.  Instances of this class are immutable.
+         * </p>
          *
-         *
-         * <h2> URI syntax and components </h2>
+         * <h3> URI syntax and components </h3>
          *
          * At the highest level a URI reference (hereinafter simply "URI") in string
          * form has the syntax
          *
-         * <br>
+         *  <br/>
          * [<i>scheme</i><b>:</b>]<i>scheme-specific-part</i>[<b>#</b><i>fragment</i>]
          * <br/>
          *
@@ -50,10 +49,10 @@ namespace core {
          * not begin with a slash character (@c '/').  Opaque URIs are not
          * subject to further parsing.  Some examples of opaque URIs are:
          *
-         * <br>
-         * @li  @code mailto:java-net@www.example.com @endcode
-         * @li  @code news:comp.lang.java @endcode
-         * @li  @code urn:isbn:096139210x @endcode
+         *  <br/>
+         * -  @code mailto:java-net@www.example.com @endcode <br/>
+         * -  @code news:comp.lang.java @endcode <br/>
+         * -  @code urn:isbn:096139210x @endcode <br/>
          * <br/>
          * </p>
          * <p>
@@ -62,17 +61,17 @@ namespace core {
          * is, a URI that does not specify a scheme.  Some examples of hierarchical
          * URIs are:
          *
-         * <br>
-         * @code http://example.com/languages/java/ @endcode<br>
-         * @code sample/a/index.html#28 @endcode<br>
-         * @code ../../demo/b/index.html @endcode<br>
+         *  <br/>
+         * @code http://example.com/languages/java/ @endcode <br/>
+         * @code sample/a/index.html#28 @endcode <br/>
+         * @code ../../demo/b/index.html @endcode <br/>
          * @code file:///~/calendar @endcode
          * <br/>
          * </p>
          * <p>
          * A hierarchical URI is subject to further parsing according to the syntax
          *
-         * <br>
+         *  <br/>
          * [<i>scheme</i><b>:</b>][<b>//</b><i>authority</i>][<i>path</i>][<b>?</b><i>query</i>][<b>#</b><i>fragment</i>]
          * <br/>
          *
@@ -86,7 +85,7 @@ namespace core {
          * <i>server-based</i> or <i>registry-based</i>.  A server-based authority
          * parses according to the familiar syntax
          *
-         * <br>
+         *  <br/>
          * [<i>user-info</i><b>@</b>]<i>host</i>[<b>:</b><i>port</i>]
          * <br/>
          *
@@ -104,20 +103,20 @@ namespace core {
          * <p>
          * All told, then, a URI instance has the following nine components:
          *
-         * <br>
+         *  <br/>
          * <b>Describes the components of a URI:scheme,scheme-specific-part,authority,user-info,host,port,path,query,fragment</b>
-         * <br>
-         * @li <b> Component </b> <--> <b> Type </b><br>
+         *  <br/>
+         * - <b> Component </b> -> <b> Type </b> <br/>
          *
-         * @li <em> scheme </em> <--> @c String
-         * @li <em> scheme-specific-part </em> <--> @c String
-         * @li <em> authority </em> <--> @c String
-         * @li <em> user-info </em> <--> @c String
-         * @li <em> host </em> <--> @c String
-         * @li <em> port </em> <--> @c gint
-         * @li <em> path </em> <--> @c String
-         * @li <em> query </em> <--> @c String
-         * @li <em> fragment </em> <--> @c String
+         * - <em> scheme </em> -> @c String <br/>
+         * - <em> scheme-specific-part </em> -> @c String <br/>
+         * - <em> authority </em> -> @c String <br/>
+         * - <em> user-info </em> -> @c String <br/>
+         * - <em> host </em> -> @c String <br/>
+         * - <em> port </em> -> @c gint <br/>
+         * - <em> path </em> -> @c String <br/>
+         * - <em> query </em> -> @c String <br/>
+         * - <em> fragment </em> -> @c String <br/>
          *
          *
          *
@@ -159,7 +158,7 @@ namespace core {
          * the path of the original is resolved against the path of the base and then
          * normalized.  The result, for example, of resolving
          *
-         * <br>
+         *  <br/>
          * @code sample/a/index.html#28 @endcode
          * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
          * &nbsp;&nbsp;&nbsp;&nbsp;(1)
@@ -168,19 +167,19 @@ namespace core {
          * against the base URI @code http://example.com/languages/java/ @endcode is the result
          * URI
          *
-         * <br>
+         *  <br/>
          * @code http://example.com/languages/java/sample/a/index.html#28 @endcode
          * <br/>
          *
          * Resolving the relative URI
          *
-         * <br>
+         *  <br/>
          * @code ../../demo/b/index.html @endcode &nbsp;&nbsp;&nbsp;&nbsp;(2)
          * <br/>
          *
          * against this result yields, in turn,
          *
-         * <br>
+         *  <br/>
          * @code http://example.com/languages/java/demo/b/index.html @endcode
          * <br/>
          *
@@ -191,7 +190,7 @@ namespace core {
          * against the relative base URI (1) yields the normalized, but still relative,
          * URI
          *
-         * <br>
+         *  <br/>
          * @code demo/b/index.html @endcode
          * <br/>
          * </p>
@@ -201,14 +200,14 @@ namespace core {
          * and <i>v</i> be any normalized relative URI not beginning with a period character (@c '.')
          * or slash character (@c '/'). Then, the following statement is true:
          *
-         * <br>
+         *  <br/>
          *   <i>u</i>@c .relativize( <i>u</i>@c .resolve( <i>v</i>@c )).equals( <i>v</i>@c )
          * <br/>
          *
          * Let <i>u</i> be any normalized absolute URI ending with a slash character (@c '/')
          * and <i>v</i> be any normalized absolute URI. Then, the following statement is true:
          *
-         * <br>
+         *  <br/>
          *   <i>u</i>@c .resolve( <i>u</i>@c .relativize( <i>v</i>@c )).equals( <i>v</i>@c )
          * <br/>
          *
@@ -216,13 +215,13 @@ namespace core {
          * that must be made relative to the base URI of the document wherever
          * possible.  For example, relativizing the URI
          *
-         * <br>
+         *  <br/>
          * @code http://example.com/languages/java/sample/a/index.html#28 @endcode
          * <br/>
          *
          * against the base URI
          *
-         * <br>
+         *  <br/>
          * @code http://example.com/languages/java/ @endcode
          * <br/>
          *
@@ -236,34 +235,34 @@ namespace core {
          * which are taken from that specification, are used below to describe these
          * constraints:
          *
-         * <br>
+         *  <br/>
          * <b>Describes categories alpha,digit,alphanum,unreserved,punct,reserved,escaped,and other</b>
-         *   <br>
-         *   @li <b> Category </b> :  Description </br>
+         *    <br/>
+         *   - <b> Category </b> :  Description </br>
          *
-         *   @li @b alpha :
+         *   - @b alpha :
          *       <p>The US-ASCII alphabetic characters,
          *        @c 'A' &nbsp;through&nbsp;@c 'Z'
          *        and @c 'a' &nbsp;through&nbsp;@c 'z' </p>
-         *   @li @b digit :
+         *   - @b digit :
          *       <p>The US-ASCII decimal digit characters,
          *       @c '0' &nbsp;through&nbsp; @c '9' </p>
-         *   @li @b alphanum :
+         *   - @b alphanum :
          *       <p>All <i>alpha</i> and <i>digit</i> characters</p>
-         *   @li @b unreserved :
+         *   - @b unreserved :
          *       <p>All <i>alphanum</i> characters together with those in the string
          *        @c "_-!.~'()*"</p>
-         *   @li @b punct :
+         *   - @b punct :
          *       <p> The characters in the string @c ",;:$&+=" </p>
-         *   @li @b reserved :
+         *   - @b reserved :
          *       <p> All <i>punct</i> characters together with those in the string
          *        @c "?/[]@" </p>
-         *   @li @b escaped :
+         *   - @b escaped :
          *       <p> Escaped octets, that is, triplets consisting of the percent
          *           character (@c '%') followed by two hexadecimal digits
          *           (@c '0' - @c '9' , @c 'A' -@c 'F' , and
          *           @c 'a' - @c 'f') </p>
-         *   @li @b other :
+         *   - @b other :
          *       <p> The Unicode characters that are not in the US-ASCII character set,
          *           are not control characters (according to the @b Character.isISOControl
          *           method), and are not space characters (according to the @b Character.isSpaceChar
@@ -274,96 +273,85 @@ namespace core {
          * The set of all legal URI characters consists of
          * the <i>unreserved</i>, <i>reserved</i>, <i>escaped</i>, and <i>other</i>
          * characters.
-         *
+         * </p>
          *
          * <h3> Escaped octets, quotation, encoding, and decoding </h3>
          *
          * RFC 2396 allows escaped octets to appear in the user-info, path, query, and
-         * fragment components.  Escaping serves two purposes in URIs:
+         * fragment components.  Escaping serves two purposes in URIs: <br/>
          *
-         *
-         *
-         *   @li  To <i>encode</i> non-US-ASCII characters when a URI is required to
+         *   -  To <i>encode</i> non-US-ASCII characters when a URI is required to
          *   conform strictly to RFC&nbsp;2396 by not containing any <i>other</i>
-         *   characters.
+         *   characters. <br/>
          *
-         *   @li  To <i>quote</i> characters that are otherwise illegal in a
+         *   -  To <i>quote</i> characters that are otherwise illegal in a
          *   component.  The user-info, path, query, and fragment components differ
-         *   slightly in terms of which characters are considered legal and illegal.
+         *   slightly in terms of which characters are considered legal and illegal. <br/>
          *
+         * These purposes are served in this class by three related operations: <br/>
          *
-         *
-         *
-         * These purposes are served in this class by three related operations:
-         *
-         *
-         *
-         *   @li  A character is <i>encoded</i> by replacing it
+         *   -  A character is <i>encoded</i> by replacing it
          *   with the sequence of escaped octets that represent that character in the
          *   UTF-8 character set.  The Euro currency symbol (@c '\u20AC'),
          *   for example, is encoded as @c "%E2%82%AC".  <i>(<b>Deviation from
          *   RFC&nbsp;2396</b>, which does not specify any particular character
-         *   set.)</i>
+         *   set.)</i> <br/>
          *
-         *   @li  An illegal character is <i>quoted</i> simply by
+         *   -  An illegal character is <i>quoted</i> simply by
          *   encoding it.  The space character, for example, is quoted by replacing it
          *   with @c "%20".  UTF-8 contains US-ASCII, hence for US-ASCII
          *   characters this transformation has exactly the effect required by
-         *   RFC&nbsp;2396.
+         *   RFC&nbsp;2396. <br/>
          *
-         *   @li
-         *   A sequence of escaped octets is <i>decoded</i> by
+         *   - A sequence of escaped octets is <i>decoded</i> by
          *   replacing it with the sequence of characters that it represents in the
          *   UTF-8 character set.  UTF-8 contains US-ASCII, hence decoding has the
          *   effect of de-quoting any quoted US-ASCII characters as well as that of
          *   decoding any encoded non-US-ASCII characters.  If a
          *   <a href="../charset/CharsetDecoder.html#ce">decoding error</a> occurs
          *   when decoding the escaped octets then the erroneous octets are replaced by
-         *   @c '\uFFFD', the Unicode replacement character.
-         *
+         *   @c '\uFFFD', the Unicode replacement character. <br/>
          *
          *
          * These operations are exposed in the constructors and methods of this class
          * as follows:
          *
-         *
-         *
-         *   @li  The <em> single-argument constructor</em> requires any illegal characters in its argument to be
+         *   -  The <em> single-argument constructor</em> requires any illegal characters in its argument to be
          *   quoted and preserves any escaped octets and <i>other</i> characters that
-         *   are present.
+         *   are present. <br/>
          *
-         *   @li  The <em> multi-argument constructors</em> quote illegal characters as
+         *   -  The <em> multi-argument constructors</em> quote illegal characters as
          *   required by the components in which they appear.  The percent character
          *   (@c '%') is always quoted by these constructors.  Any <i>other</i>
-         *   characters are preserved.
+         *   characters are preserved. <br/>
          *
-         *   @li  The @b rawUserInfo, @b rawPath, @b rawQuery, @b rawFragment, @b rawAuthority,
+         *   -  The @b rawUserInfo, @b rawPath, @b rawQuery, @b rawFragment, @b rawAuthority,
          *   and @b awSchemeSpecificPart methods return the
          *   values of their corresponding components in raw form, without interpreting
          *   any escaped octets.  The strings returned by these methods may contain
          *   both escaped octets and <i>other</i> characters, and will not contain any
-         *   illegal characters.
+         *   illegal characters. <br/>
          *
-         *   @li  The @b userInfo, @b path, @b query, @b fragment, @b authority, and
+         *   -  The @b userInfo, @b path, @b query, @b fragment, @b authority, and
          *   @b schemeSpecificPart methods decode any escaped
          *   octets in their corresponding components.  The strings returned by these
          *   methods may contain both <i>other</i> characters and illegal characters,
-         *   and will not contain any escaped octets.
+         *   and will not contain any escaped octets. <br/>
          *
-         *   @li  The @b toString method returns a URI string with
-         *   all necessary quotation but which may contain <i>other</i> characters.
+         *   -  The @b toString method returns a URI string with
+         *   all necessary quotation but which may contain <i>other</i> characters. <br/>
          *
          *
-         *   @li  The @b toASCIIString method returns a fully
+         *   -  The @b toASCIIString method returns a fully
          *   quoted and encoded URI string that does not contain any <i>other</i>
-         *   characters.
+         *   characters. <br/>
          *
          *
          * <h3> Identities </h3>
          *
          * For any URI <i>u</i>, it is always the case that
          *
-         * <br>
+         *  <br/>
          * @c URI( <i>u</i> @c .toString()).equals( <i>u</i>@c )&nbsp;.
          * <br/>
          *
@@ -372,28 +360,30 @@ namespace core {
          * colon following a host name but no port (as in
          * @code http://www.example.com: @endcode &nbsp;), and that does not encode characters
          * except those that must be quoted, the following identities also hold:
-         * <pre>
+         * @code
          *     URI(<i>u</i>.scheme(),
          *             <i>u</i>.schemeSpecificPart(),
          *             <i>u</i>.fragment())
-         *     .equals(<i>u</i>)</pre>
+         *     .equals(<i>u</i>)
+         * @endcode
          * in all cases,
-         * <pre>
+         * @code
          *     URI(<i>u</i>.scheme(),
          *             <i>u</i>.getAuthority(),
          *             <i>u</i>.path(), <i>u</i>.query(),
          *             <i>u</i>.fragment())
-         *     .equals(<i>u</i>)</pre>
+         *     .equals(<i>u</i>)
+         * @endcode
          * if <i>u</i> is hierarchical, and
-         * <pre>
+         * @code
          *     URI(<i>u</i>.scheme(),
          *             <i>u</i>.userInfo(), <i>u</i>.host(), <i>u</i>.port(),
          *             <i>u</i>.path(), <i>u</i>.query(),
          *             <i>u</i>.fragment())
-         *     .equals(<i>u</i>)</pre>
+         *     .equals(<i>u</i>)
+         * @endcode
          * if <i>u</i> is hierarchical and has either no authority or a server-based
          * authority.
-         *
          *
          * <h3> URIs, URLs, and URNs </h3>
          *
@@ -451,12 +441,12 @@ namespace core {
          * the recommendations advised in
          * <a href="https://tools.ietf.org/html/rfc3986#section-7">RFC3986,
          * Section 7, Security Considerations</a>.
-         *
-         * @spec https://www.rfc-editor.org/info/rfc2279 RFC 2279: UTF-8, a transformation format of ISO 10646
-         * @spec https://www.rfc-editor.org/info/rfc2373 RFC 2373: IP Version 6 Addressing Architecture
-         * @spec https://www.rfc-editor.org/info/rfc2396 RFC 2396: Uniform Resource Identifiers (URI): Generic Syntax
-         * @spec https://www.rfc-editor.org/info/rfc2732 RFC 2732: Format for Literal IPv6 Addresses in URL's
-         * @spec https://www.rfc-editor.org/info/rfc3986 RFC 3986: Uniform Resource Identifier (URI): Generic Syntax
+         * </p>
+         * @sa https://www.rfc-editor.org/info/rfc2279 RFC 2279: UTF-8, a transformation format of ISO 10646
+         * @sa https://www.rfc-editor.org/info/rfc2373 RFC 2373: IP Version 6 Addressing Architecture
+         * @sa https://www.rfc-editor.org/info/rfc2396 RFC 2396: Uniform Resource Identifiers (URI): Generic Syntax
+         * @sa https://www.rfc-editor.org/info/rfc2732 RFC 2732: Format for Literal IPv6 Addresses in URL's
+         * @sa https://www.rfc-editor.org/info/rfc3986 RFC 3986: Uniform Resource Identifier (URI): Generic Syntax
          *
          * @see <a href="http://www.ietf.org/rfc/rfc2279.txt">RFC&nbsp;2279: UTF-8, a
          * transformation format of ISO 10646</a>
@@ -744,9 +734,9 @@ namespace core {
              * <p> This convenience constructor works as if by invoking the
              * seven-argument constructor as follows:
              *
-             * <br>
+             *  <br/>
              * @code URI(scheme, ""_S, host, -1, path, ""_S, fragment) @endcode ;
-             * <br>
+             *  <br/>
              *
              * @param   scheme    Scheme name
              * @param   host      Host name

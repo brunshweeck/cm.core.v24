@@ -5,13 +5,7 @@
 #ifndef CORE24_RANDOMGENERATOR_H
 #define CORE24_RANDOMGENERATOR_H
 
-#include <core/Byte.h>
-#include <core/ByteArray.h>
-#include <core/Double.h>
-#include <core/Float.h>
-#include <core/Integer.h>
-#include <core/Long.h>
-#include <core/Short.h>
+
 #include <core/random/RandomGeneratorProperties.h>
 
 namespace core {
@@ -42,7 +36,7 @@ namespace core {
          * (notice that this set is a <i>subset</i> of the set of
          * <i>all representable floating-point values</i> between 0.0 (inclusive) and 1.0 (exclusive));
          * then if an explicit range was specified, then the chosen number is
-         * computationally scaled and translated so as to appear to have been chosen
+         * computationally scaled and translated to appear to have been chosen
          * approximately uniformly from that explicit range.
          * </p>
          * <p>
@@ -125,8 +119,8 @@ namespace core {
              * @note Random number generator algorithms evolve over time; new
              * algorithms will be introduced and old algorithms will
              * lose standing. If an older algorithm is deemed unsuitable
-             * for continued use, i will be marked as deprecated to indicate
-             * that i may be removed at some point in the future.
+             * for continued use, I will be marked as deprecated to indicate
+             * that I may be removed at some point in the future.
              *
              * @return true if the implementation of RandomGenerator (algorithm) has been
              *         marked for deprecation

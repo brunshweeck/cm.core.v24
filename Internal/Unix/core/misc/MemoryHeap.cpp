@@ -4,9 +4,10 @@
 
 #undef BIG_ENDIAN
 
-#include <core/Unix.h>
+#include "MemoryHeap.h"
+
+#include <native/System.h>
 #include <core/IllegalArgumentException.h>
-#include <core/misc/MemoryHeap.h>
 
 namespace core {
     CORE_ALIAS(BYTES, Class<gbyte>::Pointer);

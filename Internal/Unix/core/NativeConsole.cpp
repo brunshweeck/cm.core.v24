@@ -2,17 +2,18 @@
 // Created by bruns on 19/10/2024.
 //
 
+#include "NativeConsole.h"
+
 #include <cxxabi.h>
 #include <dlfcn.h>
 #include <execinfo.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <core/Array.h>
 #include <core/ByteArray.h>
-#include <core/NativeConsole.h>
-#include <core/misc/Event.h>
 #include <core/misc/Unsafe.h>
 #include <core/util/Arrays.h>
+
+#include "misc/Event.h"
 
 
 namespace core {

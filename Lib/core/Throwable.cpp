@@ -4,7 +4,7 @@
 
 #include <core/Array.h>
 #include <core/IllegalStateException.h>
-#include <core/NativeConsole.h>
+#include <native/Console.h>
 #include <core/Throwable.h>
 #include <core/UnsupportedOperationException.h>
 #include <core/XString.h>

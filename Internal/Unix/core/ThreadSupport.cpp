@@ -2,14 +2,14 @@
 // Created by bruns on 01/10/2024.
 //
 
+#include "ThreadSupport.h"
+
 #include <errno.h>
 #include <pthread.h>
 #include <core/LongArray.h>
-#include <core/SecurityException.h>
-#include <core/ThreadSupport.h>
 #include <core/util/Arrays.h>
 
-#include "Unix.h"
+#include "System.h"
 
 namespace core {
     static size_t AlignWordSize(glong byte) {
@@ -58,7 +58,7 @@ namespace core {
     void ThreadSupport::suspendArgs(void* arg) {
         ARGS args = (ARGS)arg;
         pthread_mutex_lock(&args->mutex);
-        args->state++;
+        args->state += 1;
         pthread_cond_wait(&args->cond, &args->mutex);
         pthread_mutex_unlock(&args->mutex);
     }
@@ -66,7 +66,7 @@ namespace core {
     void ThreadSupport::resumeArgs(void* arg) {
         ARGS args = (ARGS)arg;
         pthread_mutex_lock(&args->mutex);
-        args->state--;
+        args->state -= 1;
         pthread_cond_signal(&args->cond);
         pthread_mutex_unlock(&args->mutex);
     }

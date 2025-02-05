@@ -5,8 +5,7 @@
 #ifndef CORE24_CORE24_TRASH_H
 #define CORE24_CORE24_TRASH_H
 
-#include "core/String.h"
-#include "core/io/File.h"
+#include <core/io/File.h>
 
 namespace core {
     namespace io {

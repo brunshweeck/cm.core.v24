@@ -2,8 +2,8 @@
 // Created by bruns on 22/03/2024.
 //
 
-#ifndef CORE24_EVENT_H
-#define CORE24_EVENT_H
+#ifndef CORE24_UNIX_EVENT_H
+#define CORE24_UNIX_EVENT_H
 
 #include <core/misc/Unsafe.h>
 #include <pthread.h>
@@ -34,4 +34,4 @@ namespace core {
     }
 } // core
 
-#endif //CORE24_EVENT_H
+#endif //CORE24_UNIX_EVENT_H

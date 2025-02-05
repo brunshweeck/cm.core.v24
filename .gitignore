@@ -9,13 +9,13 @@ bin/
 *.ipr
 Cmake/
 .cmake/
-.build/
 Debug/
 .debug/
 cmake-*/
 Utilities/
-cmake-*/
-
+Docs/ASCII Doc
+.run
+banner.*
 ### VS Code ###
 .vscode/
 build/

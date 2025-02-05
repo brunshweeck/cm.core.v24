@@ -2,12 +2,15 @@
 // Created by brunshweeck on 18 août 2024.
 //
 
+#include "RandomGenerator.h"
+
 #include <core/ByteArray.h>
 #include <core/Float.h>
 #include <core/IllegalArgumentException.h>
-#include <core/random/RandomGenerator.h>
-#include <core/util/HashMap.h>
 #include <core/random/Random.h>
+#include <core/util/Collections.h>
+#include <core/util/HashMap.h>
+#include <core/util/Locale.h>
 #include <meta/random/L128X1024MixRandom.h>
 #include <meta/random/L128X128MixRandom.h>
 #include <meta/random/L128X256MixRandom.h>
@@ -22,61 +25,79 @@
 #include <meta/random/Xoshiro256PlusPlus.h>
 
 namespace core {
+    CORE_ALIAS(UNSAFE, misc::Unsafe);
+    using namespace util;
+#define CORE_INIT_RND(Rnd) { \
+    Rnd& rnd = UNSAFE::newInstance<Rnd>(); \
+    generators.put(rnd.properties().name(), rnd); \
+    generators.put(rnd.properties().name().toLowerCase(Locale::ROOT), rnd); \
+    }
+
     namespace random {
-        RandomGenerator &RandomGenerator::forName(String const &name) {
-            util::HashMap<String, RandomGenerator> &generators = RandomSupport::REGISTER_GENERATORS;
+        static Map<String, RandomGenerator>& getGenerators() {
+            static HashMap<String, RandomGenerator> generators;
             if (generators.isEmpty()) {
-                RandomGenerator const &rng0 = UNSAFE::newInstance<Random>();
-                RandomGenerator const &rng1 = UNSAFE::newInstance<L32X64MixRandom>();
-                RandomGenerator const &rng2 = UNSAFE::newInstance<L64X128MixRandom>();
-                RandomGenerator const &rng3 = UNSAFE::newInstance<L64X256MixRandom>();
-                RandomGenerator const &rng4 = UNSAFE::newInstance<L64X1024MixRandom>();
-                RandomGenerator const &rng5 = UNSAFE::newInstance<L128X128MixRandom>();
-                RandomGenerator const &rng6 = UNSAFE::newInstance<L128X256MixRandom>();
-                RandomGenerator const &rng7 = UNSAFE::newInstance<L128X1024MixRandom>();
-                RandomGenerator const &rng8 = UNSAFE::newInstance<L64X128StarStarRandom>();
-                RandomGenerator const &rng9 = UNSAFE::newInstance<Xoroshiro128PlusPlus>();
-                RandomGenerator const &rng10 = UNSAFE::newInstance<Xoshiro256PlusPlus>();
-                RandomGenerator const &rng11 = UNSAFE::newInstance<MersenneTwister>();
-                generators.put("random"_S, rng0);
-                generators.put(""_S, rng0);
-                generators.put("lcg"_S, rng0);
-                generators.put("l32x64mixrandom"_S, rng1);
-                generators.put("l32x64mix"_S, rng1);
-                generators.put("lxm"_S, rng1);
-                generators.put("l64x128mixrandom"_S, rng2);
-                generators.put("l64x128mix"_S, rng2);
-                generators.put("l64x256mixrandom"_S, rng3);
-                generators.put("l64x256mix"_S, rng3);
-                generators.put("l64x1024mixrandom"_S, rng4);
-                generators.put("l64x1024mix"_S, rng4);
-                generators.put("l128x128mixrandom"_S, rng5);
-                generators.put("l128x128mix"_S, rng5);
-                generators.put("l128x256mixrandom"_S, rng6);
-                generators.put("l128x256mix"_S, rng6);
-                generators.put("l128x1024mixrandom"_S, rng7);
-                generators.put("l128x1024mix"_S, rng7);
-                generators.put("l64x128starstarrandom"_S, rng8);
-                generators.put("l64x128starstar"_S, rng8);
-                generators.put("l64x128**"_S, rng8);
-                generators.put("xoroshiro128plusplus"_S, rng9);
-                generators.put("xoroshiro128++"_S, rng9);
-                generators.put("xoshiro256plusplus"_S, rng10);
-                generators.put("xoshiro256++"_S, rng10);
-                generators.put("mt19937"_S, rng11);
-                generators.put("mersennetwister"_S, rng11);
-                generators.put("mersenne-twister"_S, rng11);
-                generators.put("mersenne twister"_S, rng11);
+                CORE_INIT_RND(Random)
+                CORE_INIT_RND(L32X64MixRandom)
+                CORE_INIT_RND(L64X128MixRandom)
+                CORE_INIT_RND(L64X256MixRandom)
+                CORE_INIT_RND(L64X1024MixRandom)
+                CORE_INIT_RND(L128X128MixRandom)
+                CORE_INIT_RND(L128X256MixRandom)
+                CORE_INIT_RND(L128X1024MixRandom)
+                CORE_INIT_RND(L64X128StarStarRandom)
+                CORE_INIT_RND(Xoroshiro128PlusPlus)
+                CORE_INIT_RND(Xoshiro256PlusPlus)
+                CORE_INIT_RND(Xoshiro256PlusPlus)
+                CORE_INIT_RND(MersenneTwister)
             }
-            String const algorithm = name.toLowerCase();
-            Object &generator = generators.getOrNull(algorithm);
-            if (generator != null)
-                return CORE_XCAST(RandomGenerator, generator);
-            IllegalArgumentException("Generator of name `"_S + name + "` not found")
-                    .throws($ftrace());
+
+            return generators;
         }
 
-        RandomGenerator &RandomGenerator::defaultGenerator() {
+        RandomGenerator& RandomGenerator::forName(String const& name) {
+            String clazz = name;
+            if (name.isEmpty())
+                clazz = "Random"_Sl;
+        FIRST: {
+                Object& rnd = getGenerators().getOrNull(clazz);
+                if (rnd != null)
+                    return CORE_XCAST(RandomGenerator, rnd);
+            }
+            clazz = clazz.toLowerCase(Locale::ROOT);
+        SECOND: {
+                Object& rnd = getGenerators().getOrNull(clazz);
+                if (rnd != null)
+                    return CORE_XCAST(RandomGenerator, rnd);
+            }
+        THIRD: {
+                if (clazz.equals("lxm"_Sl) || clazz.equals("l32x64mix"_Sl))
+                    clazz = "l32X64MixRandom"_Sl;
+                else if (clazz.equals("l64x128mix"_Sl))
+                    clazz = "L64X128MixRandom"_Sl;
+                else if (clazz.equals("l64x256mix"_Sl))
+                    clazz = "L64X256MixRandom"_Sl;
+                else if (clazz.equals("l64x1024mix"_Sl))
+                    clazz = "L64X1024MixRandom"_Sl;
+                else if (clazz.equals("l128x128mix"_Sl))
+                    clazz = "L128X128MixRandom"_Sl;
+                else if (clazz.equals("l128x256mix"_Sl))
+                    clazz = "L128X256MixRandom"_Sl;
+                else if (clazz.equals("l128x1024mix"_Sl))
+                    clazz = "L128X1024MixRandom"_Sl;
+                else if (clazz.equals("l64x128starstar"_Sl))
+                    clazz = "L128X1024StarStarRandom"_Sl;
+                else if (clazz.equals("mt19937"_Sl) || clazz.equals("mersenne"_Sl) ||
+                    clazz.equals("mersenne-twister"_Sl))
+                    clazz = "MersenneTwister"_Sl;
+                Object& rnd = getGenerators().getOrNull(clazz);
+                if (rnd != null)
+                    return CORE_XCAST(RandomGenerator, rnd);
+            }
+            IllegalArgumentException("Unsupported Random Generator of name: "_S + name).throws($ftrace());
+        }
+
+        RandomGenerator& RandomGenerator::defaultGenerator() {
             return forName("L32X64MixRandom"_S);
         }
 
@@ -84,7 +105,7 @@ namespace core {
             return nextInt() < 0;
         }
 
-        void RandomGenerator::nextBytes(ByteArray &bytes) const {
+        void RandomGenerator::nextBytes(ByteArray& bytes) const {
             gint i = 0;
             gint len = bytes.length();
             for (gint words = len >> 3; words-- > 0;) {
@@ -166,7 +187,7 @@ namespace core {
         }
 
         Array<RandomGenerator> RandomGenerator::availableGenerators() {
-            util::HashMap<String, RandomGenerator> &generators = RandomSupport::REGISTER_GENERATORS;
+            util::HashMap<String, RandomGenerator>& generators = RandomSupport::REGISTER_GENERATORS;
             // ensure that generators is not empty
             CORE_IGNORE(forName({}));
             auto& set = util::Set<RandomGenerator>::copyOf(generators.values());
@@ -174,6 +195,5 @@ namespace core {
             UNSAFE::deleteInstance(set);
             return arr;
         }
-
     } // random
 } // core

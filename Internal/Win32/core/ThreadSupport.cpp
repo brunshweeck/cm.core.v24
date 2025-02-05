@@ -11,7 +11,6 @@
 #include <TlHelp32.h>
 #include <Windows.h>
 #include <core/SecurityException.h>
-#include <core/ThreadSupport.h>
 #include <core/util/Arrays.h>
 #include <core/misc/Event.h>
 

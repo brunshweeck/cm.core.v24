@@ -3,10 +3,10 @@
 .Core24
 ****
 [quote, Une nouvelle vision du C++, mai 2024]
-*Core24* represente une version optimisée du système de fonction standard lié au c++. Dans une vision, de lié toute les classe à une unique base, ainsi avoir une meilleur traçabilité.
+*Core24* represente une version optimisée du système de fonction
+standard lié au c++. Dans une vision, de lié toute les classe à une unique base, ainsi avoir une meilleur traçabilité.
 ****
 
-&times;
 
 === Requis
 

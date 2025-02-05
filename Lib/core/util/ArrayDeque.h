@@ -1199,6 +1199,15 @@ namespace core {
                 }
             };
         };
+
+
+#if __cpp_deduction_guides >= 201711L
+        ArrayDeque() -> ArrayDeque<>;
+        ArrayDeque(...) -> ArrayDeque<>;
+        template <class E> ArrayDeque(Collection<E> const&) -> ArrayDeque<E>;
+#endif
+
+
     } // util
 } // core
 

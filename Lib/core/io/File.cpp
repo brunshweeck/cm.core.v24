@@ -3,19 +3,18 @@
 //
 
 #include "File.h"
-#include "NotLinkException.h"
-#include "NotDirectoryException.h"
-#include "AtomicMoveNotSupportedException.h"
 
 #include <core/IllegalArgumentException.h>
 #include <core/StringArray.h>
+#include <core/io/AtomicMoveNotSupportedException.h>
+#include <core/io/FileAlreadyExistsException.h>
 #include <core/io/FileArray.h>
 #include <core/io/FileFilter.h>
 #include <core/io/FilenameFilter.h>
 #include <core/io/IOException.h>
-#include <core/io/FileAlreadyExistsException.h>
 #include <core/io/NoSuchFileException.h>
-#include <core/misc/Unsafe.h>
+#include <core/io/NotDirectoryException.h>
+#include <core/io/NotLinkException.h>
 #include <core/net/URI.h>
 #include <core/net/URISyntaxException.h>
 #include <core/random/Random.h>
@@ -371,8 +370,8 @@ namespace core {
         gbool File::createSymbolicLink(File const& link) const {
             if (isInvalid() || link.isInvalid())
                 IOException("Invalid file path."_S).throws($ftrace());
-//            if (exists())
-//                FileAlreadyExistsException(pathname).throws($ftrace());
+            //            if (exists())
+            //                FileAlreadyExistsException(pathname).throws($ftrace());
 
             String s = fs().createLink(link.pathname, pathname, FileSystem::SYMBOLIC_LINK);
             return !s.isEmpty();
@@ -414,9 +413,8 @@ namespace core {
             if (isInvalid())
                 IOException("Invalid file path."_S).throws($ftrace());
 
-            gbool r = fs().createDirectory(pathname);
-
-            if (r) return r;
+            if (fs().createDirectory(pathname))
+                return true;
 
             try {
                 File f = canonicalFile();
@@ -786,7 +784,7 @@ namespace core {
 
         File File::createTempFile(String const& prefix, String const& suffix, File const& directory) {
             if (prefix.length() < 3) {
-                IllegalArgumentException("Prefix string \""_S + prefix +
+                IllegalArgumentException(R"(Prefix string ")"_Sl + prefix +
                     "\" too short: length must be at least 3").throws($ftrace());
             }
 
@@ -832,7 +830,7 @@ namespace core {
         Object& File::clone() const {
             try {
                 return UNSAFE::newInstance<File>(*this);
-            } catch (Throwable const &ex) { ex.throws($ftrace()); }
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         gbool File::isInvalid() const {

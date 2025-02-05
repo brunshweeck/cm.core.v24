@@ -2,8 +2,8 @@
 // Created by bruns on 01/10/2024.
 //
 
-#ifndef CORE24_THREADSUPPORT_H
-#define CORE24_THREADSUPPORT_H
+#ifndef CORE24_UNIX_THREADSUPPORT_H
+#define CORE24_UNIX_THREADSUPPORT_H
 
 #include <core/Thread.h>
 
@@ -75,4 +75,4 @@ namespace core {
     };
 } // core
 
-#endif //CORE24_THREADSUPPORT_H
+#endif //CORE24_UNIX_THREADSUPPORT_H

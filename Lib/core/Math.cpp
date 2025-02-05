@@ -694,7 +694,7 @@ gdouble Math::log(gdouble a) {
 
     gfloat Math::fma(gfloat a, gfloat b, gfloat c) {
         if (Float::isFinite(a) && Float::isFinite(b) && Float::isFinite(c)) {
-            if (a == 0.0 || b == 0.0) {
+            if (a == 0.0F || b == 0.0F) {
                 return a * b + c; // Handled signed zero cases
             } else {
                 //                return (BigDecimal((gdouble) a * (gdouble) b) // Exact multiply

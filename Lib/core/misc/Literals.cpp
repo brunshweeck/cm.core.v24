@@ -129,113 +129,89 @@ namespace core {
                 return String();
             gint length = CORE_CAST(gint, len);
             ByteArray bytes = ByteArray(length);
-            for (gint i = 0; i < length; i++) bytes[i] = literal[i];
+            for (gint i = 0; i < length; i++)
+                bytes[i] = literal[i];
 
-            return String(bytes, Charset::ISO_8859_1);
+            return String(bytes, 0);
         }
 
         String operator ""_Sl(const char16_t literal[], size_t len) {
             if (!literal)
                 IllegalArgumentException("null literal").throws($ftrace());
-            if (len > Integer::MAX_VALUE / 2)
+            if (len > Integer::MAX_VALUE)
                 OutOfMemoryError("literal too large").throws($ftrace());
             if (len == 0)
                 return String();
-            gint length = CORE_CAST(gint, len) * 2;
+            gint length = CORE_CAST(gint, len);
             try {
                 ByteArray bytes = ByteArray(length);
-                for (gint i = 0, j = 0; i < len; i++) {
-                    wchar_t c = literal[i];
-                    bytes[j++] = c >> 8;
-                    bytes[j++] = c & 0xFF;
-                }
-
-                return String(bytes, Charset::ISO_8859_1);
+                for (gint i = 0; i < len; i++)
+                    bytes[i] = literal[i] & 0xFF;
+                return String(bytes, 0);
             } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator ""_Sl(const char32_t literal[], size_t len) {
             if (!literal)
                 IllegalArgumentException("null literal").throws($ftrace());
-            if (len > Integer::MAX_VALUE / 4)
+            if (len > Integer::MAX_VALUE)
                 OutOfMemoryError("literal too large").throws($ftrace());
             if (len == 0)
                 return String();
-            gint length = CORE_CAST(gint, len) * 4;
+            gint length = CORE_CAST(gint, len);
             try {
                 ByteArray bytes = ByteArray(length);
-                for (gint i = 0, j = 0; i < len; i++) {
-                    wchar_t c = literal[i];
-                    bytes[j++] = c >> 24;
-                    bytes[j++] = c >> 16 & 0xFF;
-                    bytes[j++] = c >> 8 & 0xFF;
-                    bytes[j++] = c & 0xFF;
-                }
-
-                return String(bytes, Charset::ISO_8859_1);
+                for (gint i = 0; i < len; i++)
+                    bytes[i] = literal[i] & 0xFF;
+                return String(bytes, 0);
             } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator ""_Sl(const wchar_t literal[], size_t len) {
             if (!literal)
                 IllegalArgumentException("null literal").throws($ftrace());
-            CORE_FAST gint sizeOfChar = Class<wchar_t>::size();
-            if (len > Integer::MAX_VALUE / sizeOfChar)
+            if (len > Integer::MAX_VALUE)
                 OutOfMemoryError("literal too large").throws($ftrace());
             if (len == 0)
                 return String();
-            gint length = CORE_CAST(gint, len) * sizeOfChar;
+            gint length = CORE_CAST(gint, len);
             try {
                 ByteArray bytes = ByteArray(length);
-                switch (sizeOfChar) {
-                    case 2:
-                        for (gint i = 0, j = 0; i < len; i++) {
-                            wchar_t c = literal[i];
-                            bytes[j++] = c >> 8;
-                            bytes[j++] = c & 0xFF;
-                        }
-                    case 4:
-                        for (gint i = 0, j = 0; i < len; i++) {
-                            wchar_t c = literal[i];
-                            bytes[j++] = c >> 24;
-                            bytes[j++] = c >> 16 & 0xFF;
-                            bytes[j++] = c >> 8 & 0xFF;
-                            bytes[j++] = c & 0xFF;
-                        }
-                    default: break;
-                }
-
-                return String(bytes, Charset::ISO_8859_1);
+                for (gint i = 0; i < len; i++)
+                    bytes[i] = literal[i] & 0xFF;
+                return String(bytes, 0);
             } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
-        Complex operator ""_i(unsigned long long imag) { return Complex(0, CORE_CAST(gdouble, imag)); }
+        Complex operator ""_i(unsigned long long imag) { return Complex(0, (gdouble) imag); }
 
-        Complex operator ""_i(long double imag) { return Complex(0, CORE_CAST(gdouble, imag)); }
+        Complex operator ""_i(long double imag) { return Complex(0, (gdouble) imag); }
 
-        Complex operator ""_j(unsigned long long imag) { return Complex(0, CORE_CAST(gdouble, imag)); }
+        Complex operator ""_j(unsigned long long imag) { return Complex(0, (gdouble) imag); }
 
-        Complex operator ""_j(long double imag) { return Complex(0, CORE_CAST(gdouble, imag)); }
+        Complex operator ""_j(long double imag) { return Complex(0, (gdouble) imag); }
 
 #if __cplusplus >= 201103L
 
         CORE_WARNING_PUSH
         CORE_WARNING_DISABLE_UDL
 
-        Complex operator ""i(unsigned long long imag) { return Complex(0, CORE_CAST(gdouble, imag)); }
+        Complex operator ""i(unsigned long long imag) { return Complex(0, (gdouble) imag); }
 
-        Complex operator ""i(long double imag) { return Complex(0, CORE_CAST(gdouble, imag)); }
+        Complex operator ""i(long double imag) { return Complex(0, (gdouble) imag); }
 
-        Complex operator ""j(unsigned long long imag) { return Complex(0, CORE_CAST(gdouble, imag)); }
+        Complex operator ""j(unsigned long long imag) { return Complex(0, (gdouble) imag); }
 
-        Complex operator ""j(long double imag) { return Complex(0, CORE_CAST(gdouble, imag)); }
+        Complex operator ""j(long double imag) { return Complex(0, (gdouble) imag); }
 
         CORE_WARNING_POP
 #endif
 
 
         String operator +(String const& a, String const& b) {
-            try { return a.concat(b); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a.concat(b);
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator +(String const& a, Object const& b) {
@@ -257,11 +233,15 @@ namespace core {
         }
 
         String operator +(String const& a, short b) {
-            try { return a.concat(Short::toString(b)); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a.concat(Short::toString(b));
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator +(short a, String const& b) {
-            try { return Short::toString(a).concat(b); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return Short::toString(a).concat(b);
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator +(String const& a, bool b) {
@@ -307,7 +287,9 @@ namespace core {
         }
 
         String operator +(char16_t a, String const& b) {
-            try { return Character::toString(a).concat(b); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return Character::toString(a).concat(b);
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator +(String const& a, char32_t b) {
@@ -335,151 +317,225 @@ namespace core {
         }
 
         String operator +(String const& a, unsigned short b) {
-            try { return a.concat(Integer::toString(b)); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a.concat(Integer::toString(b));
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator +(unsigned short a, String const& b) {
-            try { return Integer::toString(a).concat(b); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return Integer::toString(a).concat(b);
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator +(String const& a, int b) {
-            try { return a.concat(Integer::toString(b)); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a.concat(Integer::toString(b));
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator +(int a, String const& b) {
-            try { return Integer::toString(a).concat(b); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return Integer::toString(a).concat(b);
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator +(String const& a, unsigned int b) {
-            try { return a.concat(Integer::toUnsignedString(b)); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a.concat(Integer::toUnsignedString(b));
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator +(unsigned int a, String const& b) {
-            try { return Integer::toUnsignedString(a).concat(b); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return Integer::toUnsignedString(a).concat(b);
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator +(String const& a, long b) {
-            try { return a.concat(Long::toString(b)); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a.concat(Long::toString(b));
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator +(long a, String const& b) {
-            try { return Long::toString(a).concat(b); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return Long::toString(a).concat(b);
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator +(String const& a, unsigned long b) {
-            try { return a.concat(Long::toUnsignedString(b)); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a.concat(Long::toUnsignedString(b));
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator +(unsigned long a, String const& b) {
-            try { return Long::toUnsignedString(a).concat(b); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return Long::toUnsignedString(a).concat(b);
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator +(String const& a, long long b) {
-            try { return a.concat(Long::toString(b)); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a.concat(Long::toString(b));
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator +(long long a, String const& b) {
-            try { return Long::toString(a).concat(b); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return Long::toString(a).concat(b);
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator +(String const& a, unsigned long long b) {
-            try { return a.concat(Long::toUnsignedString(b)); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a.concat(Long::toUnsignedString(b));
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator +(unsigned long long a, String const& b) {
-            try { return Long::toUnsignedString(a).concat(b); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return Long::toUnsignedString(a).concat(b);
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator +(String const& a, float b) {
-            try { return a.concat(Float::toString(b)); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a.concat(Float::toString(b));
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator +(float a, String const& b) {
-            try { return Float::toString(a).concat(b); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return Float::toString(a).concat(b);
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator +(String const& a, double b) {
-            try { return a.concat(Double::toString(b)); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a.concat(Double::toString(b));
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator +(double a, String const& b) {
-            try { return Double::toString(a).concat(b); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return Double::toString(a).concat(b);
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator +(String const& a, long double b) {
-            try { return a.concat(Double::toString(b)); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a.concat(Double::toString(b));
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String operator +(long double a, String const& b) {
-            try { return Double::toString(a).concat(b); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return Double::toString(a).concat(b);
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String& operator+=(String& a, String const& b) {
-            try { return a = a + b; } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a = a + b;
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String& operator+=(String& a, bool b) {
-            try { return a = a + b; } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a = a + b;
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String& operator+=(String& a, char b) {
-            try { return a = a + b; } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a = a + b;
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String& operator+=(String& a, char16_t b) {
-            try { return a = a + b; } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a = a + b;
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String& operator+=(String& a, char32_t b) {
-            try { return a = a + b; } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a = a + b;
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String& operator+=(String& a, wchar_t b) {
-            try { return a = a + b; } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a = a + b;
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String& operator+=(String& a, short b) {
-            try { return a = a + b; } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a = a + b;
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String& operator+=(String& a, unsigned short b) {
-            try { return a = a + b; } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a = a + b;
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String& operator+=(String& a, int b) {
-            try { return a = a + b; } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a = a + b;
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String& operator+=(String& a, unsigned int b) {
-            try { return a = a + b; } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a = a + b;
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String& operator+=(String& a, long b) {
-            try { return a = a + b; } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a = a + b;
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String& operator+=(String& a, unsigned long b) {
-            try { return a = a + b; } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a = a + b;
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String& operator+=(String& a, long long b) {
-            try { return a = a + b; } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a = a + b;
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String& operator+=(String& a, unsigned long long b) {
-            try { return a = a + b; } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a = a + b;
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String& operator+=(String& a, float b) {
-            try { return a = a + b; } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a = a + b;
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String& operator+=(String& a, double b) {
-            try { return a = a + b; } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a = a + b;
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         String& operator+=(String& a, long double b) {
-            try { return a = a + b; } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return a = a + b;
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
 
@@ -488,7 +544,9 @@ namespace core {
         }
 
         gbool operator !=(String const& a, String const& b) {
-            try { return !(a == b); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return !(a == b);
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         gbool operator ==(String const& a, Object const& b) {
@@ -504,11 +562,15 @@ namespace core {
         }
 
         gbool operator !=(String const& a, Object const& b) {
-            try { return !(a == b); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return !(a == b);
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         gbool operator !=(Object const& a, String const& b) {
-            try { return !(a == b); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return !(a == b);
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
         Complex operator +(Complex const& a, Complex const& b) { return a.plus(b); }
@@ -896,7 +958,9 @@ namespace core {
         }
 
         gbool operator !=(Object const& a, Object const& b) {
-            try { return !(a == b); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            try {
+                return !(a == b);
+            } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
     }
 } // core
@@ -919,7 +983,7 @@ void* operator new(size_t sizeInBytes) {
         glong ptr = UNSAFE::allocateMemory(bytes);
         UNSAFE::setMemory(null, ptr, bytes, 0);
         return CORE_CAST(void*, ptr);
-    } catch (Throwable const& ex) {
+    } catch (Throwable const& _) {
         OutOfMemoryError("Could not allocate memory for new").throws($ftrace());
     }
 }
@@ -937,7 +1001,7 @@ void* operator new[](size_t sizeInBytes) {
         glong ptr = UNSAFE::allocateMemory(bytes);
         UNSAFE::setMemory(null, ptr, bytes, 0);
         return CORE_CAST(void*, ptr);
-    } catch (Throwable const& ex) {
+    } catch (Throwable const& _) {
         OutOfMemoryError("Could not allocate memory for new").throws($ftrace());
     }
 }

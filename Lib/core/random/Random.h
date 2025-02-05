@@ -232,7 +232,7 @@ namespace core {
              * as if by:
              * @code
              *   glong nextLong() {
-             *     return ((long)next(32) << 32) + next(32);
+             *     return ((glong)next(32) << 32) + next(32);
              *   }
              * @endcode
              *

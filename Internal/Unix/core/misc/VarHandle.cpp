@@ -8,8 +8,9 @@
 #undef BIG_ENDIAN
 #endif
 
+#include "VarHandle.h"
+
 #include <core/IllegalArgumentException.h>
-#include <core/misc/VarHandle.h>
 
 
 namespace core {

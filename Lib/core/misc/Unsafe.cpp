@@ -2,21 +2,22 @@
 // Created by brunshweeck on 8 juin 2024.
 //
 
+#include "Unsafe.h"
+
+#include <core/BooleanArray.h>
+#include <core/DoubleArray.h>
+#include <core/FloatArray.h>
 #include <core/IllegalArgumentException.h>
+#include <core/LongArray.h>
 #include <core/OutOfMemoryError.h>
+#include <core/ShortArray.h>
 #include <core/Thread.h>
-#include <core/misc/Cache.h>
-#include <core/misc/Event.h>
-#include <core/misc/MemoryHeap.h>
-#include <core/misc/Unsafe.h>
-#include <core/misc/VarHandle.h>
 #include <core/time/LocalDateTime.h>
 #include <core/util/Arrays.h>
-#include <core/BooleanArray.h>
-#include <core/LongArray.h>
-#include <core/ShortArray.h>
-#include <core/FloatArray.h>
-#include <core/DoubleArray.h>
+#include <native/Cache.h>
+#include <native/Event.h>
+#include <native/Memory.h>
+#include <native/Variable.h>
 
 namespace core {
     using namespace time;

@@ -75,7 +75,7 @@ namespace core {
          * This is best done at creation time, to prevent accidental
          * unsynchronized access to the map:
          * @code
-         *   Map m = Collections.synchronizedMap(UNSAFE::newInstance<HashMap>(...));
+         *   auto& m = Collections.synchronizedMap(UNSAFE::newInstance<HashMap>(...));
          * @endcode
          * </p>
          * <p>
@@ -454,7 +454,7 @@ namespace core {
              */
             V& get(K const& key) override {
                 NODE x = exactNode(key);
-                if (x)
+                if (x != null)
                     return *x->value;
                 MissingKeyException(key).throws($ftrace());
             }
@@ -474,7 +474,7 @@ namespace core {
              */
             V const& get(K const& key) const override {
                 NODE x = exactNode(key);
-                if (x)
+                if (x != null)
                     return *x->value;
                 MissingKeyException(key).throws($ftrace());
             }
@@ -527,7 +527,7 @@ namespace core {
              */
             V& remove(K const& key) override {
                 NODE x = deleteNode(hashKey(key), key, null, false, true);
-                if (!x)
+                if (x == null)
                     return valueOf(x);
                 MissingKeyException(key).throws($ftrace());
             }
@@ -706,14 +706,14 @@ namespace core {
 
             V& getOrDefault(K const& key, V const& defaultValue) override {
                 NODE x = exactNode(key);
-                if (x)
+                if (x != null)
                     return valueOf(x);
                 try { return UNSAFE::copyInstance(defaultValue); } catch (Throwable const& ex) { ex.throws($ftrace()); }
             }
 
             V const& getOrDefault(K const& key, V const& defaultValue) const override {
                 NODE x = exactNode(key);
-                if (x)
+                if (x != null)
                     return valueOf(x);
 
                 try { return UNSAFE::copyInstance(defaultValue); } catch (Throwable const& ex) { ex.throws($ftrace()); }
@@ -721,7 +721,7 @@ namespace core {
 
             Object& getOrNull(K const& key) override {
                 NODE x = exactNode(key);
-                if (x)
+                if (x != null)
                     return valueOf(x);
 
                 return null;
@@ -729,7 +729,7 @@ namespace core {
 
             const Object& getOrNull(K const& key) const override {
                 NODE x = exactNode(key);
-                if (x)
+                if (x != null)
                     return valueOf(x);
 
                 return null;
@@ -761,7 +761,7 @@ namespace core {
 
             Object& replace(K const& key, V const& value) override {
                 NODE x = exactNode(key);
-                if (x) {
+                if (x != null) {
                     V& oldValue = valueOf(x);
                     try {
                         x->value = &UNSAFE::copyInstance(value);
@@ -930,13 +930,23 @@ namespace core {
                 return null;
             }
 
-            static gint hashOf(NODE x) { return (!x) ? 0 : x->hash; }
+            static gint hashOf(NODE x) {
+                return (x == null) ? 0 : x->hash;
+            }
 
-            static NODE nextOf(NODE x) { return (!x) ? x : x->next; }
+            static NODE nextOf(NODE x) {
+                return (x == null) ? x : x->next;
+            }
 
-            static K& keyOf(NODE x) { return x->getKey(); }
+            static K& keyOf(NODE x) {
+                CORE_ASSERT(x != null);
+                return x->getKey();
+            }
 
-            static V& valueOf(NODE x) { return x->getValue(); }
+            static V& valueOf(NODE x) {
+                CORE_ASSERT(x != null);
+                return x->getValue();
+            }
 
             static TABLE tableOf(Array<Node> const& tab) { return CORE_CAST(TABLE, Arrays::array2DirectAccess(tab)); }
 
@@ -946,17 +956,17 @@ namespace core {
 
             static LINKEDNODE toLinkedNode(NODE x) { return CORE_DCAST(LINKEDNODE, x); }
 
-            static TREENODE rightOf(TREENODE x) { return (!x) ? x : x->right; }
+            static TREENODE rightOf(TREENODE x) { return (x == null) ? x : x->right; }
 
-            static TREENODE leftOf(TREENODE x) { return (!x) ? x : x->left; }
+            static TREENODE leftOf(TREENODE x) { return (x == null) ? x : x->left; }
 
-            static TREENODE parentOf(TREENODE x) { return (!x) ? x : x->parent; }
+            static TREENODE parentOf(TREENODE x) { return (x == null) ? x : x->parent; }
 
-            static TREENODE prevOf(TREENODE x) { return (!x) ? x : x->prev; }
+            static TREENODE prevOf(TREENODE x) { return (x == null) ? x : x->prev; }
 
-            static LINKEDNODE afterOf(LINKEDNODE x) { return (!x) ? x : x->after; }
+            static LINKEDNODE afterOf(LINKEDNODE x) { return (x == null) ? x : x->after; }
 
-            static LINKEDNODE beforeOf(LINKEDNODE x) { return (!x) ? x : x->before; }
+            static LINKEDNODE beforeOf(LINKEDNODE x) { return (x == null) ? x : x->before; }
 
             /**
              * Implements Map.putAll and Map constructor.
@@ -1009,11 +1019,11 @@ namespace core {
                 NODE p = { };
                 gint n = 0;
                 gint i = 0;
-                if (!((tab = tableOf(table))) || (n = table.length()) == 0) {
+                if (((tab = tableOf(table)) == null) || (n = table.length()) == 0) {
                     tab = tableOf(resize());
                     n = table.length();
                 }
-                if (!((p = tab[i = (n - 1) & hash])))
+                if ((p = tab[i = (n - 1) & hash]) == null)
                     tab[i] = newNode(hash, key, value, null);
                 else {
                     NODE x = { };
@@ -1023,7 +1033,7 @@ namespace core {
                         x = toTreeNode(p)->putTreeNode(*this, table, hash, key, value);
                     else {
                         for (gint binCount = 0;; ++binCount) {
-                            if (!((x = nextOf(p)))) {
+                            if ((x = nextOf(p)) == null) {
                                 p->next = newNode(hash, key, value, null);
                                 if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
                                     treeifyBin(table, hash);
@@ -1034,7 +1044,7 @@ namespace core {
                             p = x;
                         }
                     }
-                    if (x) {
+                    if (x != null) {
                         // existing mapping for key
                         V& oldValue = valueOf(x);
                         if (!onlyIfAbsent)
@@ -1146,7 +1156,7 @@ namespace core {
                         NODE x = { };
                         if ((x = oldTab[j])) {
                             oldTab[j] = { };
-                            if (!nextOf(x))
+                            if (nextOf(x) == null)
                                 newTab[hashOf(x) & (newCap - 1)] = x;
                             else if (isTreeNode(x))
                                 toTreeNode(x)->split(*this, newTable, j, oldCap);
@@ -1160,10 +1170,10 @@ namespace core {
                                 do {
                                     next = nextOf(x);
                                     if ((hashOf(x) & oldCap) == 0) {
-                                        (!loTail ? loHead : loTail->next) = x;
+                                        (loTail == null ? loHead : loTail->next) = x;
                                         loTail = x;
                                     } else {
-                                        (!hiTail ? hiHead : hiTail->next) = x;
+                                        (hiTail == null ? hiHead : hiTail->next) = x;
                                         hiTail = x;
                                     }
                                 } while ((x = next));
@@ -1191,14 +1201,14 @@ namespace core {
                 gint index = 0;
                 NODE x = { };
                 TABLE t = tableOf(tab);
-                if ((!t) || (n = tab.length()) < MIN_TREEIFY_CAPACITY)
+                if ((t == null) || (n = tab.length()) < MIN_TREEIFY_CAPACITY)
                     resize();
                 else if ((x = t[index = (n - 1) & hash])) {
                     TREENODE hd = { };
                     TREENODE tl = { };
                     do {
                         TREENODE p = convert2TreeNode(x, null);
-                        if (!tl)
+                        if (tl == null)
                             hd = p;
                         else {
                             p->prev = tl;
@@ -1284,7 +1294,7 @@ namespace core {
                  */
                 TREENODE root() {
                     for (TREENODE x = this, p;;) {
-                        if (!((p = parentOf(x))))
+                        if ((p = parentOf(x)) == null)
                             return x;
                         x = p;
                     }
@@ -1334,9 +1344,9 @@ namespace core {
                             x = xr;
                         else if (key == keyOf(x))
                             return x;
-                        else if (!xl)
+                        else if (xl == null)
                             x = xr;
-                        else if (!xr)
+                        else if (xr == null)
                             x = xl;
                         else if ((dir = compare(key, keyOf(x))) != 0)
                             x = (dir < 0) ? xl : xr;
@@ -1379,7 +1389,7 @@ namespace core {
                     for (TREENODE x = this, next; x; x = next) {
                         next = toTreeNode(nextOf(x));
                         x->left = x->right = { };
-                        if (!root) {
+                        if (root == null) {
                             x->parent = { };
                             setColor(x, Color::BLACK);
                             root = x;
@@ -1395,7 +1405,7 @@ namespace core {
                                 else if ((dir = compare(keyOf(x), keyOf(y))) == 0)
                                     dir = tieBreakOrder(keyOf(x), keyOf(y));
                                 TREENODE xp = y;
-                                if (!((x = (dir <= 0) ? leftOf(x) : rightOf(x)))) {
+                                if ((x = (dir <= 0) ? leftOf(x) : rightOf(x)) == null) {
                                     x->parent = xp;
                                     (dir <= 0 ? xp->left : xp->right) = x;
                                     root = afterInsertion(root, x);
@@ -1416,7 +1426,7 @@ namespace core {
                     NODE tl = { };
                     for (NODE x = this; x; x = nextOf(x)) {
                         NODE y = m.convert2Node(x, null);
-                        if (!tl)
+                        if (tl == null)
                             hd = y;
                         else
                             tl->next = y;
@@ -1453,7 +1463,7 @@ namespace core {
                         }
 
                         TREENODE xp = x;
-                        if (!((x = (dir <= 0) ? leftOf(x) : rightOf(x)))) {
+                        if ((x = (dir <= 0) ? leftOf(x) : rightOf(x)) == null) {
                             NODE xpn = nextOf(xp);
                             TREENODE z = m.newTreeNode(h, k, v, xpn);
                             (dir <= 0 ? xp->left : xp->right) = z;
@@ -1480,7 +1490,7 @@ namespace core {
                 void deleteTreeNode(HashMap& map, Array<Node>& t, gbool movable) {
                     gint n = 0;
                     TABLE tab = { };
-                    if (!((tab = tableOf(t))) || (n = t.length()) == 0)
+                    if (((tab = tableOf(t)) == null) || (n = t.length()) == 0)
                         return;
                     gint index = (n - 1) & hashOf(this);
                     TREENODE first = toTreeNode(tab[index]);
@@ -1488,17 +1498,17 @@ namespace core {
                     TREENODE rl = { };
                     TREENODE succ = toTreeNode(nextOf(this));
                     TREENODE pred = prev;
-                    if (!pred)
+                    if (pred == null)
                         tab[index] = first = succ;
                     else
                         pred->next = succ;
                     if (succ)
                         succ->prev = pred;
-                    if (!first)
+                    if (first == null)
                         return;
                     if (parentOf(root))
                         root = root->root();
-                    if ((!root) || (movable && (!rightOf(root) || !((rl = leftOf(root))) || !leftOf(rl)))) {
+                    if ((root == null) || (movable && (rightOf(root) == null || (rl = leftOf(root)) == null || leftOf(rl) == null))) {
                         tab[index] = first->untreeify(map); // too small
                         return;
                     }
@@ -1536,7 +1546,7 @@ namespace core {
                             sr->parent = p;
                         if ((s->left = pl))
                             pl->parent = s;
-                        if (!((s->parent = pp)))
+                        if ((s->parent = pp) == null)
                             root = s;
                         else if (p == pp->left)
                             pp->left = s;
@@ -1554,7 +1564,7 @@ namespace core {
                         repl = p;
                     if (repl != p) {
                         TREENODE pp = repl->parent = parentOf(p);
-                        if (!pp)
+                        if (pp == null)
                             setColor(root = repl, Color::BLACK);
                         else if (p == leftOf(pp))
                             pp->left = repl;
@@ -1603,14 +1613,14 @@ namespace core {
                         next = toTreeNode(nextOf(e));
                         e->next = { };
                         if ((hashOf(e) & bit) == 0) {
-                            if (!((e->prev = loTail)))
+                            if ((e->prev = loTail) == null)
                                 loHead = e;
                             else
                                 loTail->next = e;
                             loTail = e;
                             ++lc;
                         } else {
-                            if (!((e->prev = hiTail)))
+                            if ((e->prev = hiTail) == null)
                                 hiHead = e;
                             else
                                 hiTail->next = e;
@@ -1649,7 +1659,7 @@ namespace core {
                     if (x && ((r = rightOf(x)))) {
                         if ((rl = x->right = leftOf(x)))
                             rl->parent = x;
-                        if (!((xp = r->parent = parentOf(x))))
+                        if ((xp = r->parent = parentOf(x)) == null)
                             setColor(root = r, Color::BLACK);
                         else if (leftOf(xp) == x)
                             xp->left = r;
@@ -1668,7 +1678,7 @@ namespace core {
                     if (x && ((l = leftOf(x)))) {
                         if ((lr = x->left = rightOf(l)))
                             lr->parent = x;
-                        if (!((xp = l->parent = parentOf(x))))
+                        if ((xp = l->parent = parentOf(x)) == null)
                             setColor(root = l, Color::BLACK);
                         else if (rightOf(xp) == x)
                             xp->right = l;
@@ -1683,11 +1693,11 @@ namespace core {
                 static TREENODE afterInsertion(TREENODE root, TREENODE x) {
                     setColor(x, Color::RED);
                     for (TREENODE xp = { }, xpp = { }, xppl = { }, xppr = { };;) {
-                        if (!((xp = parentOf(x)))) {
+                        if ((xp = parentOf(x)) == null) {
                             setColor(x, Color::BLACK);
                             return x;
                         }
-                        if (colorOf(xp) == Color::RED || !((xpp = parentOf(xp))))
+                        if (colorOf(xp) == Color::RED || (xpp = parentOf(xp)) == null)
                             return root;
                         if (xp == (xppl = leftOf(xpp))) {
                             if (((xppr = rightOf(xpp))) && colorOf(xppr) == Color::RED) {
@@ -1733,9 +1743,9 @@ namespace core {
 
                 static TREENODE afterDeletion(TREENODE root, TREENODE x) {
                     for (TREENODE xp = { }, xpl = { }, xpr = { };;) {
-                        if ((!x) || x == root)
+                        if ((x == null) || x == root)
                             return root;
-                        if (!((xp = parentOf(x)))) {
+                        if ((xp = parentOf(x)) == null) {
                             setColor(x, Color::BLACK);
                             return x;
                         }
@@ -1750,16 +1760,16 @@ namespace core {
                                 root = rotateLeft(root, xp);
                                 xpr = rightOf(xp = parentOf(x));
                             }
-                            if (!xpr)
+                            if (xpr == null)
                                 x = xp;
                             else {
                                 TREENODE sl = leftOf(xpr);
                                 TREENODE sr = rightOf(xpr);
-                                if (((!sr) || colorOf(sr) == Color::BLACK) && ((!sl) || colorOf(sl) == Color::BLACK)) {
+                                if (((sr == null) || colorOf(sr) == Color::BLACK) && ((sl == null) || colorOf(sl) == Color::BLACK)) {
                                     setColor(xpr, Color::RED);
                                     x = xp;
                                 } else {
-                                    if ((!sr) || colorOf(sr) == Color::BLACK) {
+                                    if ((sr == null) || colorOf(sr) == Color::BLACK) {
                                         setColor(sl, Color::BLACK);
                                         setColor(xpr, Color::RED);
                                         root = rotateRight(root, xpr);
@@ -1767,7 +1777,7 @@ namespace core {
                                     }
                                     if (xpr) {
                                         setColor(xpr, colorOf(xp));
-                                        if (!((sr = rightOf(xpr))))
+                                        if ((sr = rightOf(xpr)) == null)
                                             setColor(sr, Color::BLACK);
                                     }
                                     if (xp) {
@@ -1785,16 +1795,16 @@ namespace core {
                                 root = rotateRight(root, xp);
                                 xpl = leftOf(xp = parentOf(x));
                             }
-                            if (!xpl)
+                            if (xpl == null)
                                 x = xp;
                             else {
                                 TREENODE sl = leftOf(xpl);
                                 TREENODE sr = rightOf(xpl);
-                                if (((!sl) || sl->color == Color::BLACK) && (!sr || colorOf(sr) == Color::BLACK)) {
+                                if (((sl == null) || sl->color == Color::BLACK) && (sr == null || colorOf(sr) == Color::BLACK)) {
                                     setColor(xpl, Color::RED);
                                     x = xp;
                                 } else {
-                                    if ((!sl) || sl->color == Color::BLACK) {
+                                    if ((sl == null) || sl->color == Color::BLACK) {
                                         setColor(sr, Color::BLACK);
                                         setColor(xpl, Color::BLACK);
                                         root = rotateLeft(root, xpl);
@@ -1845,9 +1855,9 @@ namespace core {
                 }
             };
 
-            static Color colorOf(TREENODE x) { return (!x) ? Color::BLACK : x->color; }
+            static Color colorOf(TREENODE x) { return (x == null) ? Color::BLACK : x->color; }
 
-            static Color setColor(TREENODE x, Color c) { return (!x) ? Color::BLACK : (x->color = c); }
+            static Color setColor(TREENODE x, Color c) { return (x == null) ? Color::BLACK : (x->color = c); }
 
             /**
              * Calculate initial capacity for HashMap based classes, from expected size and default load factor (0.75).
@@ -1974,7 +1984,7 @@ namespace core {
                     gbool hasNext() const override { return cursor != null; }
 
                     K& next() override {
-                        if (!cursor)
+                        if (cursor == null)
                             NoSuchElementException().throws($ftrace());
                         if (modCount != map.modCount)
                             ConcurrentModificationException().throws($ftrace());
@@ -2002,7 +2012,7 @@ namespace core {
                     }
 
                     void remove() override {
-                        if (!last)
+                        if (last == null)
                             IllegalStateException().throws($ftrace());
                         if (modCount != map.modCount)
                             ConcurrentModificationException().throws($ftrace());
@@ -2038,7 +2048,7 @@ namespace core {
                     gbool hasNext() const override { return cursor != null; }
 
                     K const& next() override {
-                        if (!cursor)
+                        if (cursor == null)
                             NoSuchElementException().throws($ftrace());
                         if (modCount != map.modCount)
                             ConcurrentModificationException().throws($ftrace());
@@ -2179,7 +2189,7 @@ namespace core {
                     gbool hasNext() const override { return cursor != null; }
 
                     V& next() override {
-                        if (!cursor)
+                        if (cursor == null)
                             NoSuchElementException().throws($ftrace());
                         if (modCount != map.modCount)
                             ConcurrentModificationException().throws($ftrace());
@@ -2198,7 +2208,7 @@ namespace core {
                     }
 
                     void remove() override {
-                        if (!last)
+                        if (last == null)
                             IllegalStateException().throws($ftrace());
                         if (modCount != map.modCount)
                             ConcurrentModificationException().throws($ftrace());
@@ -2243,7 +2253,7 @@ namespace core {
                     gbool hasNext() const override { return cursor != null; }
 
                     V const& next() override {
-                        if (!cursor)
+                        if (cursor == null)
                             NoSuchElementException().throws($ftrace());
                         if (modCount != map.modCount)
                             ConcurrentModificationException().throws($ftrace());
@@ -2379,7 +2389,7 @@ namespace core {
                     gbool hasNext() const override { return cursor != null; }
 
                     Entry& next() override {
-                        if (!cursor)
+                        if (cursor == null)
                             NoSuchElementException().throws($ftrace());
                         if (modCount != map.modCount)
                             ConcurrentModificationException().throws($ftrace());
@@ -2407,7 +2417,7 @@ namespace core {
                     }
 
                     void remove() override {
-                        if (!last)
+                        if (last == null)
                             IllegalStateException().throws($ftrace());
                         if (modCount != map.modCount)
                             ConcurrentModificationException().throws($ftrace());
@@ -2443,7 +2453,7 @@ namespace core {
                     gbool hasNext() const override { return cursor != null; }
 
                     Entry const& next() override {
-                        if (!cursor)
+                        if (cursor == null)
                             NoSuchElementException().throws($ftrace());
                         if (modCount != map.modCount)
                             ConcurrentModificationException().throws($ftrace());

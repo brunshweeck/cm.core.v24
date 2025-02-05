@@ -2,10 +2,10 @@
 // Created by brunshweeck on 18 août 2024.
 //
 
+#include "Random.h"
+
 #include <core/IllegalArgumentException.h>
 #include <core/UnsupportedOperationException.h>
-#include <core/random/Random.h>
-#include <core/time/Chrono.h>
 #include <meta/random/RandomSupport.h>
 
 namespace core {

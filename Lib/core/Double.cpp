@@ -2,8 +2,9 @@
 // Created by brunshweeck on 25 mai 2024.
 //
 
+#include "Double.h"
+
 #include <core/Character.h>
-#include <core/Double.h>
 #include <core/Long.h>
 #include <core/NumberFormatException.h>
 #include <core/misc/Unsafe.h>
@@ -148,20 +149,20 @@ namespace core {
             }
 
             f2 = abs;
-            digit = CORE_CAST(gint, f2);
+            digit = (gint) f2;
             ca[next++] = Character::forDigit(digit, 10);
             ca[next++] = '.';
             decimalPrecision -= decimalPrecision > 10 ? 2 : 1;
             do {
-                f2 = (f2 - CORE_CAST(gdouble, digit)) * 10.0;
-                digit = CORE_CAST(gint, f2);
+                f2 = (f2 - (gdouble) digit) * 10.0;
+                digit = (gint) f2;
                 ca[next++] = Character::forDigit(digit, 10);
                 decimalPrecision -= 1;
             } while (decimalPrecision > 0);
 
             // round result and remove all trailing zeros
-            f2 = (f2 - CORE_CAST(gdouble, digit)) * 10.0;
-            digit = CORE_CAST(gint, f2);
+            f2 = (f2 - (gdouble) digit) * 10.0;
+            digit = (gint) f2;
             if (digit >= 5) {
                 // round value and remove all trailing zeros
                 gbool finished = false;
@@ -204,7 +205,7 @@ namespace core {
             if (f2 < 1.0) {
                 ca[next++] = '0';
                 ca[next++] = '.';
-                f2 *= 10.0f;
+                f2 *= 10.0;
                 // decimalPrecision -= (decimalPrecision >= 10) ? 2 : 1;
                 decimalPrecision -= (decimalPrecision >= 8) ? 2 : 1;
             } else {
@@ -227,8 +228,8 @@ namespace core {
 
                 // Write the Digits of Unit part
                 do {
-                    digit = CORE_CAST(gint, f2);
-                    f2 = (f2 - CORE_CAST(gdouble, digit)) * 10.0;
+                    digit = (gint) f2;
+                    f2 = (f2 - (gdouble) digit) * 10.0;
                     ca[next++] = Character::forDigit(digit, 10);
                     decimalPrecision -= 1;
                     exp -= 1;
@@ -238,22 +239,22 @@ namespace core {
                     decimalPrecision -= 1;
             }
 
-            // Writing the Degits of Decimal part
+            // Writing the Digits of Decimal part
             do {
-                digit = CORE_CAST(gint, f2);
-                f2 = (f2 - CORE_CAST(gdouble, digit)) * 10;
+                digit = (gint) f2;
+                f2 = (f2 - (gdouble) digit) * 10;
                 ca[next++] = Character::forDigit(digit, 10);
                 decimalPrecision -= 1;
             } while (decimalPrecision > 0);
 
             // Rounding
-            digit = CORE_CAST(gint, f2);
+            digit = (gint) f2;
             if (digit == 4) {
-                // Verifing the next digits while digits have value 4
+                // Verifying the next digits while digits have value 4
                 gint nextDigit = digit;
                 do {
-                    f2 = (f2 - CORE_CAST(gdouble, nextDigit)) * 10.0F;
-                    nextDigit = CORE_CAST(gint, f2);
+                    f2 = (f2 - (gdouble) nextDigit) * 10.0;
+                    nextDigit = (gint) f2;
                 } while (nextDigit == 4);
 
                 // Rounds digit at current position
@@ -311,26 +312,26 @@ namespace core {
         digits[next++] = 'x';
         digits[next++] = uVal < MIN_NORMAL ? '0' : '1';
         digits[next++] = '.';
-        digits[next++] = Character::forDigit(CORE_CAST(gint, ((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 48) & 0xf), 16);
-        digits[next++] = Character::forDigit(CORE_CAST(gint, ((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 44) & 0xf), 16);
-        digits[next++] = Character::forDigit(CORE_CAST(gint, ((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 40) & 0xf), 16);
-        digits[next++] = Character::forDigit(CORE_CAST(gint, ((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 36) & 0xf), 16);
-        digits[next++] = Character::forDigit(CORE_CAST(gint, ((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 32) & 0xf), 16);
-        digits[next++] = Character::forDigit(CORE_CAST(gint, ((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 28) & 0xf), 16);
-        digits[next++] = Character::forDigit(CORE_CAST(gint, ((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 24) & 0xf), 16);
-        digits[next++] = Character::forDigit(CORE_CAST(gint, ((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 20) & 0xf), 16);
-        digits[next++] = Character::forDigit(CORE_CAST(gint, ((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 16) & 0xf), 16);
-        digits[next++] = Character::forDigit(CORE_CAST(gint, ((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 12) & 0xf), 16);
-        digits[next++] = Character::forDigit(CORE_CAST(gint, ((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 8) & 0xf), 16);
-        digits[next++] = Character::forDigit(CORE_CAST(gint, ((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 4) & 0xf), 16);
-        digits[next++] = Character::forDigit(CORE_CAST(gint, ((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 0) & 0xf), 16);
+        digits[next++] = Character::forDigit((gint) (((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 48) & 0xf), 16);
+        digits[next++] = Character::forDigit((gint) (((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 44) & 0xf), 16);
+        digits[next++] = Character::forDigit((gint) (((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 40) & 0xf), 16);
+        digits[next++] = Character::forDigit((gint) (((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 36) & 0xf), 16);
+        digits[next++] = Character::forDigit((gint) (((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 32) & 0xf), 16);
+        digits[next++] = Character::forDigit((gint) (((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 28) & 0xf), 16);
+        digits[next++] = Character::forDigit((gint) (((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 24) & 0xf), 16);
+        digits[next++] = Character::forDigit((gint) (((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 20) & 0xf), 16);
+        digits[next++] = Character::forDigit((gint) (((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 16) & 0xf), 16);
+        digits[next++] = Character::forDigit((gint) (((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 12) & 0xf), 16);
+        digits[next++] = Character::forDigit((gint) (((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 8) & 0xf), 16);
+        digits[next++] = Character::forDigit((gint) (((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 4) & 0xf), 16);
+        digits[next++] = Character::forDigit((gint) (((bits & DoubleConsts::SIGNIF_BIT_MASK) >> 0) & 0xf), 16);
         // remove all trailing zero
         while (digits[next - 1] == '0' && digits[next - 2] != '.')
             next -= 1;
         digits[next++] = 'p';
         gint exponent = uVal < MIN_NORMAL
                             ? MIN_EXPONENT
-                            : CORE_CAST(gint, ((bits & DoubleConsts::EXP_BIT_MASK) >> 52) - DoubleConsts::EXP_BIAS);
+                            : (gint) (((bits & DoubleConsts::EXP_BIT_MASK) >> 52) - DoubleConsts::EXP_BIAS);
         digits[next++] = exponent < 0 ? '-' : '+';
         exponent = Math::abs(exponent);
         if (exponent >= 1000)
@@ -344,10 +345,10 @@ namespace core {
         return String(digits, 0, next);
     }
 
-    Double Double::valueOf(String const &s) {
+    Double Double::valueOf(String const& s) {
         try {
             return valueOf(parseDouble(s));
-        } catch (NumberFormatException const &ex) {
+        } catch (NumberFormatException const& ex) {
             ex.throws($ftrace());
         }
     }
@@ -356,7 +357,7 @@ namespace core {
         return d;
     }
 
-    gdouble Double::parseDouble(String const &s) {
+    gdouble Double::parseDouble(String const& s) {
         if (s.isEmpty())
             NumberFormatException(R"(Invalid number format for input "".)"_S).throws($ftrace());
         gint len = s.length();
@@ -554,13 +555,13 @@ namespace core {
                     if (shift == 52) {
                         switch (digit) {
                             case 1:
-                                bit64 |= CORE_CAST(glong, digit) << 52;
+                                bit64 |= (glong) digit << 52;
                                 shift -= 4;
                                 integerBitsLen = 0;
                                 break;
                             case 2:
                             case 3:
-                                bit64 |= CORE_CAST(glong, digit) << 51;
+                                bit64 |= (glong) digit << 51;
                                 shift -= 5;
                                 integerBitsLen = 1;
                                 break;
@@ -568,32 +569,32 @@ namespace core {
                             case 5:
                             case 6:
                             case 7:
-                                bit64 |= CORE_CAST(glong, digit) << 50;
+                                bit64 |= (glong) digit << 50;
                                 shift -= 6;
                                 integerBitsLen = 2;
                                 break;
                             default:
-                                bit64 |= CORE_CAST(glong, digit) << 49;
+                                bit64 |= (glong) digit << 49;
                                 shift -= 7;
                                 integerBitsLen = 3;
                                 break;
                         }
                     } else if (shift >= 0) {
-                        bit64 |= CORE_CAST(glong, digit) << shift;
+                        bit64 |= (glong) digit << shift;
                         shift -= 4;
                     } else if (shift >= -4) {
                         switch (shift) {
                             case -1:
-                                bit64 |= (CORE_CAST(glong, digit) & 0xE) >> 1;
+                                bit64 |= ((glong) digit & 0xE) >> 1;
                                 rounded = (digit & 0x1) != 0;
                                 break;
                             case -2:
-                                bit64 |= (CORE_CAST(glong, digit) & 0xC) >> 2;
+                                bit64 |= ((glong) digit & 0xC) >> 2;
                                 rounded = (digit & 0x2) != 0;
                                 sticky = (digit & 0x1) != 0;
                                 break;
                             case -3:
-                                bit64 |= (CORE_CAST(glong, digit) & 0x8) >> 3;
+                                bit64 |= ((glong) digit & 0x8) >> 3;
                                 rounded = (digit & 0x4) != 0;
                                 sticky = (digit & 0x3) != 0;
                                 break;
@@ -608,7 +609,8 @@ namespace core {
                         sticky |= digit != 0;
                     decimalBitsLen += 1;
                     next += 1;
-                } {
+                }
+                {
                     gint digit = 0;
                     next += 1;
                     gint exponent = 0;
@@ -628,21 +630,21 @@ namespace core {
                             else
                                 goto throwIllegalFormat;
                             if (shift >= 0) {
-                                bit64 |= CORE_CAST(glong, digit) << shift;
+                                bit64 |= (glong) digit << shift;
                                 shift -= 4;
                             } else if (shift >= -4) {
                                 switch (shift) {
                                     case -1:
-                                        bit64 |= (CORE_CAST(glong, digit) & 0xE) >> 1;
+                                        bit64 |= ((glong) digit & 0xE) >> 1;
                                         rounded = (digit & 0x1) != 0;
                                         break;
                                     case -2:
-                                        bit64 |= (CORE_CAST(glong, digit) & 0xC) >> 2;
+                                        bit64 |= ((glong) digit & 0xC) >> 2;
                                         rounded = (digit & 0x2) != 0;
                                         sticky = (digit & 0x1) != 0;
                                         break;
                                     case -3:
-                                        bit64 |= (CORE_CAST(glong, digit) & 0x8) >> 3;
+                                        bit64 |= ((glong) digit & 0x8) >> 3;
                                         rounded = (digit & 0x4) != 0;
                                         sticky = (digit & 0x3) != 0;
                                         break;
@@ -708,7 +710,7 @@ namespace core {
                             if (var > 1)
                                 sticky = sticky || (bit64 & ~((~0) << (var - 1))) != 0;
                             bit64 = bit64 >> var;
-                            eBit64 = CORE_CAST(glong, MIN_EXPONENT - 1 + DoubleConsts::EXP_BIAS) << 52;
+                            eBit64 = (glong) (MIN_EXPONENT - 1 + DoubleConsts::EXP_BIAS) << 52;
                         }
                         if (((bit64 & 1) != 0 && rounded && sticky) || (((bit64 & 1) == 0) && rounded))
                             bit64 += 1;
@@ -747,10 +749,10 @@ namespace core {
         //
     }
 
-    Double::Double(String const &s) {
+    Double::Double(String const& s) {
         try {
             value = parseDouble(s);
-        } catch (NumberFormatException const &ex) { ex.throws($ftrace()); }
+        } catch (NumberFormatException const& ex) { ex.throws($ftrace()); }
     }
 
     gbool Double::isNaN() const {
@@ -766,23 +768,23 @@ namespace core {
     }
 
     gbyte Double::byteValue() const {
-        return CORE_CAST(gbyte, value);
+        return (gbyte) value;
     }
 
     gshort Double::shortValue() const {
-        return CORE_CAST(gshort, value);
+        return (gshort) value;
     }
 
     gint Double::intValue() const {
-        return CORE_CAST(gint, value);
+        return (gint) value;
     }
 
     glong Double::longValue() const {
-        return CORE_CAST(glong, value);
+        return (glong) value;
     }
 
     gfloat Double::floatValue() const {
-        return CORE_CAST(gfloat, value);
+        return (gfloat) value;
     }
 
     gdouble Double::doubleValue() const {
@@ -797,9 +799,9 @@ namespace core {
         return Long::hash(toLongBits(value));
     }
 
-    gbool Double::equals(Object const &obj) const {
+    gbool Double::equals(Object const& obj) const {
         return this == &obj ||
-               Class<Double>::hasInstance(obj) && compare(value, CORE_XCAST(Double const, obj).value);
+                Class<Double>::hasInstance(obj) && compare(value, CORE_XCAST(Double const, obj).value);
     }
 
     glong Double::toLongBits(gdouble value) {
@@ -809,14 +811,14 @@ namespace core {
     }
 
     glong Double::toRawLongBits(gdouble value) {
-        return *CORE_CAST(Class<glong>::Pointer, &value);
+        return *(Class<glong>::Pointer) &value;
     }
 
     gdouble Double::fromLongBits(glong bits) {
-        return *CORE_CAST(Class<gdouble>::Pointer, &bits);
+        return *(Class<gdouble>::Pointer) &bits;
     }
 
-    gint Double::compareTo(Double const &anotherDouble) const {
+    gint Double::compareTo(Double const& anotherDouble) const {
         return compare(value, anotherDouble.value);
     }
 
@@ -850,13 +852,13 @@ namespace core {
         return doubleValue();
     }
 
-    Double::operator gdouble &() {
+    Double::operator gdouble&() {
         return value;
     }
 
-    Object &Double::clone() const {
+    Object& Double::clone() const {
         try {
             return UNSAFE::newInstance<Double>(*this);
-        } catch (Throwable const &ex) { ex.throws($ftrace()); }
+        } catch (Throwable const& ex) { ex.throws($ftrace()); }
     }
 } // core

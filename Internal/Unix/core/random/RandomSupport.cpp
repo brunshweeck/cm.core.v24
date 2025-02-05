@@ -3,7 +3,7 @@
 //
 
 #include <meta/random/RandomSupport.h>
-#include <core/Unix.h>
+#include <native/System.h>
 
 namespace core {
     namespace random {

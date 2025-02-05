@@ -19,15 +19,16 @@ namespace core {
          * <em> character sequences </em> against the regular
          * expression.  All of the state involved in performing a match resides in the
          * matcher, so many matchers can share the same pattern.
-         *
-         * <p> A typical invocation sequence is thus
+         * </p>
+         * <p>
+         * A typical invocation sequence is thus
          *
          * @code
          *   auto p = Pattern::compile("a*b");
          *   auto m = p.matcher("aaaaab");
-         *   gbool b = m.matches();
+         *   auto b = m.matches();
          * @endcode
-         *
+         * </p>
          * <p>
          * A @b matches method is defined by this class as a
          * convenience for when a regular expression is used just once.  This method
@@ -35,179 +36,179 @@ namespace core {
          * invocation.  The statement
          *
          * @code
-         *   gbool b = Pattern::matches("a*b", "aaaaab");
+         *   auto b = Pattern::matches("a*b", "aaaaab");
          * @endcode
          * is equivalent to the three statements above, though for repeated matches it
          * is less efficient since it does not allow the compiled pattern to be reused.
-         *
-         * <h2>Summary of regular-expression constructs</h2>
+         * </p>
+         * <h3>Summary of regular-expression constructs</h3>
          *
          * <b>Regular expression constructs, and what they match</b> <br>
          * <p>
          * @b Construct -> @b Matches
          * </p>
          * <p>
-         * Characters:
-         * @li x -> The character x
-         * @li @c \\ -> The backslash character
-         * @li @c \0x -> The character with octal value @c 0x (0 <= x <= 7)
-         * @li @c \0xx -> The character with octal value @c 0xx (0 <= x <= 7)
-         * @li @c \0yxx -> The character with octal value @c 0yxx (0 <= y <= 3, 0 <= x <= 7)
-         * @li @c \xhh -> The character with hexadecimal value @c 0xhh
-         * @li @c \uhhhh -> The character with hexadecimal value @c 0xhhhh
-         * @li @c \xh...h -> The character with hexadecimal value @c 0xh...h (0 <= @c 0xh...h <= 0x10FFFF)
-         * @li @c \N{<i>name</i>} -> The character with Unicode character name <i>'name'</i>
-         * @li @c \t -> The tab character (@c '\u0009')
-         * @li @c \n -> The newline (line feed) character (@c '\u000A')
-         * @li @c \r -> The carriage-return character (@c '\u000D')
-         * @li @c \f -> The form-feed character (@c '\u000C')
-         * @li @c \a -> The alert (bell) character (@c '\u0007')
-         * @li @c \e -> The escape character (@c '\u001B')
-         * @li @c \cx -> The control character corresponding to x
+         * 1- Characters: <br/>
+         * - x -> The character x <br/>
+         * - @c "\\" -> The backslash character <br/>
+         * - @c "\0x" -> The character with octal value @c 0x (0 <= x <= 7) <br/>
+         * - @c "\0xx" -> The character with octal value @c 0xx (0 <= x <= 7) <br/>
+         * - @c "\0yxx" -> The character with octal value @c 0yxx (0 <= y <= 3, 0 <= x <= 7) <br/>
+         * - @c "\xhh" -> The character with hexadecimal value @c 0xhh <br/>
+         * - @c "\uhhhh" -> The character with hexadecimal value @c 0xhhhh <br/>
+         * - @c "\xh...h" -> The character with hexadecimal value @c 0xh...h (0 <= @c 0xh...h <= 0x10FFFF) <br/>
+         * - @c "\N{name}" -> The character with Unicode character name <i>'name'</i> <br/>
+         * - @c "\t" -> The tab character (@c '\u0009') <br/>
+         * - @c "\n" -> The newline (line feed) character (@c '\u000A') <br/>
+         * - @c "\r" -> The carriage-return character (@c '\u000D') <br/>
+         * - @c "\f" -> The form-feed character (@c '\u000C') <br/>
+         * - @c "\a" -> The alert (bell) character (@c '\u0007') <br/>
+         * - @c "\e" -> The escape character (@c '\u001B') <br/>
+         * - @c "\cx" -> The control character corresponding to x <br/>
          * </p>
          * <p>
-         * Character classes:
-         * @li [abc] -> @c a, @c b, or @c c (simple class)
-         * @li [^abc] -> Any character except @c a, @c b, or @c c (negation)
-         * @li [a-zA-Z] -> @c a through @c z or @c A through @c Z, inclusive (range)
-         * @li [a-d[m-p]] -> @c a through @c d, or @c m through @c p:  [a-dm-p] (union)
-         * @li [a-z&&[def]] -> @c d, @c e, or @c f (intersection)
-         * @li [a-z&&[^bc]] -> @c a through @c z, except for @c b and @c c: [ad-z] (subtraction)
-         * @li [a-z&&[^m-p]] -> @c a through @c z, and not @c m through @c p:  [a-lq-z] (subtraction)
+         * 2- Character classes:
+         * - @c "[abc]" -> @c a, @c b, or @c c (simple class) <br/>
+         * - @c "[^abc]" -> Any character except @c a, @c b, or @c c (negation) <br/>
+         * - @c "[a-zA-Z]" -> @c a through @c z or @c A through @c Z, inclusive (range) <br/>
+         * - @c "[a-d[m-p]]" -> @c a through @c d, or @c m through @c p:  [a-dm-p] (union) <br/>
+         * - @c "[a-z&&[def]]" -> @c d, @c e, or @c f (intersection) <br/>
+         * - @c "[a-z&&[^bc]]" -> @c a through @c z, except for @c b and @c c: [ad-z] (subtraction) <br/>
+         * - @c "[a-z&&[^m-p]]" -> @c a through @c z, and not @c m through @c p:  [a-lq-z] (subtraction) <br/>
          * </p>
          * <p>
-         * Predefined character classes
-         * @li @c . -> Any character (may or may not match <a href="#lt">line terminators</a>)
-         * @li @c \d -> A digit:  [0-9] if UNICODE_CHARACTER_CLASS is not set. See Unicode Support.
-         * @li @c \D -> A non-digit:  [^0-9]
-         * @li @c \h -> A horizontal whitespace character: [\t\xA0\u1680\u180e\u2000-\u200a\u202f\u205f\u3000]
-         * @li @c \H -> A non-horizontal whitespace character: [^\h]
-         * @li @c \s -> A whitespace character:  "[\t\n\x0B\f\r]" if UNICODE_CHARACTER_CLASS is not set. See Unicode Support.
-         * @li @c \S -> A non-whitespace character: [^\s]
-         * @li @c \v -> A vertical whitespace character: "[\n\x0B\f\r\x85\u2028\u2029]"
-         * @li @c \V -> A non-vertical whitespace character: [^\v]
-         * @li @c \w -> A word character: [a-zA-Z_0-9] if UNICODE_CHARACTER_CLASS is not set. See Unicode Support.
-         * @li @c \W -> A non-word character:  [^\w]
+         * 3- Predefined character classes <br/>
+         * - @c "." -> Any character (may or may not match <a href="#lt">line terminators</a>) <br/>
+         * - @c "\d" -> A digit:  [0-9] if UNICODE_CHARACTER_CLASS is not set. See Unicode Support. <br/>
+         * - @c "\D" -> A non-digit:  [^0-9] <br/>
+         * - @c "\h" -> A horizontal whitespace character: @c "[\t\xA0\u1680\u180e\u2000-\u200a\u202f\u205f\u3000]" <br/>
+         * - @c "\H" -> A non-horizontal whitespace character: [^\h] <br/>
+         * - @c "\s" -> A whitespace character:  @c "[\t\n\x0B\f\r]" if UNICODE_CHARACTER_CLASS is not set. See Unicode Support. <br/>
+         * - @c "\S" -> A non-whitespace character: @c "[^\s]" <br/>
+         * - @c "\v" -> A vertical whitespace character: @c "[\n\x0B\f\r\x85\u2028\u2029]" <br/>
+         * - @c "\V" -> A non-vertical whitespace character: @c "[^\v]" <br/>
+         * - @c "\w" -> A word character: @c "[a-zA-Z_0-9]" if UNICODE_CHARACTER_CLASS is not set. See Unicode Support. <br/>
+         * - @c "\W" -> A non-word character:  @c "[^\w]" <br/>
          * </p>
          * <p>
-         * <b>POSIX character classes (US-ASCII only)</b>
-         * @li @c \p{Lower} -> A lower-case alphabetic character:  [a-z]
-         * @li @c \p{Upper} -> An upper-case alphabetic character: [A-Z]
-         * @li @c \p{ASCII} -> All ASCII: [\x00-\x7F]
-         * @li @c \p{Alpha} -> An alphabetic character: [\p{Lower}\p{Upper}]
-         * @li @c \p{Digit} -> A decimal digit:  [0-9]
-         * @li @c \p{Alnum} -> An alphanumeric character: [\p{Alpha}\p{Digit}]
-         * @li @c \p{Punct} -> Punctuation: One of !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~
-         * @li @c \p{Graph} -> A visible character: [\p{Alnum}\p{Punct}]
-         * @li @c \p{Print} -> A printable character:  [\p{Graph}\x20]
-         * @li @c \p{Blank} -> A space or a tab:  [ \t]
-         * @li @c \p{Cntrl} -> A control character: [\x00-\x1F\x7F]
-         * @li @c \p{XDigit} -> A hexadecimal digit: [0-9a-fA-F]
-         * @li @c \p{Space} -> A whitespace character:  [\t\n\x0B\f\r]
+         * 4- <b>POSIX character classes (US-ASCII only)</b> <br/>
+         * - @c "\p{Lower}" -> A lower-case alphabetic character:  [a-z] <br/>
+         * - @c "\p{Upper}" -> An upper-case alphabetic character: [A-Z] <br/>
+         * - @c "\p{ASCII}" -> All ASCII: @c "[\x00-\x7F]" <br/>
+         * - @c "\p{Alpha}" -> An alphabetic character: @c "[\p{Lower}\p{Upper}]" <br/>
+         * - @c "\p{Digit}" -> A decimal digit:  [0-9] <br/>
+         * - @c "\p{Alnum}" -> An alphanumeric character: @c "[\p{Alpha}\p{Digit}]" <br/>
+         * - @c "\p{Punct}" -> Punctuation: One of !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~ <br/>
+         * - @c "\p{Graph}" -> A visible character: @c "[\p{Alnum}\p{Punct}]" <br/>
+         * - @c "\p{Print}" -> A printable character:  @c "[\p{Graph}\x20]" <br/>
+         * - @c "\p{Blank}" -> A space or a tab:  @c "[\t]" <br/>
+         * - @c "\p{Cntrl}" -> A control character: @c "[\x00-\x1F\x7F]" <br/>
+         * - @c "\p{XDigit}" -> A hexadecimal digit: @c "[0-9a-fA-F]" <br/>
+         * - @c "\p{Space}" -> A whitespace character:  @c "\t\n\x0B\f\r" <br/>
          * </p>
          * <p>
-         * Classes for Unicode scripts, blocks, categories and binary properties
-         * @li @c \p{IsLatin} -> A Latin script character (script)
-         * @li @c \p{InGreek} -> A character in the Greek block (block)
-         * @li @c \p{Lu} -> An uppercase letter (category)
-         * @li @c \p{IsAlphabetic} -> An alphabetic character (binary property)
-         * @li @c \p{Sc} -> A currency symbol
-         * @li @c \P{InGreek} -> Any character except one in the Greek block (negation)
-         * @li [\p{L}&&[^\p{Lu}]] -> Any letter except an uppercase letter (subtraction)
+         * 5- Classes for Unicode scripts, blocks, categories and binary properties <br/>
+         * - @c "\p{IsLatin}" -> A Latin script character (script) <br/>
+         * - @c "\p{InGreek}" -> A character in the Greek block (block) <br/>
+         * - @c "\p{Lu}" -> An uppercase letter (category) <br/>
+         * - @c "\p{IsAlphabetic}" -> An alphabetic character (binary property) <br/>
+         * - @c "\p{Sc}" -> A currency symbol <br/>
+         * - @c "\P{InGreek}" -> Any character except one in the Greek block (negation) <br/>
+         * - @c "[\p{L}&&[^\p{Lu}]]" -> Any letter except an uppercase letter (subtraction) <br/>
          * </p>
          * <p>
-         * Boundary matchers
-         * @li ^ -> The beginning of a line
-         * @li $ -> The end of a line
-         * @li @c \b -> A word boundary: (?:(?<=\w)(?=\W)|(?<=\W)(?=\w)) (the location
-         *     where a non-word character abuts a word character)
-         * @li @c \b{g} -> A Unicode extended grapheme cluster boundary
-         * @li @c \B -> A non-word boundary: [^\b]
-         * @li @c \A -> The beginning of the input
-         * @li @c \G -> The end of the previous match
-         * @li @c \Z -> The end of the input but for the final terminator, if any
-         * @li @c \z -> The end of the input
+         * 6- Boundary matchers
+         * - @c "^" -> The beginning of a line <br/>
+         * - @c "$" -> The end of a line <br/>
+         * - @c "\b" -> A word boundary: (?:(?<=\w)(?=\W)|(?<=\W)(?=\w)) (the location
+         *     where a non-word character abuts a word character) <br/>
+         * - @c "\b{g}" -> A Unicode extended grapheme cluster boundary <br/>
+         * - @c "\B" -> A non-word boundary: [^\b] <br/>
+         * - @c "\A" -> The beginning of the input <br/>
+         * - @c "\G" -> The end of the previous match <br/>
+         * - @c "\Z" -> The end of the input but for the final terminator, if any <br/>
+         * - @c "\z" -> The end of the input <br/>
          * </p>
          * <p>
-         * Linebreak matcher
-         * @li @c \R -> Any Unicode linebreak sequence, is equivalent to
-         *     @c "\u000D\u000A|[\u000A\u000B\u000C\u000D\u0085\u2028\u2029]"
+         * 7- Linebreak matcher <br/>
+         * - @c "\R" -> Any Unicode linebreak sequence, is equivalent to
+         *     @c "\u000D\u000A|[\u000A\u000B\u000C\u000D\u0085\u2028\u2029]" <br/>
          * </p>
          * <p>
-         * Unicode Extended Grapheme matcher
-         * @li @c \X -> Any Unicode extended grapheme cluster
+         * 8- Unicode Extended Grapheme matcher <br/>
+         * - @c "\X" -> Any Unicode extended grapheme cluster <br/>
          * </p>
          * <p>
-         * Greedy quantifiers
-         * @li x? -> x, once or not at all
-         * @li x* -> x, zero or more times
-         * @li x+ -> x, one or more times
-         * @li x{n} -> x, exactly n times
-         * @li x{n,} -> x, at least n times
-         * @li x{n,m} -> <i>X</i>, at least n but not more than m times
+         * 9- Greedy quantifiers <br/>
+         * - @c "x?" -> x, once or not at all <br/>
+         * - @c "x*" -> x, zero or more times <br/>
+         * - @c "x+" -> x, one or more times <br/>
+         * - @c "x{n}" -> x, exactly n times <br/>
+         * - @c "x{n,}" -> x, at least n times <br/>
+         * - @c "x{n,m}" -> <i>X</i>, at least n but not more than m times <br/>
          * </p>
          * <p>
-         * Reluctant quantifiers
-         * @li x?? -> x, once or not at all
-         * @li x*? -> x, zero or more times
-         * @li x+? -> x, one or more times
-         * @li x{n}? -> x, exactly n times
-         * @li x{n,}? -> x, at least n times
-         * @li x{n,m}? -> x, at least n but not more than m times
+         * 10- Reluctant quantifiers <br/>
+         * - @c "x??" -> x, once or not at all <br/>
+         * - @c "x*?" -> x, zero or more times <br/>
+         * - @c "x+?" -> x, one or more times <br/>
+         * - @c "x{n}?" -> x, exactly n times <br/>
+         * - @c "x{n,}?" -> x, at least n times <br/>
+         * - @c "x{n,m}?" -> x, at least n but not more than m times <br/>
          * </p>
          * <p>
-         * Possessive quantifiers
-         * @li x?+ -> x, once or not at all
-         * @li x*+ -> x, zero or more times
-         * @li x++ -> x, one or more times
-         * @li x{n}+ -> x, exactly n times
-         * @li x{n,}+ -> x, at least n times
-         * @li x{n,m}+ -> x, at least n but not more than m times
+         * 11- Possessive quantifiers <br/>
+         * - @c "x?+" -> x, once or not at all <br/>
+         * - @c "x*+" -> x, zero or more times <br/>
+         * - @c "x++" -> x, one or more times <br/>
+         * - @c "x{n}+" -> x, exactly n times <br/>
+         * - @c "x{n,}+" -> x, at least n times <br/>
+         * - @c "x{n,m}+" -> x, at least n but not more than m times <br/>
          * </p>
          * <p>
-         * Logical operators
-         * @li xy -> x followed by y
-         * @li x|y -> Either x or y
-         * @li (x) -> X, as a capturing group
+         * 12- Logical operators <br/>
+         * - @c "xy" -> x followed by y <br/>
+         * - @c "x|y" -> Either x or y <br/>
+         * - @c "(x)" -> X, as a capturing group <br/>
          * </p>
          * <p>
-         * Back references
-         * @li @c \n -> Whatever the n<sup>th</sup> capturing group matched
-         * @li @c \k @code<name>@endcode -> Whatever the named-capturing group "name" matched
+         * 13- Back references <br/>
+         * - @c "\n" -> Whatever the n<sup>th</sup> capturing group matched <br/>
+         * - @c "\k" @code<name>@endcode -> Whatever the named-capturing group "name" matched <br/>
          * </p>
          * <p>
-         * Quotation
-         * @li @c \ -> Nothing, but quotes the following character
-         * @li @c \Q -> Nothing, but quotes all characters until @c \E
-         * @li @c \E -> Nothing, but ends quoting started by @c \Q
+         * 14- Quotation <br/>
+         * - @c "\" -> Nothing, but quotes the following character <br/>
+         * - @c "\Q" -> Nothing, but quotes all characters until @c \E <br/>
+         * - @c "\E" -> Nothing, but ends quoting started by @c \Q <br/>
          * </p>
          * <p>
-         * Special constructs (named-capturing and non-capturing)
-         * @li (?@code <name>@endcode x) -> x, as a named-capturing group
-         * @li (?:x) -> x, as a non-capturing group
-         * @li (?idmsuxU-idmsuxU) -> Nothing, but turns match flags i d m s u x U on - off
-         * @li (?idmsuxU-idmsuxU:x) -> x, as a non-capturing group with the given flags i d
-         * @li m s u x U on - off
-         * @li (?=x) -> x, via zero-width positive lookahead
-         * @li (?!x) -> x, via zero-width negative lookahead
-         * @li (?<=x) -> x, via zero-width positive lookbehind
-         * @li (?<!x) -> x, via zero-width negative lookbehind
-         * @li (?>x) -> x, as an independent, non-capturing group
+         * 15- Special constructs (named-capturing and non-capturing) <br/>
+         * - @c "(?name x)" -> x, as a named-capturing group <br/>
+         * - @c "(?:x)" -> x, as a non-capturing group <br/>
+         * - @c "(?idmsuxU-idmsuxU)" -> Nothing, but turns match flags i d m s u x U on - off <br/>
+         * - @c "(?idmsuxU-idmsuxU:x)" -> x, as a non-capturing group with the given flags i d
+         *  m s u x U on - off <br/>
+         * - @c "(?=x)" -> x, via zero-width positive lookahead <br/>
+         * - @c "(?!x)" -> x, via zero-width negative lookahead <br/>
+         * - @c "(?<=x)" -> x, via zero-width positive lookbehind <br/>
+         * - @c "(?<!x)" -> x, via zero-width negative lookbehind <br/>
+         * - @c "(?>x)" -> x, as an independent, non-capturing group <br/>
          * </p>
-         * <hr>
-         * <h2>Backslashes, escapes, and quoting</h2>
+         *
+         * <h3>Backslashes, escapes, and quoting</h3>
          * <p>
          * The backslash character (@c '\') serves to introduce escaped
          * constructs, as defined in the table above, as well as to quote characters
          * that otherwise would be interpreted as unescaped constructs.  Thus the
-         * expression @c \\ matches a single backslash and @c '{' matches a
+         * expression @c '\\' matches a single backslash and @c '{' matches a
          * left brace.
          * </p>
-         * <h2>Character Classes</h2>
+         * <h3>Character Classes</h3>
          * <p>
          * Character classes may appear within other character classes, and
          * may be composed by the union operator (implicit) and the intersection
-         * operator (@c &&).
+         * operator (@c '&&').
          * The union operator denotes a class that contains every character that is
          * in at least one of its operand classes.  The intersection operator
          * denotes a class that contains every character that is in both of its
@@ -219,12 +220,12 @@ namespace core {
          * </p>
          * <b>Precedence of character class operators.</b>
          * <p>
-         * Precedence -> Name -> Example
-         * @li 1 -> Literal escape -> \x
-         * @li 2 -> Grouping -> [...]
-         * @li 3 -> Range -> a-z
-         * @li 4 -> Union -> [a-e][i-u]
-         * @li 5 -> Intersection -> [a-z&&[aeiou]]
+         * Precedence -> Name -> Example <br/>
+         * - 1 -> Literal escape -> @c '\x' <br/>
+         * - 2 -> Grouping -> @c "[...]" <br/>
+         * - 3 -> Range -> @c "a-z" <br/>
+         * - 4 -> Union -> @c "[a-e][i-u]" <br/>
+         * - 5 -> Intersection -> @c "[a-z&&[aeiou]]" <br/>
          * </p>
          * <p>
          * Note that a different set of metacharacters are in effect inside
@@ -233,17 +234,17 @@ namespace core {
          * character class, while the expression @c - becomes a range
          * forming metacharacter.
          * </p>
-         * <h2>Line terminators</h2>
+         * <h3>Line terminators</h3>
          * <p>
          * A <i>line terminator</i> is a one- or two-character sequence that marks
          * the end of a line of the input character sequence.  The following are
-         * recognized as line terminators:
-         * @li A newline (line feed) character (@c '\n'),
-         * @li A carriage-return character followed immediately by a newline character (@c "\r\n"),
-         * @li A standalone carriage-return character (@c '\r'),
-         * @li A next-line character (@c '\u0085'),
-         * @li A line-separator character (@c '\u2028'), or
-         * @li A paragraph-separator character (@c '\u2029').
+         * recognized as line terminators: <br/>
+         * - A newline (line feed) character (@c '\n'), <br/>
+         * - A carriage-return character followed immediately by a newline character (@c "\r\n"), <br/>
+         * - A standalone carriage-return character (@c '\r'), <br/>
+         * - A next-line character (@c '\u0085'), <br/>
+         * - A line-separator character (@c '\u2028'), or <br/>
+         * - A paragraph-separator character (@c '\u2029'). <br/>
          * <p>
          * If @b UNIX_LINES mode is activated, then the only line terminators
          * recognized are newline characters.
@@ -267,17 +268,17 @@ namespace core {
          * except at the end of input. When in @b MULTILINE mode @c $
          * matches just before a line terminator or the end of the input sequence.
          * </p>
-         * <h2>Groups and capturing</h2>
+         * <h3>Groups and capturing</h3>
          *
          * <h3>Group number</h3>
          * <p>
          * Capturing groups are numbered by counting their opening parentheses from
          * left to right.  In the expression @c ((A)(B(C))), for example, there
-         * are four such groups:
-         * @li ((A)(B(C)))
-         * @li (A)
-         * @li (B(C))
-         * @li (C)
+         * are four such groups: <br/>
+         * - ((A)(B(C))) <br/>
+         * - (A) <br/>
+         * - (B(C)) <br/>
+         * - (C) <br/>
          * </p>
          * <p>
          * Group zero always stands for the entire expression.
@@ -292,11 +293,11 @@ namespace core {
          * <p>
          * A capturing group can also be assigned a "name", a @c named-capturing group,
          * and then be back-referenced later by the "name". Group names are composed of
-         * the following characters. The first character must be a @c letter.
+         * the following characters. The first character must be a @c letter. <br/>
          *
-         * @li The uppercase letters @c 'A' through @c 'Z' (@li '\u0041' through @li '\u005a'),
-         * @li The lowercase letters @c 'a' through @c 'z' (@li '\u0061' through @li '\u007a'),
-         * @li The digits @c '0' through @c '9' (@li '\u0030' through @li '\u0039'),
+         * - The uppercase letters @c 'A' through @c 'Z' (@c '\u0041' through @c '\u005a'), <br/>
+         * - The lowercase letters @c 'a' through @c 'z' (@c '\u0061' through @c '\u007a'), <br/>
+         * - The digits @c '0' through @c '9' (@c '\u0030' through @c '\u0039'), <br/>
          * </p>
          * <p>
          * A @code named-capturing group @endcode is still numbered as described in Group number.
@@ -317,7 +318,6 @@ namespace core {
          * </p>
          */
         class Pattern final : public Object {
-            CORE_ALIAS(UNSAFE, misc::Unsafe);
             CORE_ADD_AS_FRIEND(Matcher);
             class Self;
             CORE_ALIAS(SelfData, Class<Self>::Pointer);
@@ -443,7 +443,7 @@ namespace core {
                  * Enables dotall mode.
                  *
                  * <p> In dotall mode, the expression @c . matches any character,
-                 * including a line terminator.  By default this expression does not match
+                 * including a line terminator.  By default, this expression does not match
                  * line terminators.
                  *
                  * <p> Dotall mode can also be enabled via the embedded flag
@@ -631,7 +631,7 @@ namespace core {
              *
              * @param  input
              *         The character sequence to be matched
-             * @return whether or not the regular expression matches on the input
+             * @return whether the regular expression matches on the input
              * @throws  PatternSyntaxException
              *          If the expression's syntax is invalid
              */
@@ -772,7 +772,7 @@ namespace core {
              * This method works as if by invoking the two-argument @b split
              * method with the given input
              * sequence and a limit argument of zero.  Trailing empty strings are
-             * therefore not included in the resulting array. </p>
+             * therefore not included in the resulting array.
              * </p>
              *
              *
@@ -791,9 +791,11 @@ namespace core {
              * <p>
              * This method produces a @c String that can be used to
              * create a @c Pattern that would match the string
-             * @c s as if it were a literal pattern.</p> Metacharacters
-             * or escape sequences in the input sequence will be given no special
-             * meaning.
+             * @c s as if it were a literal pattern.
+             * </p>
+             * <p>
+             * Metacharacters or escape sequences in the input sequence will
+             * be given no special meaning.
              * </p>
              * @param  s The string to be literalized
              * @return  A literal string replacement
@@ -817,7 +819,7 @@ namespace core {
              * from the input sequence and then calls @c find, for example a
              * predicate of the form:
              * @code
-             *   [&](String const &s) -> gbool { return matcher(s).find(); }
+             *   [&](String const &s) { return matcher(s).find(); }
              * @endcode
              *
              * @return  The predicate which can be used for finding a match on a
@@ -831,10 +833,10 @@ namespace core {
              *
              * @note
              * This method creates a predicate that behaves as if it creates a matcher
-             * from the input sequence and then calls {@code matches}, for example a
+             * from the input sequence and then calls @c matches, for example a
              * predicate of the form:
              * @code
-             *   [&](String const &s) -> gbool { return matcher(s).matches(); }
+             *   [&](String const &s) { return matcher(s).matches(); }
              * @endcode
              *
              * @return  The predicate which can be used for matching an input string
@@ -947,7 +949,7 @@ namespace core {
             class NFCCharProperty;
 
             /**
-             * Node class that matches an unicode extended grapheme cluster
+             * Node class that matches a Unicode extended grapheme cluster
              */
             class XGrapheme;
 
@@ -962,7 +964,7 @@ namespace core {
             class SliceNode;
 
             /**
-             * Node class for a case sensitive/BMP-only sequence of literal
+             * Node class for a case-sensitive/BMP-only sequence of literal
              * characters.
              */
             class Slice;
@@ -975,25 +977,25 @@ namespace core {
 
             /**
              * Node class for a unicode_case_insensitive/BMP-only sequence of
-             * literal characters. Uses unicode case folding.
+             * literal characters. Uses Unicode case folding.
              */
             class SliceU;
 
             /**
-             * Node class for a case sensitive sequence of literal characters
+             * Node class for a case-sensitive sequence of literal characters
              * including supplementary characters.
              */
             class SliceS;
 
             /**
-             * Node class for a case insensitive sequence of literal characters
+             * Node class for a case-insensitive sequence of literal characters
              * including supplementary characters.
              */
             class SliceIS;
 
             /**
-             * Node class for a case insensitive sequence of literal characters.
-             * Uses unicode case folding.
+             * Node class for a case-insensitive sequence of literal characters.
+             * Uses Unicode case folding.
              */
             class SliceUS;
 

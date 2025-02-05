@@ -414,7 +414,16 @@ namespace core {
 
         CORE_PRINT_ALL_NUMBERS_LITERALS(Complex, _j) // 1 + 2_j
 
-#if __cplusplus > 201103L
+#ifndef CORE_OVERRIDE_COMPLEX_LITERALS
+#ifndef CORE_COMPILER_MSVC
+  #define CORE_OVERRIDE_COMPLEX_LITERALS 0
+#else
+  #define CORE_OVERRIDE_COMPLEX_LITERALS 1
+#endif
+
+#endif
+
+#if __cplusplus > 201103L && CORE_OVERRIDE_COMPLEX_LITERALS
         CORE_WARNING_PUSH
         CORE_WARNING_DISABLE_UDL
 

@@ -5,7 +5,6 @@
 #include <Windows.h>
 #include <io.h>
 #include <core/ByteArray.h>
-#include <core/NativeConsole.h>
 #include <core/misc/Event.h>
 #include <core/misc/Unsafe.h>
 #include <core/Array.h>

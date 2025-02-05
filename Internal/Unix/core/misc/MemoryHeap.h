@@ -5,7 +5,7 @@
 #ifndef CORE24_MEMORYHEAP_H
 #define CORE24_MEMORYHEAP_H
 
-#include <core/misc/VarHandle.h>
+#include "VarHandle.h"
 
 namespace core {
     namespace misc {

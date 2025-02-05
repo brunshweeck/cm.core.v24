@@ -10,8 +10,7 @@
 #include <core/function/DoubleUnaryOperator.h>
 
 namespace core {
-    FloatArray::FloatArray() CORE_NOTHROW: FloatArray(0) {
-    }
+    FloatArray::FloatArray() CORE_NOTHROW: FloatArray(0) {}
 
     FloatArray::FloatArray(gint length) {
         if (length < 0)
@@ -20,7 +19,7 @@ namespace core {
         try {
             value = CORE_CAST(ARRAY, UNSAFE::allocateMemory(length * 4LL));
             count = length;
-        } catch (Throwable const &ex) { ex.throws($ftrace()); }
+        } catch (Throwable const& ex) { ex.throws($ftrace()); }
     }
 
     FloatArray::FloatArray(gint length, gfloat initialValue) {
@@ -33,17 +32,17 @@ namespace core {
 
             if (initialValue != 0)
                 for (gint i = 0; i < length; i++) value[i] = initialValue;
-        } catch (Throwable const &ex) { ex.throws($ftrace()); }
+        } catch (Throwable const& ex) { ex.throws($ftrace()); }
     }
 
-    FloatArray::FloatArray(FloatArray const &array) : PrimitiveArray(array) {
+    FloatArray::FloatArray(FloatArray const& array) : PrimitiveArray(array) {
         value = CORE_CAST(ARRAY, UNSAFE::allocateMemory(array.count * 4LL));
         count = array.count;
 
         for (int i = 0; i < count; ++i) value[i] = array.value[i];
     }
 
-    FloatArray::FloatArray(FloatArray &&array) noexcept {
+    FloatArray::FloatArray(FloatArray&& array) noexcept {
         UNSAFE::swapValues(value, array.value);
         UNSAFE::swapValues(count, array.count);
     }
@@ -58,20 +57,20 @@ namespace core {
 
     gbool FloatArray::isEmpty() const { return count == 0; }
 
-    gfloat &FloatArray::get(gint index) {
+    gfloat& FloatArray::get(gint index) {
         try {
             misc::Preconditions::checkIndex(index, length());
 
             return value[index];
-        } catch (Exception const &ex) { ex.throws($ftrace()); }
+        } catch (Exception const& ex) { ex.throws($ftrace()); }
     }
 
-    gfloat const &FloatArray::get(gint index) const {
+    gfloat const& FloatArray::get(gint index) const {
         try {
             misc::Preconditions::checkIndex(index, length());
 
             return value[index];
-        } catch (Exception const &ex) { ex.throws($ftrace()); }
+        } catch (Exception const& ex) { ex.throws($ftrace()); }
     }
 
     gfloat FloatArray::set(gint index, gfloat newValue) {
@@ -81,7 +80,7 @@ namespace core {
             const gfloat oldValue = value[index];
             value[index] = newValue;
             return oldValue;
-        } catch (Exception const &ex) { ex.throws($ftrace()); }
+        } catch (Exception const& ex) { ex.throws($ftrace()); }
     }
 
     FloatArray::~FloatArray() {
@@ -95,19 +94,19 @@ namespace core {
             UNSAFE::freeMemory(CORE_CAST(glong, a));
     }
 
-    gfloat const &FloatArray::operator[](gint index) const {
+    gfloat const& FloatArray::operator[](gint index) const {
         try {
             return get(index);
-        } catch (Exception const &ex) { ex.throws($ftrace()); }
+        } catch (Exception const& ex) { ex.throws($ftrace()); }
     }
 
-    gfloat &FloatArray::operator[](gint index) {
+    gfloat& FloatArray::operator[](gint index) {
         try {
             return get(index);
-        } catch (Exception const &ex) { ex.throws($ftrace()); }
+        } catch (Exception const& ex) { ex.throws($ftrace()); }
     }
 
-    FloatArray &FloatArray::operator=(FloatArray const &array) {
+    FloatArray& FloatArray::operator=(FloatArray const& array) {
         try {
             if (this != &array) {
                 if (count < array.count)
@@ -116,11 +115,11 @@ namespace core {
                 count = array.count;
                 for (int i = 0; i < count; i++) value[i] = array.value[i];
             }
-        } catch (Throwable const &ex) { ex.throws($ftrace()); }
+        } catch (Throwable const& ex) { ex.throws($ftrace()); }
         return *this;
     }
 
-    FloatArray &FloatArray::operator=(FloatArray &&array) CORE_NOTHROW {
+    FloatArray& FloatArray::operator=(FloatArray&& array) CORE_NOTHROW {
         if (this != &array) {
             UNSAFE::swapValues(value, array.value);
             UNSAFE::swapValues(count, array.count);
@@ -130,21 +129,21 @@ namespace core {
 
     FloatArray FloatArray::of() { return FloatArray(); }
 
-    FloatArray FloatArray::copyOf(Array<Float> const &a) {
+    FloatArray FloatArray::copyOf(Array<Float> const& a) {
         try {
             gint len = a.length();
             FloatArray dest = FloatArray(len);
             for (int i = 0; i < len; i++) dest.value[i] = a[i].floatValue();
             return dest;
-        } catch (Throwable const &ex) { ex.throws($ftrace()); }
+        } catch (Throwable const& ex) { ex.throws($ftrace()); }
     }
 
     FloatArray FloatArray::ofRange(gfloat limit) {
-        try { return ofRange(0, limit, 1); } catch (Throwable const &ex) { ex.throws($ftrace()); }
+        try { return ofRange(0, limit, 1); } catch (Throwable const& ex) { ex.throws($ftrace()); }
     }
 
     FloatArray FloatArray::ofRange(gfloat firstValue, gfloat limit) {
-        try { return ofRange(firstValue, limit, 1); } catch (Throwable const &ex) { ex.throws($ftrace()); }
+        try { return ofRange(firstValue, limit, 1); } catch (Throwable const& ex) { ex.throws($ftrace()); }
     }
 
     FloatArray FloatArray::ofRange(gfloat firstValue, gfloat limit, gdouble offsetByValue) {
@@ -157,7 +156,7 @@ namespace core {
         if (!Double::isFinite(offsetByValue))
             IllegalArgumentException("Non-finite step"_S).throws($ftrace());
 
-        gdouble d = Math::abs((limit - firstValue) / offsetByValue);
+        gdouble d = Math::abs((gdouble) (limit - firstValue) / offsetByValue);
         if (d > Integer::MAX_VALUE)
             OutOfMemoryError("Required length is too large").throws($ftrace());
 
@@ -171,10 +170,10 @@ namespace core {
                 next += offsetByValue;
             }
             return dest;
-        } catch (Throwable const &ex) { ex.throws($ftrace()); }
+        } catch (Throwable const& ex) { ex.throws($ftrace()); }
     }
 
-    FloatArray FloatArray::ofSequence(gint length, function::DoubleUnaryOperator const &generator) {
+    FloatArray FloatArray::ofSequence(gint length, function::DoubleUnaryOperator const& generator) {
         if (length < 0)
             IllegalArgumentException().throws($ftrace());
 
@@ -182,10 +181,10 @@ namespace core {
             FloatArray dest = FloatArray(length);
             for (int i = 0; i < length; i++) dest.value[i] = CORE_CAST(gfloat, generator.apply(i));
             return dest;
-        } catch (Throwable const &ex) { ex.throws($ftrace()); }
+        } catch (Throwable const& ex) { ex.throws($ftrace()); }
     }
 
-    FloatArray FloatArray::ofSequence(gint length, function::DoubleSupplier const &generator) {
+    FloatArray FloatArray::ofSequence(gint length, function::DoubleSupplier const& generator) {
         if (length < 0)
             IllegalArgumentException().throws($ftrace());
 
@@ -193,52 +192,50 @@ namespace core {
             FloatArray dest = FloatArray(length);
             for (int i = 0; i < length; i++) dest.value[i] = CORE_CAST(gfloat, generator.get());
             return dest;
-        } catch (Throwable const &ex) { ex.throws($ftrace()); }
+        } catch (Throwable const& ex) { ex.throws($ftrace()); }
     }
 
-    FloatArray::LinearIterator::LinearIterator(FloatArray &array, gbool isEnd)
-        : array(array), next(isEnd ? array.count : 0), isEnd(isEnd || array.count == 0) {
-    }
+    FloatArray::LinearIterator::LinearIterator(FloatArray& array, gbool isEnd)
+        : array(array), next(isEnd ? array.count : 0), isEnd(isEnd || array.count == 0) {}
 
-    FloatArray::LinearIterator &FloatArray::LinearIterator::operator++() {
+    FloatArray::LinearIterator& FloatArray::LinearIterator::operator++() {
         isEnd = isEnd || ++next >= array.count;
 
         return *this;
     }
 
-    gfloat &FloatArray::LinearIterator::operator*() const {
+    gfloat& FloatArray::LinearIterator::operator*() const {
         if (!isEnd) return array[next];
 
         util::NoSuchElementException().throws($ftrace());
     }
 
-    gbool FloatArray::LinearIterator::operator==(LinearIterator const &rhs) const {
+    gbool FloatArray::LinearIterator::operator==(LinearIterator const& rhs) const {
         return (this == &rhs) || (&array == &rhs.array) && ((isEnd && rhs.isEnd) || (next == rhs.next));
     }
 
-    gbool FloatArray::LinearIterator::operator!=(LinearIterator const &rhs) const { return !(*this == rhs); }
+    gbool FloatArray::LinearIterator::operator!=(LinearIterator const& rhs) const { return !(*this == rhs); }
 
-    FloatArray::LinearIterator2::LinearIterator2(FloatArray const &array, gbool isEnd)
-        : array(array), next(isEnd ? array.count : 0), isEnd(isEnd || array.count == 0) {
-    }
+    FloatArray::LinearIterator2::LinearIterator2(FloatArray const& array, gbool isEnd)
+        : array(array), next(isEnd ? array.count : 0), isEnd(isEnd || array.count == 0) {}
 
-    FloatArray::LinearIterator2 &FloatArray::LinearIterator2::operator++() {
+    FloatArray::LinearIterator2& FloatArray::LinearIterator2::operator++() {
         isEnd = isEnd || ++next >= array.count;
 
         return *this;
     }
 
-    gfloat const &FloatArray::LinearIterator2::operator*() const {
+    gfloat const& FloatArray::LinearIterator2::operator*() const {
         if (!isEnd) return array[next];
 
         util::NoSuchElementException().throws($ftrace());
     }
 
-    gbool FloatArray::LinearIterator2::operator==(LinearIterator2 const &rhs) const {
+    gbool FloatArray::LinearIterator2::operator==(LinearIterator2 const& rhs) const {
         return (this == &rhs) || (&array == &rhs.array) && ((isEnd && rhs.isEnd) || (next == rhs.next));
     }
 
-    gbool FloatArray::LinearIterator2::operator!=(LinearIterator2 const &rhs) const { return !(*this == rhs); }
+    gbool FloatArray::LinearIterator2::operator!=(LinearIterator2 const& rhs) const { return !(*this == rhs); }
 
     FloatArray::LinearIterator FloatArray::begin() { return LinearIterator(*this, false); }
 
@@ -248,14 +245,14 @@ namespace core {
 
     FloatArray::LinearIterator2 FloatArray::end() const { return LinearIterator2(*this, true); }
 
-    gbool FloatArray::equals(const Object &obj) const {
+    gbool FloatArray::equals(const Object& obj) const {
         if (this == &obj)
             return true;
 
         if (!Class<FloatArray>::hasInstance(obj))
             return false;
 
-        FloatArray const &array = CORE_XCAST(FloatArray const, obj);
+        FloatArray const& array = CORE_XCAST(FloatArray const, obj);
 
         if (count != array.count) return false;
 
@@ -281,9 +278,9 @@ namespace core {
         return str.append(value[count - 1]).append(']').toString();
     }
 
-    Object &FloatArray::clone() const {
+    Object& FloatArray::clone() const {
         try {
             return UNSAFE::newInstance<FloatArray>(*this);
-        } catch (Throwable const &ex) { ex.throws($ftrace()); }
+        } catch (Throwable const& ex) { ex.throws($ftrace()); }
     }
 } // core
