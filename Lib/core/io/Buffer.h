@@ -33,7 +33,7 @@ namespace core {
          * <p>
          * There is one subclass of this class for each non-boolean primitive type.
          * </p>
-         * <h2> Transferring data </h2>
+         * <h3> Transferring data </h3>
          * <p>
          * Each subclass of this class defines two categories of <i>get</i> and
          * <i>put</i> operations:
@@ -57,7 +57,7 @@ namespace core {
          * I/O operations of an appropriate channel, which are always relative to the
          * current position.
          * </p>
-         * <h2> Marking and resetting </h2>
+         * <h3> Marking and resetting </h3>
          * <p>
          * A buffer's <i>mark</i> is the index to which its position will be reset
          * when the @b reset method is invoked.  The mark is not always
@@ -67,7 +67,7 @@ namespace core {
          * mark is not defined then invoking the @b reset method causes an
          * @b InvalidMarkException to be thrown.
          * </p>
-         * <h2> Invariants </h2>
+         * <h3> Invariants </h3>
          * <p>
          * The following invariant holds for the mark, position, limit, and
          * capacity values:
@@ -82,31 +82,31 @@ namespace core {
          * constructed.  Each element of a newly-allocated buffer is initialized
          * to zero.
          * </p>
-         * <h2> Additional operations </h2>
+         * <h3> Additional operations </h3>
          * <p>
          * In addition to methods for accessing the position, limit, and capacity
          * values and for marking and resetting, this class also defines the following
-         * operations upon buffers:
-         *   @li <p> @b clear makes a buffer ready for a new sequence of
+         * operations upon buffers: <br/>
+         *   - @b clear makes a buffer ready for a new sequence of
          *   channel-read or relative <i>put</i> operations: It sets the limit to the
-         *   capacity and the position to zero.  </p>
+         *   capacity and the position to zero.  <br/>
          *
-         *   @li <p> @b flip makes a buffer ready for a new sequence of
+         *   - @b flip makes a buffer ready for a new sequence of
          *   channel-write or relative <i>get</i> operations: It sets the limit to the
-         *   current position and then sets the position to zero.  </p>
+         *   current position and then sets the position to zero.  <br/>
          *
-         *   @li <p> @b rewind makes a buffer ready for re-reading the data that
+         *   - @b rewind makes a buffer ready for re-reading the data that
          *   it already contains: It leaves the limit unchanged and sets the position
-         *   to zero.  </p>
+         *   to zero.  <br/>
          *
-         *   @li <p> The @b slice and @code slice(index,length) @endcode
+         *   - The @b slice and @code slice(index,length) @endcode
          *   methods create a subsequence of a buffer: They leave the limit and the
-         *   position unchanged. </p>
+         *   position unchanged. <br/>
          *
-         *   @li <p> @b duplicate creates a shallow copy of a buffer: It leaves
-         *   the limit and the position unchanged. </p>
+         *   - @b duplicate creates a shallow copy of a buffer: It leaves
+         *   the limit and the position unchanged. <br/>
          *
-         * <h2> Read-only buffers </h2>
+         * <h3> Read-only buffers </h3>
          * <p>
          * Every buffer is readable, but not every buffer is writable.  The
          * mutation methods of each buffer class are specified as <i>optional
@@ -116,13 +116,13 @@ namespace core {
          * Whether a buffer is read-only may be determined by invoking its
          * @b isReadOnly method.
          * </p>
-         * <h2> Thread safety </h2>
+         * <h3> Thread safety </h3>
          * <p>
          * Buffers are not safe for use by multiple concurrent threads.  If a
          * buffer is to be used by more than one thread then access to the buffer
          * should be controlled by appropriate synchronization.
          * </p>
-         * <h2> Invocation chaining </h2>
+         * <h3> Invocation chaining </h3>
          * <p>
          * Methods in this class that do not otherwise have a value to return are
          * specified to return the buffer upon which they are invoked.  This allows

@@ -383,20 +383,26 @@ namespace core {
                 CORE_ALIAS(CharT, typename Class<Str>::ArrayElement);
                 bpc = Class<CharT>::size();
                 len = Class<Str>::count();
-                if (len > 0 && str && str[len - 1] == '\0')
-                    len -= 1;
+                if (len > 0) {
+                    // Remove last null character (it mark end of literal string)
+                    if (str[len - 1] == '\0')
+                        len -= 1;
+                }
             } else {
                 // Class<Str>::isPointer()
                 // CharT const*
                 CORE_ALIAS(CharT, typename Class<Str>::PointerTarget);
                 bpc = Class<CharT>::size();
-                gint est = -1; // the estimation of literal string length
-                if (str)
-                    while (str[++est] != '\0') $();
+                gint est = 0; // the estimation of literal string length
+                if (!isNullPointer(str))
+                    while (str[est] != '\0')
+                        est++;
+                else
+                    est = -1;
                 len = est;
             }
 
-            initStringFromLiteral(CORE_CAST(glong, str), len, bpc);
+            initStringFromLiteral((glong) str, len, bpc);
         }
 
         /**
@@ -1915,6 +1921,7 @@ namespace core {
             Object &fmt = formatter(format, (gint) sizeof...(args));
             gbool _[] = {formatArg(fmt, args)...};
             finalize(fmt);
+            CORE_IGNORE(_);
             return fmt.toString();
         }
 
@@ -2036,6 +2043,7 @@ namespace core {
             Object &fmt = formatter(locale, format, (gint) sizeof...(args));
             gbool _[] = {formatArg(fmt, args)...};
             finalize(fmt);
+            CORE_IGNORE(_);
             return fmt.toString();
         }
 
@@ -2055,6 +2063,7 @@ namespace core {
             Object& fmt = formatter(*this, (gint) sizeof...(args));
             gbool _[] = {formatArg(fmt, args)...};
             finalize(fmt);
+            CORE_IGNORE(_);
             return fmt.toString();
         }
 
@@ -2242,6 +2251,12 @@ namespace core {
         /* ::::::::::::::::::::::: ????? :::::::::::::::::::::::::: */
 
         void initStringFromLiteral(glong str, glong est, gint bpc);
+
+        template<class T, ClassOf(1)::OnlyIf<Class<T>::isPointer()> = 1>
+        static CORE_FAST gbool isNullPointer(T&& ptr) { return ptr == null; }
+
+        template<class T, ClassOf(1)::OnlyIf<!Class<T>::isPointer()> = 1>
+        static CORE_FAST gbool isNullPointer(T&& ptr) { return false; }
 
         /* :::::::::::::::::::::::  Formatter  :::::::::::::::::::::::::: */
 

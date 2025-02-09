@@ -22,7 +22,7 @@ namespace core {
          * @c gfloat such that 1.0f + EPSILON != 1.0f . It is equal to the value returned by
          * @c Float::fromIntBits(0x34000000).
          */
-        static CORE_FAST gfloat EPSILON = 0x1.0P-23F; //1.192092896E-7F;
+        static CORE_FAST gfloat EPSILON = 0x1.0p-23F; //1.192092896E-7F;
         /**
          * A constant holding the positive infinity of type
          * @c gfloat. It is equal to the value returned by

@@ -13,7 +13,7 @@ Debug/
 .debug/
 cmake-*/
 Utilities/
-Docs/ASCII Doc
+Docs
 .run
 banner.*
 ### VS Code ###

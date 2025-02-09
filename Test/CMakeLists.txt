@@ -1,4 +1,5 @@
-MESSAGE(NOTICE "
+#[[
+
 
             ____                 ____  _  _     _____         _
            / ___|___  _ __ ___  |___ \| || |   |_   _|__  ___| |_ ___
@@ -7,14 +8,24 @@ MESSAGE(NOTICE "
            \____\___/|_|  \___| |_____|  |_|     |_|\___||___/\__|___/
 
 
-"
-)
+
+]]
 
 
-INCLUDE("${PROJECT_SOURCE_DIR}/Test/Config.cmake")
+INCLUDE("${PROJECT_SOURCE_DIR}/Config.cmake")
 
-#SET(GTEST PRIVATE Core-24 PRIVATE GTest::gtest PRIVATE GTest::gmock PRIVATE GTest::gtest_main)
-ADD_SUBDIRECTORY("${PROJECT_SOURCE_DIR}/Test/core")
-ADD_SUBDIRECTORY("${PROJECT_SOURCE_DIR}/Test/core/charset")
-ADD_SUBDIRECTORY("${PROJECT_SOURCE_DIR}/Test/core/io")
-ADD_SUBDIRECTORY("${PROJECT_SOURCE_DIR}/Test/core/util")
+#[[ Base ]]
+CREATE_CLASS_TEST(String "${CMAKE_CURRENT_SOURCE_DIR}/core")
+
+#[[ Charsets ]]
+CREATE_CLASS_TEST(Charset "${CMAKE_CURRENT_SOURCE_DIR}/core/charset")
+
+#[[ I/O]]
+CREATE_CLASS_TEST(File "${CMAKE_CURRENT_SOURCE_DIR}/core/io")
+
+#[[ Collections ]]
+CREATE_CLASS_TEST(Vector "${CMAKE_CURRENT_SOURCE_DIR}/core/util")
+#CREATE_CLASS_TEST(ArrayList "${CMAKE_CURRENT_SOURCE_DIR}/core/util")
+#CREATE_CLASS_TEST(TreeMap "${CMAKE_CURRENT_SOURCE_DIR}/core/util")
+
+#[[ Concurrence ]]

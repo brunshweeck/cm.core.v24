@@ -339,21 +339,21 @@ namespace core {
              * </p>
              * <p>
              * If the field is a @b ChronoField then the query is implemented here.
-             * The supported fields are:
+             * The supported fields are: <br/>
              *
-             * @li @c DAY_OF_WEEK
-             * @li @c ALIGNED_DAY_OF_WEEK_IN_MONTH
-             * @li @c ALIGNED_DAY_OF_WEEK_IN_YEAR
-             * @li @c DAY_OF_MONTH
-             * @li @c DAY_OF_YEAR
-             * @li @c EPOCH_DAY
-             * @li @c ALIGNED_WEEK_OF_MONTH
-             * @li @c ALIGNED_WEEK_OF_YEAR
-             * @li @c MONTH_OF_YEAR
-             * @li @c PROLEPTIC_MONTH
-             * @li @c YEAR_OF_ERA
-             * @li @c YEAR
-             * @li @c ERA
+             * - @c DAY_OF_WEEK <br/>
+             * - @c ALIGNED_DAY_OF_WEEK_IN_MONTH <br/>
+             * - @c ALIGNED_DAY_OF_WEEK_IN_YEAR <br/>
+             * - @c DAY_OF_MONTH <br/>
+             * - @c DAY_OF_YEAR <br/>
+             * - @c EPOCH_DAY <br/>
+             * - @c ALIGNED_WEEK_OF_MONTH <br/>
+             * - @c ALIGNED_WEEK_OF_YEAR <br/>
+             * - @c MONTH_OF_YEAR <br/>
+             * - @c PROLEPTIC_MONTH <br/>
+             * - @c YEAR_OF_ERA <br/>
+             * - @c YEAR <br/>
+             * - @c ERA <br/>
              *
              * All other @c ChronoField instances will return false.
              * </p>
@@ -371,16 +371,16 @@ namespace core {
              * </p>
              * <p>
              * If the unit is a @b ChronoUnit then the query is implemented here.
-             * The supported units are:
+             * The supported units are: <br/>
              *
-             * @li @c DAYS
-             * @li @c WEEKS
-             * @li @c MONTHS
-             * @li @c YEARS
-             * @li @c DECADES
-             * @li @c CENTURIES
-             * @li @c MILLENNIA
-             * @li @c ERAS
+             * - @c DAYS <br/>
+             * - @c WEEKS <br/>
+             * - @c MONTHS <br/>
+             * - @c YEARS <br/>
+             * - @c DECADES <br/>
+             * - @c CENTURIES <br/>
+             * - @c MILLENNIA <br/>
+             * - @c ERAS
              *
              * All other @c ChronoUnit instances will return false.
              * </p>
@@ -556,72 +556,72 @@ namespace core {
              * If the field is a @b ChronoField then the adjustment is implemented here.
              * The supported fields behave as follows:
              *
-             * @li @c DAY_OF_WEEK -
+             * - @c DAY_OF_WEEK -
              *  Returns a @c LocalDate with the specified day-of-week.
              *  The date is adjusted up to 6 days forward or backward within the boundary
-             *  of a Monday to Sunday week.
-             * @li @c ALIGNED_DAY_OF_WEEK_IN_MONTH -
+             *  of a Monday to Sunday week. <br/>
+             * - @c ALIGNED_DAY_OF_WEEK_IN_MONTH -
              *  Returns a @c LocalDate with the specified aligned-day-of-week.
              *  The date is adjusted to the specified month-based aligned-day-of-week.
              *  Aligned weeks are counted such that the first week of a given month starts
              *  on the first day of that month.
-             *  This may cause the date to be moved up to 6 days into the following month.
-             * @li @c ALIGNED_DAY_OF_WEEK_IN_YEAR -
+             *  This may cause the date to be moved up to 6 days into the following month. <br/>
+             * - @c ALIGNED_DAY_OF_WEEK_IN_YEAR -
              *  Returns a @c LocalDate with the specified aligned-day-of-week.
              *  The date is adjusted to the specified year-based aligned-day-of-week.
              *  Aligned weeks are counted such that the first week of a given year starts
              *  on the first day of that year.
-             *  This may cause the date to be moved up to 6 days into the following year.
-             * @li @c DAY_OF_MONTH -
+             *  This may cause the date to be moved up to 6 days into the following year. <br/>
+             * - @c DAY_OF_MONTH -
              *  Returns a @c LocalDate with the specified day-of-month.
              *  The month and year will be unchanged. If the day-of-month is invalid for the
-             *  year and month, then a @c DateTimeException is thrown.
-             * @li @c DAY_OF_YEAR -
+             *  year and month, then a @c DateTimeException is thrown. <br/>
+             * - @c DAY_OF_YEAR -
              *  Returns a @c LocalDate with the specified day-of-year.
              *  The year will be unchanged. If the day-of-year is invalid for the
-             *  year, then a @c DateTimeException is thrown.
-             * @li @c EPOCH_DAY -
+             *  year, then a @c DateTimeException is thrown. <br/>
+             * - @c EPOCH_DAY -
              *  Returns a @c LocalDate with the specified epoch-day.
-             *  This completely replaces the date and is equivalent to @b ofEpochDay(long).
-             * @li @c ALIGNED_WEEK_OF_MONTH -
+             *  This completely replaces the date and is equivalent to @b ofEpochDay(long). <br/>
+             * - @c ALIGNED_WEEK_OF_MONTH -
              *  Returns a @c LocalDate with the specified aligned-week-of-month.
              *  Aligned weeks are counted such that the first week of a given month starts
              *  on the first day of that month.
              *  This adjustment moves the date in whole week chunks to match the specified week.
              *  The result will have the same day-of-week as this date.
-             *  This may cause the date to be moved into the following month.
-             * @li @c ALIGNED_WEEK_OF_YEAR -
+             *  This may cause the date to be moved into the following month. <br/>
+             * - @c ALIGNED_WEEK_OF_YEAR -
              *  Returns a @c LocalDate with the specified aligned-week-of-year.
              *  Aligned weeks are counted such that the first week of a given year starts
              *  on the first day of that year.
              *  This adjustment moves the date in whole week chunks to match the specified week.
              *  The result will have the same day-of-week as this date.
-             *  This may cause the date to be moved into the following year.
-             * @li @c MONTH_OF_YEAR -
+             *  This may cause the date to be moved into the following year. <br/>
+             * - @c MONTH_OF_YEAR -
              *  Returns a @c LocalDate with the specified month-of-year.
              *  The year will be unchanged. The day-of-month will also be unchanged,
              *  unless it would be invalid for the new month and year. In that case, the
-             *  day-of-month is adjusted to the maximum valid value for the new month and year.
-             * @li @c PROLEPTIC_MONTH -
+             *  day-of-month is adjusted to the maximum valid value for the new month and year. <br/>
+             * - @c PROLEPTIC_MONTH -
              *  Returns a @c LocalDate with the specified proleptic-month.
              *  The day-of-month will be unchanged, unless it would be invalid for the new month
              *  and year. In that case, the day-of-month is adjusted to the maximum valid value
-             *  for the new month and year.
-             * @li @c YEAR_OF_ERA -
+             *  for the new month and year. <br/>
+             * - @c YEAR_OF_ERA -
              *  Returns a @c LocalDate with the specified year-of-era.
              *  The era and month will be unchanged. The day-of-month will also be unchanged,
              *  unless it would be invalid for the new month and year. In that case, the
-             *  day-of-month is adjusted to the maximum valid value for the new month and year.
-             * @li @c YEAR -
+             *  day-of-month is adjusted to the maximum valid value for the new month and year. <br/>
+             * - @c YEAR -
              *  Returns a @c LocalDate with the specified year.
              *  The month will be unchanged. The day-of-month will also be unchanged,
              *  unless it would be invalid for the new month and year. In that case, the
-             *  day-of-month is adjusted to the maximum valid value for the new month and year.
-             * @li @c ERA -
+             *  day-of-month is adjusted to the maximum valid value for the new month and year. <br/>
+             * - @c ERA -
              *  Returns a @c LocalDate with the specified era.
              *  The year-of-era and month will be unchanged. The day-of-month will also be unchanged,
              *  unless it would be invalid for the new month and year. In that case, the
-             *  day-of-month is adjusted to the maximum valid value for the new month and year.
+             *  day-of-month is adjusted to the maximum valid value for the new month and year. <br/>
              *
              * </p>
              * <p>
@@ -718,55 +718,55 @@ namespace core {
              * </p>
              * <p>
              * If the field is a @b ChronoUnit then the addition is implemented here.
-             * The supported fields behave as follows:
+             * The supported fields behave as follows: <br/>
              *
-             * @li @c DAYS -
+             * - @c DAYS -
              *  Returns a @c LocalDate with the specified number of days added.
-             *  This is equivalent to @b plusDays(long).
-             * @li @c WEEKS -
+             *  This is equivalent to @b plusDays(long). <br/>
+             * - @c WEEKS -
              *  Returns a @c LocalDate with the specified number of weeks added.
-             *  This is equivalent to @b plusWeeks(long) and uses a 7 days week.
-             * @li @c MONTHS -
+             *  This is equivalent to @b plusWeeks(long) and uses a 7 days week. <br/>
+             * - @c MONTHS -
              *  Returns a @c LocalDate with the specified number of months added.
              *  This is equivalent to @b plusMonths(long).
              *  The day-of-month will be unchanged unless it would be invalid for the new
              *  month and year. In that case, the day-of-month is adjusted to the maximum
-             *  valid value for the new month and year.
-             * @li @c YEARS -
+             *  valid value for the new month and year. <br/>
+             * - @c YEARS -
              *  Returns a @c LocalDate with the specified number of years added.
              *  This is equivalent to @b plusYears(long).
              *  The day-of-month will be unchanged unless it would be invalid for the new
              *  month and year. In that case, the day-of-month is adjusted to the maximum
-             *  valid value for the new month and year.
-             * @li @c DECADES -
+             *  valid value for the new month and year. <br/>
+             * - @c DECADES -
              *  Returns a @c LocalDate with the specified number of decades added.
              *  This is equivalent to calling @b plusYears(long) with the amount
              *  multiplied by 10.
              *  The day-of-month will be unchanged unless it would be invalid for the new
              *  month and year. In that case, the day-of-month is adjusted to the maximum
-             *  valid value for the new month and year.
-             * @li @c CENTURIES -
+             *  valid value for the new month and year. <br/>
+             * - @c CENTURIES -
              *  Returns a @c LocalDate with the specified number of centuries added.
              *  This is equivalent to calling @b plusYears(long) with the amount
              *  multiplied by 100.
              *  The day-of-month will be unchanged unless it would be invalid for the new
              *  month and year. In that case, the day-of-month is adjusted to the maximum
-             *  valid value for the new month and year.
-             * @li @c MILLENNIA -
+             *  valid value for the new month and year. <br/>
+             * - @c MILLENNIA -
              *  Returns a @c LocalDate with the specified number of millennia added.
              *  This is equivalent to calling @b plusYears(long) with the amount
              *  multiplied by 1,000.
              *  The day-of-month will be unchanged unless it would be invalid for the new
              *  month and year. In that case, the day-of-month is adjusted to the maximum
-             *  valid value for the new month and year.
-             * @li @c ERAS -
+             *  valid value for the new month and year. <br/>
+             * - @c ERAS -
              *  Returns a @c LocalDate with the specified number of eras added.
              *  Only two eras are supported so the amount must be one, zero or minus one.
              *  If the amount is non-zero then the year is changed such that the year-of-era
              *  is unchanged.
              *  The day-of-month will be unchanged unless it would be invalid for the new
              *  month and year. In that case, the day-of-month is adjusted to the maximum
-             *  valid value for the new month and year.
+             *  valid value for the new month and year. <br/>
              *
              * </p>
              * <p>
@@ -788,11 +788,11 @@ namespace core {
             /**
              * Returns a copy of this @c LocalDate with the specified number of years added.
              * <p>
-             * This method adds the specified amount to the years field in three steps:
+             * This method adds the specified amount to the years field in three steps: <br/>
              *
-             * @li Add the input years to the year field
-             * @li Check if the resulting date would be invalid
-             * @li Adjust the day-of-month to the last valid day if necessary
+             * - Add the input years to the year field <br/>
+             * - Check if the resulting date would be invalid <br/>
+             * - Adjust the day-of-month to the last valid day if necessary <br/>
              *
              * </p>
              * <p>
@@ -812,11 +812,11 @@ namespace core {
             /**
              * Returns a copy of this @c LocalDate with the specified number of months added.
              * <p>
-             * This method adds the specified amount to the months field in three steps:
+             * This method adds the specified amount to the months field in three steps: <br/>
              *
-             * @li Add the input months to the month-of-year field
-             * @li Check if the resulting date would be invalid
-             * @li Adjust the day-of-month to the last valid day if necessary
+             * - Add the input months to the month-of-year field <br/>
+             * - Check if the resulting date would be invalid <br/>
+             * - Adjust the day-of-month to the last valid day if necessary <br/>
              *
              * </p>
              * <p>
@@ -900,11 +900,11 @@ namespace core {
             /**
              * Returns a copy of this @c LocalDate with the specified number of years subtracted.
              * <p>
-             * This method subtracts the specified amount from the years field in three steps:
+             * This method subtracts the specified amount from the years field in three steps: <br/>
              *
-             * @li Subtract the input years from the year field
-             * @li Check if the resulting date would be invalid
-             * @li Adjust the day-of-month to the last valid day if necessary
+             * - Subtract the input years from the year field <br/>
+             * - Check if the resulting date would be invalid <br/>
+             * - Adjust the day-of-month to the last valid day if necessary <br/>
              *
              * </p>
              * <p>
@@ -924,11 +924,11 @@ namespace core {
             /**
              * Returns a copy of this @c LocalDate with the specified number of months subtracted.
              * <p>
-             * This method subtracts the specified amount from the months field in three steps:
+             * This method subtracts the specified amount from the months field in three steps: <br/>
              *
-             * @li Subtract the input months from the month-of-year field
-             * @li Check if the resulting date would be invalid
-             * @li Adjust the day-of-month to the last valid day if necessary
+             * - Subtract the input months from the month-of-year field <br/>
+             * - Check if the resulting date would be invalid <br/>
+             * - Adjust the day-of-month to the last valid day if necessary <br/>
              *
              * </p>
              * <p>

@@ -52,8 +52,8 @@ namespace core {
 
             /**
              * Construct new Consumer with specified callable
-             * object. The given callable may be:
-             * @li a <em> unary static function </em>;
+             * object. The given callable may be: <br/>
+             * - a <em> unary static function </em>;
              *     @code
              *       void myFunction(String);
              *
@@ -65,13 +65,13 @@ namespace core {
              *       Consumer<String> c1 = myFunction;
              *       Consumer<String> c2 = MyClass::myStaticMethod;
              *     @endcode
-             * @li a <em> unary lambda function </em>;
+             * - a <em> unary lambda function </em>;
              *      @code
              *        Consumer<String> c1 = [](String) {...}
              *        Consumer<String> c2 = [&](String) {...}
              *        Consumer<String> c3 = [=](String) {...}
              *      @endcode
-             * @li an <em>object that implement call operator with one argument </em>.
+             * - an <em>object that implement call operator with one argument </em>.
              *      @code
              *        class MyCallableClass {
              *        public:

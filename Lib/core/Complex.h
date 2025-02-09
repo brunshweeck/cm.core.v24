@@ -17,10 +17,10 @@ namespace core {
      * infinite values according to the rules for @b Double, i.e.
      * @b equals is an equivalence relation for all instances that have
      * a @c NaN in either real or imaginary part, e.g. the following are
-     * considered equal:
-     *   @li @code 1 + NaNi @endcode
-     *   @li @code NaN + i @endcode
-     *   @li @code NaN + NaNi @endcode
+     * considered equal: <br/>
+     *   - @code 1 + NaNi @endcode <br/>
+     *   - @code NaN + i @endcode <br/>
+     *   - @code NaN + NaNi @endcode
      * </p>
      * <p>
      * Note that this contradicts the IEEE-754 standard for floating
@@ -169,23 +169,23 @@ namespace core {
          * The rest of string should constitute a @a value (single or double) as described by the lexical
          * syntax rules:
          * <p>
-         * 1- @a Single-Value:
-         *   @li Sign<sub>opt</sub><em>NaN</em>
-         *   @li Sign<sub>opt</sub><em>inf</em>
-         *   @li Sign<sub>opt</sub><em>infinity</em>
-         *   @li Sign<sub>opt</sub><em> floating literal</em>
-         *   @li Sign<sub>opt</sub><em>NaNi</em>
-         *   @li Sign<sub>opt</sub><em>infi</em>
-         *   @li Sign<sub>opt</sub><em>infinityi</em>
-         *   @li Sign<sub>opt</sub><em>(NaN)i</em>
-         *   @li Sign<sub>opt</sub><em>(inf)i</em>
-         *   @li Sign<sub>opt</sub><em>(infinity)i</em>
-         *   @li Sign<sub>opt</sub><em> floating literal</em> <b>i</b>
+         * 1- @a Single-Value: <br/>
+         *   - Sign<sub>opt</sub><em>NaN</em> <br/>
+         *   - Sign<sub>opt</sub><em>inf</em> <br/>
+         *   - Sign<sub>opt</sub><em>infinity</em> <br/>
+         *   - Sign<sub>opt</sub><em> floating literal</em> <br/>
+         *   - Sign<sub>opt</sub><em>NaNi</em> <br/>
+         *   - Sign<sub>opt</sub><em>infi</em> <br/>
+         *   - Sign<sub>opt</sub><em>infinityi</em> <br/>
+         *   - Sign<sub>opt</sub><em>(NaN)i</em> <br/>
+         *   - Sign<sub>opt</sub><em>(inf)i</em> <br/>
+         *   - Sign<sub>opt</sub><em>(infinity)i</em> <br/>
+         *   - Sign<sub>opt</sub><em> floating literal</em> <b>i</b>
          * </p>
          * <p>
-         * 2- Evaluable Expression: such as
-         *   @li exp<sub>1</sub> op expr<sub>2</sub>
-         *   @li exp<sub>1</sub> op<sub>1</sub> expr<sub>2</sub> ... exp<sub>k</sub> <br>
+         * 2- Evaluable Expression: such as <br/>
+         *   - exp<sub>1</sub> op expr<sub>2</sub> <br/>
+         *   - exp<sub>1</sub> op<sub>1</sub> expr<sub>2</sub> ... exp<sub>k</sub> <br> <br/>
          *   ( where expN=single-value and op=+/-)
          * </p>
          *
@@ -513,26 +513,24 @@ namespace core {
          * underflows in the computation.
          * <p>
          * @c Infinite and @c NaN values are handled according to the
-         * following rules, applied in the order presented:
+         * following rules, applied in the order presented: <br/>
          *
-         *  @li If either @c this or @c divisor has a @c NaN value
-         *   in either part, @b NaN is returned.
+         *  - If either @c this or @c divisor has a @c NaN value
+         *   in either part, @b NaN is returned. <br/>
          *
-         *  @li If @c divisor equals @b ZERO, @b NaN is returned.
+         *  - If @c divisor equals @b ZERO, @b NaN is returned. <br/>
          *
-         *  @li If @c this and @c divisor are both infinite,
-         *   @b NaN is returned.
+         *  - If @c this and @c divisor are both infinite,
+         *   @b NaN is returned. <br/>
          *
-         *  @li If @c this is finite (i.e., has no @c Infinite or
+         *  - If @c this is finite (i.e., has no @c Infinite or
          *   @c NaN parts) and @c divisor is infinite (one or both parts
-         *   infinite), @b ZERO is returned.
+         *   infinite), @b ZERO is returned. <br/>
          *
-         *  @li If @c this is infinite and @c divisor is finite,
+         *  - If @c this is infinite and @c divisor is finite,
          *   @c NaN values are returned in the parts of the result if the
          *   @b Double rules applied to the definitional formula
-         *   force @c NaN results.
-         *
-         *
+         *   force @c NaN results. <br/>
          *
          * @param divisor Value by which this @c Complex is to be divided.
          * @return @code this / divisor @endcode.
@@ -573,7 +571,7 @@ namespace core {
          * essentially treating finite parts as zero in the presence of an
          * infinite coordinate and returning a multiple of pi/4 depending on
          * the signs of the infinite parts.
-         * See the javadoc for @c Math::atan2 for full details.
+         * See the documentation for @c Math::atan2 for full details.
          *
          * @return the argument of @c this.
          */
@@ -593,7 +591,7 @@ namespace core {
          * essentially treating finite parts as zero in the presence of an
          * infinite coordinate and returning a multiple of pi/4 depending on
          * the signs of the infinite parts.
-         * See the javadoc for @c Math::atan2 for full details.
+         * See the documentation for @c Math::atan2 for full details.
          *
          * @return the argument of @c this.
          */
@@ -954,15 +952,15 @@ namespace core {
          * Compute the
          * <a href="http://mathworld.wolfram.com/SquareRoot.html" TARGET="_top">
          * square root</a> of this complex number.
-         * Implements the following algorithm to compute @code sqrt(a + bi) @endcode :
-         * @li Let @code t = sqrt((|a| + |a + bi|) / 2) @endcode
-         * @li if @code  a &#8805; 0 @endcode return @code t + (b/2t)i @endcode
-         *  else return @code |b|/2t + sign(b)t i  @endcode .
+         * Implements the following algorithm to compute @code sqrt(a + bi) @endcode : <br/>
+         * - Let @code t = sqrt((|a| + |a + bi|) / 2) @endcode <br/>
+         * - if @code  a &#8805; 0 @endcode return @code t + (b/2t)i @endcode
+         *  else return @code |b|/2t + sign(b)t i  @endcode . <br/>
          *
          * where
-         * @li @code |a| = @endcode @b Math::abs(a)
-         * @li @code |a + bi| = @endcode @b Complex::abs(a + bi)
-         * @li @code sign(b) =  @endcode @b copySign(1d, b)
+         * - @code |a| = @endcode @b Math::abs(a) <br/>
+         * - @code |a + bi| = @endcode @b Complex::abs(a + bi) <br/>
+         * - @code sign(b) =  @endcode @b copySign(1d, b) <br/>
          *
          * <p>
          * Returns @b Complex::NaN if either real or imaginary part of the

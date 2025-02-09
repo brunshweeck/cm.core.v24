@@ -166,16 +166,16 @@ namespace core {
              * <p>
              * The lock associated with this @c Condition is atomically
              * released and the current thread becomes disabled for thread scheduling
-             * purposes and lies dormant until <em>one</em> of four things happens:
+             * purposes and lies dormant until <em>one</em> of four things happens: <br/>
              *
-             *  @li Some other thread invokes the @b notify method for this
+             *  - Some other thread invokes the @b notify method for this
              * @c Condition and the current thread happens to be chosen as the
-             * thread to be awakened; or
-             *  @li Some other thread invokes the @b notifyAll method for this
-             * @c Condition; or
-             *  @li Some other thread @b interrupts the
-             * current thread, and interruption of thread suspension is supported; or
-             *  @li A &quot;<em>spurious wakeup</em>&quot; occurs.
+             * thread to be awakened; or <br/>
+             *  - Some other thread invokes the @b notifyAll method for this
+             * @c Condition; or <br/>
+             *  - Some other thread @b interrupts the
+             * current thread, and interruption of thread suspension is supported; or <br/>
+             *  - A &quot;<em>spurious wakeup</em>&quot; occurs.
              *
              * </p>
              *
@@ -186,10 +186,10 @@ namespace core {
              * </p>
              *
              * <p>
-             * If the current thread:
+             * If the current thread: <br/>
              *
-             *  @li has its interrupted status set on entry to this method; or
-             *  @li is @em interrupted while waiting
+             *  - has its interrupted status set on entry to this method; or <br/>
+             *  - is @em interrupted while waiting <br/>
              * and interruption of thread suspension is supported,
              *
              * then @b InterruptedException is thrown and the current thread's
@@ -229,14 +229,14 @@ namespace core {
              * <p>
              * The lock associated with this condition is atomically
              * released and the current thread becomes disabled for thread scheduling
-             * purposes and lies dormant until <em>one</em> of three things happens:
+             * purposes and lies dormant until <em>one</em> of three things happens: <br/>
              *
-             *  @li Some other thread invokes the @b notify method for this
+             *  - Some other thread invokes the @b notify method for this
              * @c Condition and the current thread happens to be chosen as the
-             * thread to be awakened; or
-             *  @li Some other thread invokes the @b notifyAll method for this
-             * @c Condition; or
-             *  @li A &quot;<em>spurious wakeup</em>&quot; occurs.
+             * thread to be awakened; or <br/>
+             *  - Some other thread invokes the @b notifyAll method for this
+             * @c Condition; or <br/>
+             *  - A &quot;<em>spurious wakeup</em>&quot; occurs. <br/>
              * </p>
              *
              * <p>
@@ -275,17 +275,17 @@ namespace core {
              * <p>
              * The lock associated with this condition is atomically
              * released and the current thread becomes disabled for thread scheduling
-             * purposes and lies dormant until <em>one</em> of five things happens:
+             * purposes and lies dormant until <em>one</em> of five things happens: <br/>
              *
-             *  @li Some other thread invokes the @b notify method for this
+             *  - Some other thread invokes the @b notify method for this
              * @c Condition and the current thread happens to be chosen as the
-             * thread to be awakened; or
-             *  @li Some other thread invokes the @b notifyAll method for this
-             * @c Condition; or
-             *  @li Some other thread @b interrupts the
-             * current thread, and interruption of thread suspension is supported; or
-             *  @li The specified waiting time elapses; or
-             *  @li A &quot;<em>spurious wakeup</em>&quot; occurs.
+             * thread to be awakened; or <br/>
+             *  - Some other thread invokes the @b notifyAll method for this
+             * @c Condition; or <br/>
+             *  - Some other thread @b interrupts the
+             * current thread, and interruption of thread suspension is supported; or <br/>
+             *  - The specified waiting time elapses; or <br/>
+             *  - A &quot;<em>spurious wakeup</em>&quot; occurs. <br/>
              *
              * </p>
              *
@@ -296,10 +296,10 @@ namespace core {
              * </p>
              *
              * <p>
-             * If the current thread:
+             * If the current thread: <br/>
              *
-             *  @li has its interrupted status set on entry to this method; or
-             *  @li is @em interrupted while waiting
+             *  - has its interrupted status set on entry to this method; or <br/>
+             *  - is @em interrupted while waiting <br/>
              * and interruption of thread suspension is supported,
              *
              * then @b InterruptedException is thrown and the current thread's
@@ -397,17 +397,17 @@ namespace core {
              * <p>
              * The lock associated with this condition is atomically
              * released and the current thread becomes disabled for thread scheduling
-             * purposes and lies dormant until <em>one</em> of five things happens:
+             * purposes and lies dormant until <em>one</em> of five things happens: <br/>
              *
-             *  @li Some other thread invokes the @b notify method for this
+             *  - Some other thread invokes the @b notify method for this
              * @c Condition and the current thread happens to be chosen as the
-             * thread to be awakened; or
-             *  @li Some other thread invokes the @b notifyAll method for this
-             * @c Condition; or
-             *  @li Some other thread @b interrupts the
-             * current thread, and interruption of thread suspension is supported; or
-             *  @li The specified deadline elapses; or
-             *  @li A &quot;<em>spurious wakeup</em>&quot; occurs.
+             * thread to be awakened; or <br/>
+             *  - Some other thread invokes the @b notifyAll method for this
+             * @c Condition; or <br/>
+             *  - Some other thread @b interrupts the
+             * current thread, and interruption of thread suspension is supported; or <br/>
+             *  - The specified deadline elapses; or <br/>
+             *  - A &quot;<em>spurious wakeup</em>&quot; occurs. <br/>
              * </p>
              *
              * <p>
@@ -417,10 +417,10 @@ namespace core {
              * </p>
              *
              * <p>
-             * If the current thread:
+             * If the current thread: <br/>
              *
-             *  @li has its interrupted status set on entry to this method; or
-             *  @li is @em interrupted while waiting
+             *  - has its interrupted status set on entry to this method; or <br/>
+             *  - is @em interrupted while waiting <br/>
              * and interruption of thread suspension is supported,
              *
              * then @b InterruptedException is thrown and the current thread's

@@ -258,7 +258,7 @@ namespace core {
     gint BooleanArray::hash() const {
         gint hash = 0;
         for (int i = 0; i < count; ++i)
-            hash = hash * 31 ^ (count - i - 1) + Boolean::hash(value[i]);
+            hash = hash * 31 ^ ((count - i - 1) + Boolean::hash(value[i]));
         return hash;
     }
 

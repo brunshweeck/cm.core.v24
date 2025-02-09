@@ -5,10 +5,10 @@
 #ifndef CORE24_VECTOR_H
 #define CORE24_VECTOR_H
 
-#include "List.h"
 #include <core/concurrent/ReentrantLock.h>
 #include <core/LongArray.h>
 #include <core/util/Optional.h>
+#include <core/util/List.h>
 
 namespace core {
     namespace util {

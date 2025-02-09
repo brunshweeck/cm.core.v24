@@ -15,23 +15,19 @@ namespace core {
          * A char buffer.
          *
          * <p> This class defines four categories of operations upon
-         * char buffers:
+         * char buffers: <br/>
          *
-         *  @li <p> Absolute and relative <i>get</i> and
-         *   <i>put</i> methods that read and write
-         *   single chars; </p>
+         *  - Absolute and relative <i>get</i> and <i>put</i> methods that read and write
+         *   single chars <br/>
          *
-         *  @li <p> Absolute and relative <i>bulk get</i>
+         *  - Absolute and relative <i>bulk get</i>
          *   methods that transfer contiguous sequences of chars from this buffer
-         *   into an array;</p>
+         *   into an arra <br/>
          *
-         *  @li <p> Absolute and relative <i>bulk put</i>
-         *   methods that transfer contiguous sequences of chars from a
-         *   char array, a string, or some other char
-         *   buffer into this buffer;</p>
+         *  - Absolute and relative <i>bulk put</i> methods that transfer contiguous sequences of chars from a
+         *   char array, a string, or some other char buffer into this buffe <br/>
          *
-         *  @li <p> A method for @b compacting
-         *   a char buffer.  </p>
+         *  - A method for @b compacting a char buffer. <br/>
          *
          * <p> Char buffers can be created either by
          * <i>allocation</i>, which allocates space for the buffer's
@@ -1013,14 +1009,12 @@ namespace core {
              *
              * <p> Two char buffers are equal if, and only if,
              *
-             *  @li <p> They have the same element type,  </p>
+             *  - They have the same element type,   <br/>
              *
-             *  @li <p> They have the same number of remaining elements, and
-             *   </p>
+             *  - They have the same number of remaining elements, and <br/>
              *
-             *  @li <p> The two sequences of remaining elements, considered
-             *   independently of their starting positions, are point-wise equal.
-             *   </p>
+             *  - The two sequences of remaining elements, considered
+             *   independently of their starting positions, are point-wise equal. <br/>
              *
              * <p> A char buffer is not equal to any other type of object.  </p>
              *

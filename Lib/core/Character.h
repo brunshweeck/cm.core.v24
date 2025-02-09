@@ -69,20 +69,20 @@ namespace core {
      * points and the upper (most significant) 11 bits must be zero.
      * Unless otherwise specified, the behavior with respect to
      * supplementary characters and surrogate @c gchar values is
-     * as follows:
+     * as follows: <br/>
      *
-     * @li The methods that only accept a @c gchar value cannot support
+     * - The methods that only accept a @c gchar value cannot support
      * supplementary characters. They treat @c gchar values from the
      * surrogate ranges as undefined characters. For example,
      * @code Character::isLetter('\D840') @endcode returns @c false, even though
      * this specific value if followed by any low-surrogate value in a string
-     * would represent a letter.
+     * would represent a letter. <br/>
      *
-     * @li The methods that accept an @c gint value support all
+     * - The methods that accept an @c gint value support all
      * Unicode characters, including supplementary characters. For
      * example, @code Character.isLetter(0x2F81A) @endcode returns
      * @c true because the code point value represents a letter
-     * (a CJK ideograph).
+     * (a CJK ideograph). <br/>
      *
      * </p>
      * <p>
@@ -3979,12 +3979,12 @@ namespace core {
          * </p>
          * <p>
          * These are some of the Unicode characters for which this method returns
-         * @c true:
+         * @c true: <br/>
          *
-         * @li @c LATIN CAPITAL LETTER D WITH SMALL LETTER Z WITH CARON
-         * @li @c LATIN CAPITAL LETTER L WITH SMALL LETTER J
-         * @li @c LATIN CAPITAL LETTER N WITH SMALL LETTER J
-         * @li @c LATIN CAPITAL LETTER D WITH SMALL LETTER Z
+         * - @c LATIN CAPITAL LETTER D WITH SMALL LETTER Z WITH CARON <br/>
+         * - @c LATIN CAPITAL LETTER L WITH SMALL LETTER J <br/>
+         * - @c LATIN CAPITAL LETTER N WITH SMALL LETTER J <br/>
+         * - @c LATIN CAPITAL LETTER D WITH SMALL LETTER Z
          *
          * <p>
          * Many other Unicode characters are titlecase too.
@@ -4017,12 +4017,12 @@ namespace core {
          * </p>
          * <p>
          * These are some of the Unicode characters for which this method returns
-         * @c true:
+         * @c true: <br/>
          *
-         * @li @c LATIN CAPITAL LETTER D WITH SMALL LETTER Z WITH CARON
-         * @li @c LATIN CAPITAL LETTER L WITH SMALL LETTER J
-         * @li @c LATIN CAPITAL LETTER N WITH SMALL LETTER J
-         * @li @c LATIN CAPITAL LETTER D WITH SMALL LETTER Z
+         * - @c LATIN CAPITAL LETTER D WITH SMALL LETTER Z WITH CARON <br/>
+         * - @c LATIN CAPITAL LETTER L WITH SMALL LETTER J <br/>
+         * - @c LATIN CAPITAL LETTER N WITH SMALL LETTER J <br/>
+         * - @c LATIN CAPITAL LETTER D WITH SMALL LETTER Z
          * </p>
          * <p>
          * Many other Unicode characters are titlecase too.
@@ -4041,18 +4041,18 @@ namespace core {
          * by @c Character::category(ch), is @c DECIMAL_DIGIT_NUMBER.
          * </p>
          * <p>
-         * Some Unicode character ranges that contain digits:
+         * Some Unicode character ranges that contain digits: <br/>
          *
-         * @li @c '\u0030' through @c '\u0039',
-         *     ISO-LATIN-1 digits (@c '0' through @c '9')
-         * @li @c '\u0660' through @c '\u0669',
-         *     Arabic-Indic digits
-         * @li @c '\u06F0' through @c '\u06F9',
-         *     Extended Arabic-Indic digits
-         * @li @c '\u0966' through @c '\u096F',
-         *     Devanagari digits
-         * @li @c '\uFF10' through @c '\uFF19',
-         *     Fullwidth digits
+         * - @c '\u0030' through @c '\u0039',
+         *     ISO-LATIN-1 digits (@c '0' through @c '9') <br/>
+         * - @c '\u0660' through @c '\u0669',
+         *     Arabic-Indic digits <br/>
+         * - @c '\u06F0' through @c '\u06F9',
+         *     Extended Arabic-Indic digits <br/>
+         * - @c '\u0966' through @c '\u096F',
+         *     Devanagari digits <br/>
+         * - @c '\uFF10' through @c '\uFF19',
+         *     Fullwidth digits <br/>
          *
          * Many other character ranges contain digits as well.
          * </p>
@@ -4077,16 +4077,11 @@ namespace core {
          * <p>
          * Some Unicode character ranges that contain digits:
          *
-         * @li @c '\u0030' through @c '\u0039',
-         *     ISO-LATIN-1 digits (@c '0' through @c '9')
-         * @li @c '\u0660' through @c '\u0669',
-         *     Arabic-Indic digits
-         * @li @c '\u06F0' through @c '\u06F9',
-         *     Extended Arabic-Indic digits
-         * @li @c '\u0966' through @c '\u096F',
-         *     Devanagari digits
-         * @li @c '\uFF10' through @c '\uFF19',
-         *     Fullwidth digits
+         * - @c '\u0030' through @c '\u0039', ISO-LATIN-1 digits (@c '0' through @c '9') <br/>
+         * - @c '\u0660' through @c '\u0669', Arabic-Indic digits <br/>
+         * - @c '\u06F0' through @c '\u06F9', Extended Arabic-Indic digits <br/>
+         * - @c '\u0966' through @c '\u096F', Devanagari digits <br/>
+         * - @c '\uFF10' through @c '\uFF19', Fullwidth digits
          *
          * Many other character ranges contain digits as well.
          * </p>
@@ -4102,8 +4097,8 @@ namespace core {
          * <p>
          * A character is defined if at least one of the following is true:
          *
-         * @li It has an entry in the UnicodeData file.
-         * @li It has a value in a range defined by the UnicodeData file.
+         * - It has an entry in the UnicodeData file. <br/>
+         * - It has a value in a range defined by the UnicodeData file. <br/>
          * </p>
          *
          * <p>
@@ -4121,10 +4116,10 @@ namespace core {
         /**
          * Determines if a character (Unicode code point) is defined in Unicode.
          * <p>
-         * A character is defined if at least one of the following is true:
+         * A character is defined if at least one of the following is true: <br/>
          *
-         * @li It has an entry in the UnicodeData file.
-         * @li It has a value in a range defined by the UnicodeData file.
+         * - It has an entry in the UnicodeData file. <br/>
+         * - It has a value in a range defined by the UnicodeData file. <br/>
          * </p>
          *
          * @param   codePoint the character (Unicode code point) to be tested.
@@ -4139,13 +4134,13 @@ namespace core {
          * <p>
          * A character is considered to be a letter if its general
          * category type, provided by @c Character::category(ch),
-         * is any of the following:
+         * is any of the following: <br/>
          *
-         * @li  @c UPPERCASE_LETTER
-         * @li  @c LOWERCASE_LETTER
-         * @li  @c TITLECASE_LETTER
-         * @li  @c MODIFIER_LETTER
-         * @li  @c OTHER_LETTER
+         * -  @c UPPERCASE_LETTER <br/>
+         * -  @c LOWERCASE_LETTER <br/>
+         * -  @c TITLECASE_LETTER <br/>
+         * -  @c MODIFIER_LETTER <br/>
+         * -  @c OTHER_LETTER
          *
          *
          * Not all letters have case. Many characters are
@@ -4167,13 +4162,13 @@ namespace core {
          * <p>
          * A character is considered to be a letter if its general
          * category type, provided by @c Character::category(gint) category(codePoint),
-         * is any of the following:
+         * is any of the following: <br/>
          *
-         * @li  @c UPPERCASE_LETTER
-         * @li  @c LOWERCASE_LETTER
-         * @li  @c TITLECASE_LETTER
-         * @li  @c MODIFIER_LETTER
-         * @li  @c OTHER_LETTER
+         * -  @c UPPERCASE_LETTER <br/>
+         * -  @c LOWERCASE_LETTER <br/>
+         * -  @c TITLECASE_LETTER <br/>
+         * -  @c MODIFIER_LETTER <br/>
+         * -  @c OTHER_LETTER
          *
          *
          * Not all letters have case. Many characters are
@@ -4226,14 +4221,14 @@ namespace core {
          * <p>
          * A character is considered to be alphabetic if its general category type,
          * provided by @c Character::category(gint) category(codePoint), is any of
-         * the following:
+         * the following: <br/>
          *
-         * @li  @c UPPERCASE_LETTER
-         * @li  @c LOWERCASE_LETTER
-         * @li  @c TITLECASE_LETTER
-         * @li  @c MODIFIER_LETTER
-         * @li  @c OTHER_LETTER
-         * @li  @c LETTER_NUMBER
+         * -  @c UPPERCASE_LETTER <br/>
+         * -  @c LOWERCASE_LETTER <br/>
+         * -  @c TITLECASE_LETTER <br/>
+         * -  @c MODIFIER_LETTER <br/>
+         * -  @c OTHER_LETTER <br/>
+         * -  @c LETTER_NUMBER
          *
          * or it has contributory property Other_Alphabetic as defined by the
          * Unicode Standard.
@@ -4511,27 +4506,27 @@ namespace core {
          * radix, @c -1 is returned. A character is a valid digit
          * if at least one of the following is true:
          *
-         * @li The method @c isDigit is @c true of the character
+         * - The method @c isDigit is @c true of the character
          *     and the Unicode decimal digit value of the character (or its
          *     single-character decomposition) is less than the specified radix.
-         *     In this case the decimal digit value is returned.
-         * @li The character is one of the uppercase Latin letters
+         *     In this case the decimal digit value is returned. <br/>
+         * - The character is one of the uppercase Latin letters
          *     @c 'A' through @c 'Z' and its code is less than
          *     @c radix + 'A' - 10.
          *     In this case, @c ch - 'A' + 10
-         *     is returned.
-         * @li The character is one of the lowercase Latin letters
+         *     is returned. <br/>
+         * - The character is one of the lowercase Latin letters
          *     @c 'a' through @c 'z' and its code is less than
          *     @c radix + 'a' - 10.
          *     In this case, @c ch - 'a' + 10
-         *     is returned.
-         * @li The character is one of the fullwidth uppercase Latin letters A
+         *     is returned. <br/>
+         * - The character is one of the fullwidth uppercase Latin letters A
          *     (@c '\uFF21') through Z (@c '\uFF3A')
          *     and its code is less than
          *     @c radix + '\uFF21' - 10.
          *     In this case, @c ch - '\uFF21' + 10
-         *     is returned.
-         * @li The character is one of the fullwidth lowercase Latin letters a
+         *     is returned. <br/>
+         * - The character is one of the fullwidth lowercase Latin letters a
          *     (@c '\uFF41') through z (@c '\uFF5A')
          *     and its code is less than
          *     @c radix + '\uFF41' - 10.
@@ -4560,36 +4555,25 @@ namespace core {
          * @c radix &le; @c MAX_RADIX or if the
          * character is not a valid digit in the specified
          * radix, @c -1 is returned. A character is a valid digit
-         * if at least one of the following is true:
+         * if at least one of the following is true: <br/>
          *
-         * @li The method @c isDigit(codePoint) is @c true of the character
+         * - The method @c isDigit(codePoint) is @c true of the character
          *     and the Unicode decimal digit value of the character (or its
          *     single-character decomposition) is less than the specified radix.
-         *     In this case the decimal digit value is returned.
-         * @li The character is one of the uppercase Latin letters
+         *     In this case the decimal digit value is returned. <br/>
+         * - The character is one of the uppercase Latin letters
          *     @c 'A' through @c 'Z' and its code is less than
-         *     @c radix + 'A' - 10.
-         *     In this case, @c codePoint - 'A' + 10
-         *     is returned.
-         * @li The character is one of the lowercase Latin letters
+         *     @c radix + 'A' - 10. In this case, @c codePoint - 'A' + 10 is returned. <br/>
+         * - The character is one of the lowercase Latin letters
          *     @c 'a' through @c 'z' and its code is less than
-         *     @c radix + 'a' - 10.
-         *     In this case, @c codePoint - 'a' + 10
-         *     is returned.
-         * @li The character is one of the fullwidth uppercase Latin letters A
+         *     @c radix + 'a' - 10. In this case, @c codePoint - 'a' + 10 is returned. <br/>
+         * - The character is one of the fullwidth uppercase Latin letters A
          *     (@c '\uFF21') through Z (@c '\uFF3A')
-         *     and its code is less than
-         *     @c radix + '\uFF21' - 10.
-         *     In this case,
-         *     @c codePoint - '\uFF21' + 10
-         *     is returned.
-         * @li The character is one of the fullwidth lowercase Latin letters a
-         *     (@c '\uFF41') through z (@c '\uFF5A')
-         *     and its code is less than
-         *     @c radix + '\uFF41'- 10.
-         *     In this case,
-         *     @c codePoint - '\uFF41' + 10
-         *     is returned.
+         *     and its code is less than @c radix + '\uFF21' - 10.
+         *     In this case, @c codePoint - '\uFF21' + 10 is returned. <br/>
+         * - The character is one of the fullwidth lowercase Latin letters a
+         *     (@c '\uFF41') through z (@c '\uFF5A') and its code is less than
+         *     @c radix + '\uFF41'- 10. In this case, @c codePoint - '\uFF41' + 10 is returned. <br/>
          * </p>
          *
          * @param   codePoint the character (Unicode code point) to be converted.
@@ -4666,13 +4650,13 @@ namespace core {
         /**
          * Determines if the specified character is ISO-LATIN-1 white space.
          * This method returns @c true for the following five
-         * characters only:
-         * @li  Character ........Code ........Name
-         * @li  '\\t' ............U+0009 ......HORIZONTAL TABULATION
-         * @li  '\\n' ............U+000A ......NEW LINE
-         * @li  '\\f' ............U+000C ......FORM FEED
-         * @li  '\\r' ............U+000D ......CARRIAGE RETURN
-         * @li  ' ' ..............U+0020 ......SPACE
+         * characters only: <br/>
+         * -  Character ........Code ........Name <br/>
+         * -  '\\t' ............U+0009 ......HORIZONTAL TABULATION <br/>
+         * -  '\\n' ............U+000A ......NEW LINE <br/>
+         * -  '\\f' ............U+000C ......FORM FEED <br/>
+         * -  '\\r' ............U+000D ......CARRIAGE RETURN <br/>
+         * -  ' ' ..............U+0020 ......SPACE
          *
          * @param      ch   the character to be tested.
          * @return     @c true if the character is ISO-LATIN-1 white space; @c false otherwise.
@@ -4688,11 +4672,11 @@ namespace core {
          * A character is considered to be a space character if and only if
          * it is specified to be a space character by the Unicode Standard. This
          * method returns true if the character's general category type is any of
-         * the following:
+         * the following: <br/>
          *
-         * @li  @c SPACE_SEPARATOR
-         * @li  @c LINE_SEPARATOR
-         * @li  @c PARAGRAPH_SEPARATOR
+         * -  @c SPACE_SEPARATOR <br/>
+         * -  @c LINE_SEPARATOR <br/>
+         * -  @c PARAGRAPH_SEPARATOR
          *
          *
          * <p>
@@ -4711,12 +4695,11 @@ namespace core {
          * Unicode space character.  A character is considered to be a
          * space character if and only if it is specified to be a space
          * character by the Unicode Standard. This method returns true if
-         * the character's general category type is any of the following:
+         * the character's general category type is any of the following: <br/>
          *
-         *
-         * @li  @b SPACE_SEPARATOR
-         * @li  @b LINE_SEPARATOR
-         * @li  @b PARAGRAPH_SEPARATOR
+         * -  @b SPACE_SEPARATOR <br/>
+         * -  @b LINE_SEPARATOR <br/>
+         * -  @b PARAGRAPH_SEPARATOR <br/>
          *
          *
          * @param   codePoint the character (Unicode code point) to be tested.
@@ -4728,23 +4711,21 @@ namespace core {
         /**
          * Determines if the specified character is white space according to Java.
          * A character is a Java whitespace character if and only if it satisfies
-         * one of the following criteria:
+         * one of the following criteria: <br/>
          *
-         * @li  It is a Unicode space character (@c SPACE_SEPARATOR,
+         * -  It is a Unicode space character (@c SPACE_SEPARATOR,
          *      @c LINE_SEPARATOR, or @c PARAGRAPH_SEPARATOR)
          *      but is not also a non-breaking space (@c '\u00A0',
-         *      @c '\u2007', @c '\u202F').
-         * @li  It is @c '\\t', U+0009 HORIZONTAL TABULATION.
-         * @li  It is @c '\\n', U+000A LINE FEED.
-         * @li  It is @c '\u000B', U+000B VERTICAL TABULATION.
-         * @li  It is @c '\\f', U+000C FORM FEED.
-         * @li  It is @c '\\r', U+000D CARRIAGE RETURN.
-         * @li  It is @c '\u001C', U+001C FILE SEPARATOR.
-         * @li  It is @c '\u001D', U+001D GROUP SEPARATOR.
-         * @li  It is @c '\u001E', U+001E RECORD SEPARATOR.
-         * @li  It is @c '\u001F', U+001F UNIT SEPARATOR.
-         *
-         *
+         *      @c '\u2007', @c '\u202F'). <br/>
+         * -  It is @c '\\t', U+0009 HORIZONTAL TABULATION. <br/>
+         * -  It is @c '\\n', U+000A LINE FEED. <br/>
+         * -  It is @c '\u000B', U+000B VERTICAL TABULATION. <br/>
+         * -  It is @c '\\f', U+000C FORM FEED. <br/>
+         * -  It is @c '\\r', U+000D CARRIAGE RETURN. <br/>
+         * -  It is @c '\u001C', U+001C FILE SEPARATOR. <br/>
+         * -  It is @c '\u001D', U+001D GROUP SEPARATOR. <br/>
+         * -  It is @c '\u001E', U+001E RECORD SEPARATOR. <br/>
+         * -  It is @c '\u001F', U+001F UNIT SEPARATOR.
          * <p>
          * @c Note: This method cannot handle <i> supplementary characters</i>. To support
          * all Unicode characters, including supplementary characters, use
@@ -4761,21 +4742,21 @@ namespace core {
          * Determines if the specified character (Unicode code point) is
          * white space according to Java.  A character is a Java
          * whitespace character if and only if it satisfies one of the
-         * following criteria:
+         * following criteria: <br/>
          *
-         * @li  It is a Unicode space character (@b SPACE_SEPARATOR,
+         * -  It is a Unicode space character (@b SPACE_SEPARATOR,
          *      @b LINE_SEPARATOR, or @b PARAGRAPH_SEPARATOR)
          *      but is not also a non-breaking space (@c '\u00A0',
-         *      @c '\u2007', @c '\u202F').
-         * @li  It is @c '\\t', U+0009 HORIZONTAL TABULATION.
-         * @li  It is @c '\\n', U+000A LINE FEED.
-         * @li  It is @c '\u000B', U+000B VERTICAL TABULATION.
-         * @li  It is @c '\\f', U+000C FORM FEED.
-         * @li  It is @c '\\r', U+000D CARRIAGE RETURN.
-         * @li  It is @c '\u001C', U+001C FILE SEPARATOR.
-         * @li  It is @c '\u001D', U+001D GROUP SEPARATOR.
-         * @li  It is @c '\u001E', U+001E RECORD SEPARATOR.
-         * @li  It is @c '\u001F', U+001F UNIT SEPARATOR.
+         *      @c '\u2007', @c '\u202F'). <br/>
+         * -  It is @c '\\t', U+0009 HORIZONTAL TABULATION. <br/>
+         * -  It is @c '\\n', U+000A LINE FEED. <br/>
+         * -  It is @c '\u000B', U+000B VERTICAL TABULATION. <br/>
+         * -  It is @c '\\f', U+000C FORM FEED. <br/>
+         * -  It is @c '\\r', U+000D CARRIAGE RETURN. <br/>
+         * -  It is @c '\u001C', U+001C FILE SEPARATOR. <br/>
+         * -  It is @c '\u001D', U+001D GROUP SEPARATOR. <br/>
+         * -  It is @c '\u001E', U+001E RECORD SEPARATOR. <br/>
+         * -  It is @c '\u001F', U+001F UNIT SEPARATOR.
          *
          *
          * @param   codePoint the character (Unicode code point) to be tested.

@@ -97,10 +97,10 @@ namespace core {
             CORE_EXPLICIT Decimal64(gbool noChars);
 
             /**
-             * Returns a string representation of the {@code double}
+             * Returns a string representation of the @c double
              * argument. All characters mentioned below are ASCII characters.
              *
-             * @param   v   the {@code double} to be converted.
+             * @param   v   the @c double to be converted.
              * @return a string representation of the argument.
              * @see Double#toString(double)
              */
@@ -108,7 +108,7 @@ namespace core {
 
             /**
              * Splits the decimal <i>d</i> described in
-             * {@link Double#toString(double)} in integers <i>f</i> and <i>e</i>
+             * @b Double::toString(double) in integers <i>f</i> and <i>e</i>
              * such that <i>d</i> = <i>f</i> 10<sup><i>e</i></sup>.
              *
              * <p>Further, determines integer <i>n</i> such that <i>n</i> = 0 when
@@ -116,24 +116,25 @@ namespace core {
              * 10<sup><i>n</i>-1</sup> &le; <i>f</i> &lt; 10<sup><i>n</i></sup>
              * otherwise.
              *
-             * <p>The argument {@code v} is assumed to be a positive finite value or
+             * <p>The argument @c v is assumed to be a positive finite value or
              * positive zero.
-             * Further, {@code fd} must not be {@code null}.
+             * Further, @c fd must not be @c null.
              *
-             * @param v     the finite {@code double} to be split.
+             * @param v     the finite @c double to be split.
              * @param fd    the object that will carry <i>f</i>, <i>e</i>, and <i>n</i>.
              */
             static void split(gdouble v, DecimalFormatter& fd);
 
             /**
-             * Appends the rendering of the {@code v} to {@code app}.
+             * Appends the rendering of the @c v to @c app.
              *
-             * <p>The outcome is the same as if {@code v} were first
-             * {@link #toString(double) rendered} and the resulting string were then
-             * {@link Appendable#append(CharSequence) appended} to {@code app}.
-             *
-             * @param v the {@code double} whose rendering is appended.
-             * @param app the {@link Appendable} to append to.
+             * <p>
+             * The outcome is the same as if @c v were first
+             * @b rendered and the resulting string were then
+             * @b appended to @c app.
+             * </p>
+             * @param v the @c double whose rendering is appended.
+             * @param app the @b Appendable to append to.
              * @throws IOException If an I/O error occurs
              */
             static Appendable& appendTo(gdouble v, Appendable& app);

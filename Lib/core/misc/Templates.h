@@ -829,7 +829,7 @@ namespace core {
         class TEST<REQUEST::CHR_FLAG, wchar_t> : public ALWAYS_TRUE {
         };
 
-#if __cpp_lib_char8_t
+#if defined(__cpp_lib_char8_t)
         template <>
         class TEST<REQUEST::CHR_FLAG, char8_t> : public ALWAYS_TRUE
         {

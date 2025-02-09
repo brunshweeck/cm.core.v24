@@ -22,32 +22,28 @@ namespace core {
          * This class defines six categories of operations upon
          * byte buffers:
          *
-         *  @li <p> Absolute and relative <i>get</i> and
+         *  - Absolute and relative <i>get</i> and
          *   <i>put</i> methods that read and write
-         *   single bytes; </p>
+         *   single bytes; <br/>
          *
-         *  @li <p> Absolute and relative <i>bulk get</i>
+         *  - Absolute and relative <i>bulk get</i>
          *   methods that transfer contiguous sequences of bytes from this buffer
-         *   into an array;</p>
+         *   into an array <br/>
          *
-         *  @li <p> Absolute and relative <i>bulk put</i>
+         *  - Absolute and relative <i>bulk put</i>
          *   methods that transfer contiguous sequences of bytes from a
-         *   byte array or some other byte
-         *   buffer into this buffer;</p>
+         *   byte array or some other byte buffer into this buffer <br/>
          *
-         *
-         *  @li <p> Absolute and relative <i>get</i> and <i>put</i> methods that read and
+         *  - Absolute and relative <i>get</i> and <i>put</i> methods that read and
          *   write values of other primitive types, translating them to and from
-         *   sequences of bytes in a particular byte order; </p>
+         *   sequences of bytes in a particular byte order; <br/>
          *
-         *  @li <p> Methods for creating <i><a href="#views">view buffers</a></i>,
+         *  - Methods for creating <i><a href="#views">view buffers</a></i>,
          *   which allow a byte buffer to be viewed as a buffer containing values of
-         *   some other primitive type; and </p>
+         *   some other primitive type; and <br/>
          *
          *
-         *  @li <p> A method for @b compacting
-         *   a byte buffer.  </p>
-         *
+         *  - A method for @b compacting a byte buffer.  <br/>
          *
          * <p>
          * Byte buffers can be created either by
@@ -55,8 +51,7 @@ namespace core {
          *
          * content, or by <i>wrapping</i> an existing byte array into a buffer.
          *
-         * <a id="direct"></a>
-         * <h2> Direct <i>vs.</i> non-direct buffers </h2>
+         * <h2> Direct vs. non-direct buffers </h2>
          *
          * <p> A byte buffer is either <i>direct</i> or <i>non-direct</i>.  Given a
          * direct byte buffer, the Java virtual machine will make a best effort to
@@ -131,31 +126,31 @@ namespace core {
          * the method is invoked.  Corresponding view-creation methods are defined for
          * the types @c gchar, @c gshort, @c gint, @c glong, and @c gdouble.
          *
-         * <p> View buffers have three important advantages over the families of
-         * type-specific <i>get</i> and <i>put</i> methods described above:
+         * <p>
+         * View buffers have three important advantages over the families of
+         * type-specific <i>get</i> and <i>put</i> methods described above: <br/>
          *
-         * <ul>
+         *  - A view buffer is indexed not in terms of bytes but rather in terms
+         *   of the type-specific size of its values; <br/>
          *
-         *  @li <p> A view buffer is indexed not in terms of bytes but rather in terms
-         *   of the type-specific size of its values;  </p>
-         *
-         *  @li <p> A view buffer provides relative bulk <i>get</i> and <i>put</i>
+         *  - A view buffer provides relative bulk <i>get</i> and <i>put</i>
          *   methods that can transfer contiguous sequences of values between a buffer
-         *   and an array or some other buffer of the same type; and  </p>
+         *   and an array or some other buffer of the same type; and <br/>
          *
-         *  @li <p> A view buffer is potentially much more efficient because it will
-         *   be direct if, and only if, its backing byte buffer is direct.  </p>
+         *  - A view buffer is potentially much more efficient because it will
+         *   be direct if, and only if, its backing byte buffer is direct. <br/>
          *
-         * </ul>
-         *
-         * <p> The byte order of a view buffer is fixed to be that of its byte buffer
-         * at the time that the view is created.  </p>
+         * </p>
+         * <p>
+         * The byte order of a view buffer is fixed to be that of its byte buffer
+         * at the time that the view is created.
+         * </p>
          * <h2> Invocation chaining </h2>
          *
-         * <p> Methods in this class that do not otherwise have a value to return are
+         * <p>
+         * Methods in this class that do not otherwise have a value to return are
          * specified to return the buffer upon which they are invoked.  This allows
          * method invocations to be chained.
-         *
          *
          * The sequence of statements
          *
@@ -1007,18 +1002,12 @@ namespace core {
              *
              * <p> Two byte buffers are equal if, and only if,
              *
-             * <ol>
+             *  - They have the same element type, <br/>
              *
-             *  @li <p> They have the same element type,  </p>
+             *  - They have the same number of remaining elements, and <br/>
              *
-             *  @li <p> They have the same number of remaining elements, and
-             *   </p>
-             *
-             *  @li <p> The two sequences of remaining elements, considered
-             *   independently of their starting positions, are pointwise equal.
-             *   </p>
-             *
-             * </ol>
+             *  - The two sequences of remaining elements, considered
+             *   independently of their starting positions, are pointwise equal. <br/>
              *
              * <p> A byte buffer is not equal to any other type of object.  </p>
              *

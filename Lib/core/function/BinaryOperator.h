@@ -55,8 +55,8 @@ namespace core {
         public:
             /**
              * Construct new Operator with specified callable
-             * object. The given callable may be:
-             * @li a <em> binary static function </em>;
+             * object. The given callable may be: <br/>
+             * - a <em> binary static function </em>;
              *     @code
              *       gint myFunction(String, String);
              *
@@ -68,13 +68,13 @@ namespace core {
              *       BinaryOperator<String> f1 = myFunction;
              *       BinaryOperator<String> f2 = MyClass::myStaticMethod;
              *     @endcode
-             * @li a <em> binary lambda function </em>;
+             * - a <em> binary lambda function </em>;
              *      @code
              *        BinaryOperator<String> f1 = [](String, String) -> String {...}
              *        BinaryOperator<String> f2 = [&](String, String) -> String {...}
              *        BinaryOperator<String> f3 = [=](String, String) -> String {...}
              *      @endcode
-             * @li an <em>object that implement call operator with two arguments </em>.
+             * - an <em>object that implement call operator with two arguments </em>.
              *      @code
              *        class MyCallableClass {
              *        public:

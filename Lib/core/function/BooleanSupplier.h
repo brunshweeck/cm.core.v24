@@ -42,8 +42,8 @@ namespace core {
         public:
             /**
              * Construct new Supplier with specified callable
-             * object. The given callable may be:
-             * @li a <em> static function </em>;
+             * object. The given callable may be: <br/>
+             * - a <em> static function </em>;
              *     @code
              *       gbool myFunction();
              *
@@ -55,13 +55,13 @@ namespace core {
              *       BooleanSupplier s1 = myFunction;
              *       BooleanSupplier s2 = MyClass::myStaticMethod;
              *     @endcode
-             * @li a <em> lambda function </em>;
+             * - a <em> lambda function </em>;
              *      @code
              *        BooleanSupplier s1 = []() -> gbool {...}
              *        BooleanSupplier s2 = [&]() -> gbool {...}
              *        BooleanSupplier s3 = [=]() -> gbool {...}
              *      @endcode
-             * @li an <em>object that implement call operator without arguments </em>.
+             * - an <em>object that implement call operator without arguments </em>.
              *      @code
              *        class MyCallableClass {
              *        public:
@@ -170,8 +170,8 @@ namespace core {
 
             gbool equals(const Object &obj) const override {
                 return this == &obj ||
-                       Class<BooleanSupplier>::hasInstance(obj) &&
-                       launcher == CORE_XCAST(BooleanSupplier const, obj).launcher;
+                       (Class<BooleanSupplier>::hasInstance(obj) &&
+                       launcher == CORE_XCAST(BooleanSupplier const, obj).launcher);
             }
 
             Object &clone() const override {

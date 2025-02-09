@@ -31,34 +31,34 @@ namespace core {
          * concurrent threads.
          * </p>
          *
-         * <h2>Charset names</h2>
+         * <h3>Charset names</h3>
          *
          * <p>
-         * Charsets are named by strings composed of the following characters:
+         * Charsets are named by strings composed of the following characters:<br/>
          *
-         *   @li The uppercase letters @c 'A' through @c 'Z'
-         *        (@c '\u0041'  through @c '\u005a' ),
+         *  - The uppercase letters @c 'A' through @c 'Z'
+         *        (@c '\u0041'  through @c '\u005a' ),<br/>
          *
-         *   @li The lowercase letters @c 'a' through @c 'z'
-         *        (@c '\u0061'  through @c '\u007a' ),
+         *  - The lowercase letters @c 'a' through @c 'z'
+         *        (@c '\u0061'  through @c '\u007a' ),<br/>
          *
-         *   @li The digits @c '0' through @c '9'
-         *        (@c '\u0030'  through @c '\u0039' ),
+         *  - The digits @c '0' through @c '9'
+         *        (@c '\u0030'  through @c '\u0039' ),<br/>
          *
-         *   @li The dash character @c '-'
-         *        (@c '\u002d' , <small>HYPHEN-MINUS</small>),
+         *  - The dash character @c '-'
+         *        (@c '\u002d' , <small>HYPHEN-MINUS</small>),<br/>
          *
-         *   @li The plus character @c '+'
-         *        (@c '\u002b' , <small>PLUS SIGN</small>),
+         *  - The plus character @c '+'
+         *        (@c '\u002b' , <small>PLUS SIGN</small>),<br/>
          *
-         *   @li The period character @c '.'
-         *        (@c '\u002e' , <small>FULL STOP</small>),
+         *  - The period character @c '.'
+         *        (@c '\u002e' , <small>FULL STOP</small>),<br/>
          *
-         *   @li The colon character @c ':'
-         *        (@c '\u003a' , <small>COLON</small>), and
+         *  - The colon character @c ':'
+         *        (@c '\u003a' , <small>COLON</small>), and<br/>
          *
-         *   @li The underscore character @c '_'
-         *        (@c '\u005f' , <small>LOW LINE</small>).
+         *  - The underscore character @c '_'
+         *        (@c '\u005f' , <small>LOW LINE</small>).<br/>
          *
          * A charset name must begin with either a letter or a digit.  The empty string
          * is not a legal charset name.  Charset names are not case-sensitive; that is,
@@ -94,56 +94,62 @@ namespace core {
          * charset, and that if the canonical name of a charset is changed then its
          * previous canonical name be made into an alias.
          * </p>
-         * <h2>Standard charsets</h2>
+         * <h3>Standard charsets</h3>
          * <p>
          * Every implementation is required to support the following standard charsets.
          * Consult the release documentation for your implementation to see if any other
          * charsets are supported.  The behavior of such optional charsets may differ
          * between implementations. <br>
-         * <b>Description of standard charsets</b>
-         * <br>
-         * @li @c US-ASCII = Seven-bit ASCII, a.k.a. @c ISO646-US, a.k.a. the Basic Latin block of the Unicode character set
-         * @li @c ISO-8859-1 = ISO Latin Alphabet No. 1, a.k.a. @c ISO-LATIN-1
-         * @li @c UTF-8 = Eight-bit UCS Transformation Format
-         * @li @c UTF-16BE = Sixteen-bit UCS Transformation Format, big-endian byte order
-         * @li @c UTF-16LE = Sixteen-bit UCS Transformation Format, little-endian byte order
-         * @li @c UTF-16 = Sixteen-bit UCS Transformation Format, byte order identified by an optional byte-order mark
-         * @li @c UTF-32BE = Thirty-two-bit UCS Transformation Format, big-endian byte order
-         * @li @c UTF-32LE = Thirty-two-bit UCS Transformation Format, little-endian byte order
-         * @li @c UTF-32 = Thirty-two-bit UCS Transformation Format, byte order identified by an optional byte-order mark
-         * <br>
+         * <b>Description of standard charsets</b> <br/>
+         *
+         * - @c "US-ASCII" = Seven-bit ASCII, a.k.a. @c ISO646-US, a.k.a. the Basic Latin
+         *                   block of the Unicode character set <br/>
+         * - @c "ISO-8859-1" = ISO Latin Alphabet No. 1, a.k.a. @c ISO-LATIN-1 <br/>
+         * - @c "UTF-8" = Eight-bit UCS Transformation Format <br/>
+         * - @c "UTF-16BE" = Sixteen-bit UCS Transformation Format, big-endian byte order <br/>
+         * - @c "UTF-16LE" = Sixteen-bit UCS Transformation Format, little-endian byte order <br/>
+         * - @c "UTF-16" = Sixteen-bit UCS Transformation Format, byte order identified by
+         *                  an optional byte-order mark <br/>
+         * - @c "UTF-32BE" = Thirty-two-bit UCS Transformation Format, big-endian byte order <br/>
+         * - @c "UTF-32LE" = Thirty-two-bit UCS Transformation Format, little-endian byte order <br/>
+         * - @c "UTF-32" = Thirty-two-bit UCS Transformation Format, byte order identified by an
+         *                  optional byte-order mark <br/>
+         *
          * </p>
          * <p>
-         * The @c UTF-8 charset is specified by <a href="http://www.ietf.org/rfc/rfc2279.txt">
-         * RFC 2279</a>; the transformation format upon which it is based is specified in
-         * ISO 10646-1 and is also described in the <a href="http://www.unicode.org/standard/standard.html">
-         * Unicode Standard</a>.
+         * The @c UTF-8 charset is specified by
+         * <a href="http://www.ietf.org/rfc/rfc2279.txt">RFC 2279</a>;
+         * the transformation format upon which it is based is specified in
+         * ISO 10646-1 and is also described in the
+         * <a href="http://www.unicode.org/standard/standard.html">Unicode Standard</a>.
          * </p>
          * <p>
-         * The @c UTF-16 charsets are specified by <a href="http://www.ietf.org/rfc/rfc2781.txt">
-         * RFC 2781</a>; the transformation formats upon which they are based are specified in
-         * ISO 10646-1 and are also described in the <a href="http://www.unicode.org/standard/standard.html">Unicode
-         * Standard</a>.
+         * The @c UTF-16 charsets are specified by
+         * <a href="http://www.ietf.org/rfc/rfc2781.txt"> RFC 2781</a>;
+         * the transformation formats upon which they are based are specified in
+         * ISO 10646-1 and are also described in the
+         * <a href="http://www.unicode.org/standard/standard.html">Unicode Standard</a>.
          * </p>
          * <p> The @c UTF-32 charsets are based upon transformation formats which are specified in
-         * ISO 10646-1 and are also described in the <a href="http://www.unicode.org/standard/standard.html">
-         * Unicode Standard</a>.
+         * ISO 10646-1 and are also described in the
+         * <a href="http://www.unicode.org/standard/standard.html"> Unicode Standard</a>.
          * </p>
          * <p>
          * The @c UTF-16 and @c UTF-32 charsets use sixteen-bit and thirty-two-bit
          * quantities respectively, and are therefore sensitive to byte order.
          * In these encodings the byte order of a stream may be indicated by an initial <i>byte-order mark</i>
-         * represented by the Unicode character @c U+FEFF.  Byte-order marks are handled as follows:
-         *   @li When decoding, the @c UTF-16BE, @c UTF-16LE, @c UTF-32BE, and @c UTF-32LE
+         * represented by the Unicode character @c U+FEFF.  Byte-order marks are handled as follows: <br/>
+         *
+         *   - When decoding, the @c UTF-16BE, @c UTF-16LE, @c UTF-32BE, and @c UTF-32LE
          *   charsets interpret the initial byte-order marks as a <small>ZERO-WIDTH
          *   NON-BREAKING SPACE</small>; when encoding, they do not write
-         *   byte-order marks.
+         *   byte-order marks. <br/>
          *
-         *   @li When decoding, the @c UTF-16 and @c UTF-32 charsets interpret the
+         *   - When decoding, the @c UTF-16 and @c UTF-32 charsets interpret the
          *   byte-order mark at the beginning of the input stream to indicate the
          *   byte-order of the stream but defaults to big-endian if there is no
          *   byte-order mark; when encoding, it uses big-endian byte order and writes
-         *   a big-endian byte-order mark.
+         *   a big-endian byte-order mark. <br/>
          *
          * In any case, byte order marks occurring after the first element of an
          * input sequence are not omitted since the same code is used to represent
@@ -153,10 +159,10 @@ namespace core {
          * Every instance has a default charset, which is @c UTF-8 unless changed in
          * an implementation specific manner. Refer to @b defaultCharset() for more detail.
          * </p>
-         * <h2>Terminology</h2>
+         * <h3>Terminology</h3>
          * <p>
          * The name of this class is taken from the terms used in
-         * <a href="http://www.ietf.org/rfc/rfc2278.txt"><i>RFC 2278</i></a>.
+         * <a href="http://www.ietf.org/rfc/rfc2278.txt">RFC 2278</a>.
          * In that document a <i>charset</i> is defined as the combination of
          * one or more coded character sets and a character-encoding scheme.
          * (This definition is confusing; some other software systems define
@@ -230,7 +236,7 @@ namespace core {
              *         a canonical name or an alias
              *
              * @return  @c true if, and only if, support for the named charset
-             *          is available in the current Java virtual machine
+             *          is available.
              *
              * @throws IllegalCharsetNameException
              *         If the given charset name is illegal
@@ -251,7 +257,7 @@ namespace core {
              *
              * @throws  UnsupportedCharsetException
              *          If no support for the named charset is available
-             *          in this instance of the Java virtual machine
+             *          in this instance.
              */
             static Charset& forName(const String& charsetName);
 
@@ -280,7 +286,7 @@ namespace core {
              *
              * <p>
              * The map returned by this method will have one entry for each charset
-             * for which support is available in the current Java virtual machine.  If
+             * for which support is available.  If
              * two or more supported charsets have the same canonical name then the
              * resulting map will contain just one of them; which one it will contain
              * is not specified.
@@ -296,8 +302,8 @@ namespace core {
              * </p>
              * <p>
              * This method may return different results at different times if new
-             * charset providers are dynamically made available to the current Java
-             * virtual machine.  In the absence of such changes, the charsets returned
+             * charset providers are dynamically made available.
+             * In the absence of such changes, the charsets returned
              * by this method are exactly those that can be retrieved via the
              * @b forName method.
              * </p>
@@ -308,7 +314,7 @@ namespace core {
             static util::SortedMap<String, Charset> const& availableCharsets();
 
             /**
-             * Returns the default charset of this Java virtual machine.
+             * Returns the default charset.
              *
              * <p>
              * The default charset is @c UTF-8, unless changed in an

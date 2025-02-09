@@ -1,93 +1,59 @@
 //
-// Created by admin on 11/01/25.
+// This File has been Created by CMake For Testing in Project CORE-24
 //
+#include "StringTest.h"
 
-#include <core/IllegalArgumentException.h>
-#include <gtest/gtest.h>
-#include <lib/Printer.h>
-#include <core/charset/Charset.h>
-
-using namespace core;
-
-class StringTest : public Object, public testing::Test {
-public:
-    const char *nullMultiBytesString = {};
-    const char16_t *nullUtf16String = {};
-    const char32_t *nullUtf32String = {};
-    const wchar_t *nullUnicodeString = {};
-
-private:
-    void SetUp() override {}
-
-    void TearDown() override {}
-};
-
-TEST_F(StringTest, constructorWithLiteralMultiBytesString) {
-    EXPECT_NO_THROW(String("HelloWorld"));
+TEST_F(StringTest, try_construct_new_ansi_string_with_ansi_string) {
+    EXPECT_TRUE(isAnsiString("Hello, World"_Sl));
+    EXPECT_EQ("Hello, World"_Sl, "Hello, World");
 }
 
-TEST_F(StringTest, constructorWithLiteralUtf16String) {
-    EXPECT_NO_THROW(String(u"HelloWorld"));
+TEST_F(StringTest, try_construct_new_ansi_string_with_utf8_string) {
+    EXPECT_TRUE(isAnsiString(u8"ブラン背ヴィク"_Sl));
+    EXPECT_NE(u8"ブラン背ヴィク"_Sl, u8"ブラン背ヴィク");
 }
 
-TEST_F(StringTest, constructorWithLiteralUtf32String) {
-    EXPECT_NO_THROW(String(U"HelloWorld"));
+TEST_F(StringTest, try_construct_new_ansi_string_with_utf16_string) {
+    EXPECT_TRUE(isAnsiString(u"ブラン背ヴィク"_Sl));
+    EXPECT_NE(u"ブラン背ヴィク"_Sl, u"ブラン背ヴィク");
 }
 
-TEST_F(StringTest, constructorWithLiteralUnicodeString) {
-    EXPECT_NO_THROW(String(L"HelloWorld"));
+TEST_F(StringTest, try_construct_new_ansi_string_with_utf32_string) {
+    EXPECT_TRUE(isAnsiString(U"ブラン背ヴィク"_Sl));
+    EXPECT_NE(U"ブラン背ヴィク"_Sl, U"ブラン背ヴィク");
 }
 
-TEST_F(StringTest, constructorWithLiteralMultiBytesStringAsLatin1String) {
-    EXPECT_NO_THROW("HelloWorld"_Sl);
+TEST_F(StringTest, try_construct_new_ansi_string_with_wide_string) {
+    EXPECT_TRUE(isAnsiString(L"ブラン背ヴィク"_Sl));
+    EXPECT_NE(L"ブラン背ヴィク"_Sl, L"ブラン背ヴィク");
 }
 
-TEST_F(StringTest, constructorWithLiteralUtf16StringAsLatin1String) {
-    EXPECT_NO_THROW(u"HelloWorld"_Sl);
+TEST_F(StringTest, try_construct_new_unicode_string_with_ansi_string) {
+    EXPECT_TRUE(isAnsiString("Hello, World"_Su));
+    EXPECT_EQ("Hello, World"_Su, "Hello, World");
 }
 
-TEST_F(StringTest, constructorWithLiteralUtf32StringAsLatin1String) {
-    EXPECT_NO_THROW(U"HelloWorld"_Sl);
+TEST_F(StringTest, try_construct_new_unicode_string_with_utf8_string) {
+    EXPECT_TRUE(isNonAnsiString(u8"ブラン背ヴィク"_Su));
+    EXPECT_EQ(u8"ブラン背ヴィク"_Su, u8"ブラン背ヴィク");
 }
 
-TEST_F(StringTest, constructorWithLiteralUnicodeStringAsLatin1String) {
-    EXPECT_NO_THROW(L"HelloWorld"_Sl);
+TEST_F(StringTest, try_construct_new_unicode_string_with_utf16_string) {
+    EXPECT_TRUE(isNonAnsiString(u"ブラン背ヴィク"_Su));
+    EXPECT_EQ(u"ブラン背ヴィク"_Su, u"ブラン背ヴィク");
 }
 
-
-TEST_F(StringTest, constructorWithLiteralMultiBytesStringAsUnicodeString) {
-    EXPECT_NO_THROW("HelloWorld"_Su);
+TEST_F(StringTest, try_construct_new_unicode_string_with_utf32_string) {
+    EXPECT_TRUE(isNonAnsiString(U"ブラン背ヴィク"_Su));
+    EXPECT_EQ(U"ブラン背ヴィク"_Su, U"ブラン背ヴィク");
 }
 
-TEST_F(StringTest, constructorWithLiteralUtf16StringAsUnicodeString) {
-    EXPECT_NO_THROW(u"HelloWorld"_Su);
+TEST_F(StringTest, try_construct_new_unicode_string_with_wide_string) {
+    EXPECT_TRUE(isNonAnsiString(L"ブラン背ヴィク"_Su));
+    EXPECT_EQ(L"ブラン背ヴィク"_Su, L"ブラン背ヴィク");
 }
 
-TEST_F(StringTest, constructorWithLiteralUtf32StringAsUnicodeString) {
-    EXPECT_NO_THROW(U"HelloWorld"_Su);
-}
-
-TEST_F(StringTest, constructorWithLiteralUnicodeStringAsUnicodeString) {
-    EXPECT_NO_THROW(L"HelloWorld"_Su);
-}
-
-TEST_F(StringTest, constructorWithNullMultiBytesString) {
-    EXPECT_THROW(String((const char *) null), IllegalArgumentException);
-}
-
-TEST_F(StringTest, constructorWithNullUtf16String) {
-    EXPECT_THROW(String((const char16_t *) null), IllegalArgumentException);
-}
-
-TEST_F(StringTest, constructorWithNullUtf32String) {
-    EXPECT_THROW(String((const char32_t *) null), IllegalArgumentException);
-}
-
-TEST_F(StringTest, constructorWithNullUnicodeString) {
-    EXPECT_THROW(String((const wchar_t *) null), IllegalArgumentException);
-}
-
-TEST_F(StringTest, compareLatin1StringWithUnicodeString) {
-    EXPECT_NE(L"HelloWorld"_Sl, L"HelloWorld"_Su);
-    EXPECT_NE(L"ブラン背ヴィク"_Sl, L"ブラン背ヴィク"_Su);
+TEST_F(StringTest, try_construct_new_string_with_null_pointer_string) {
+    char* nullStr = null;
+    EXPECT_ANY_THROW((String)nullStr);
 }

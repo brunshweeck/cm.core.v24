@@ -265,21 +265,21 @@ namespace core {
              * If the field is a @b ChronoField then the query is implemented here.
              * The supported fields are:
              * </p>
-             * @li @c NANO_OF_SECOND
-             * @li @c NANO_OF_DAY
-             * @li @c MICRO_OF_SECOND
-             * @li @c MICRO_OF_DAY
-             * @li @c MILLI_OF_SECOND
-             * @li @c MILLI_OF_DAY
-             * @li @c SECOND_OF_MINUTE
-             * @li @c SECOND_OF_DAY
-             * @li @c MINUTE_OF_HOUR
-             * @li @c MINUTE_OF_DAY
-             * @li @c HOUR_OF_AMPM
-             * @li @c CLOCK_HOUR_OF_AMPM
-             * @li @c HOUR_OF_DAY
-             * @li @c CLOCK_HOUR_OF_DAY
-             * @li @c AMPM_OF_DAY
+             * - @c NANO_OF_SECOND <br/>
+             * - @c NANO_OF_DAY <br/>
+             * - @c MICRO_OF_SECOND <br/>
+             * - @c MICRO_OF_DAY <br/>
+             * - @c MILLI_OF_SECOND <br/>
+             * - @c MILLI_OF_DAY <br/>
+             * - @c SECOND_OF_MINUTE <br/>
+             * - @c SECOND_OF_DAY <br/>
+             * - @c MINUTE_OF_HOUR <br/>
+             * - @c MINUTE_OF_DAY <br/>
+             * - @c HOUR_OF_AMPM <br/>
+             * - @c CLOCK_HOUR_OF_AMPM <br/>
+             * - @c HOUR_OF_DAY <br/>
+             * - @c CLOCK_HOUR_OF_DAY <br/>
+             * - @c AMPM_OF_DAY <br/>
              *
              * All other @c ChronoField instances will return false.
              *
@@ -299,13 +299,13 @@ namespace core {
              * If the unit is a @b ChronoUnit then the query is implemented here.
              * The supported units are:
              * </p>
-             * @li @c NANOS
-             * @li @c MICROS
-             * @li @c MILLIS
-             * @li @c SECONDS
-             * @li @c MINUTES
-             * @li @c HOURS
-             * @li @c HALF_DAYS
+             * - @c NANOS <br/>
+             * - @c MICROS <br/>
+             * - @c MILLIS <br/>
+             * - @c SECONDS <br/>
+             * - @c MINUTES <br/>
+             * - @c HOURS <br/>
+             * - @c HALF_DAYS <br/>
              *
              * All other @c ChronoUnit instances will return false.
              *
@@ -402,55 +402,55 @@ namespace core {
              * If the field is a @b ChronoField then the adjustment is implemented here.
              * The supported fields behave as follows:
              *
-             * @li @c NANO_OF_SECOND -
+             * - @c NANO_OF_SECOND -
              *  Returns a @c LocalTime with the specified nano-of-second.
-             *  The hour, minute and second will be unchanged.
-             * @li @c NANO_OF_DAY -
+             *  The hour, minute and second will be unchanged. <br/>
+             * - @c NANO_OF_DAY -
              *  Returns a @c LocalTime with the specified nano-of-day.
-             *  This completely replaces the time and is equivalent to @b ofNanoOfDay(long).
-             * @li @c MICRO_OF_SECOND -
+             *  This completely replaces the time and is equivalent to @b ofNanoOfDay(long). <br/>
+             * - @c MICRO_OF_SECOND -
              *  Returns a @c LocalTime with the nano-of-second replaced by the specified
              *  micro-of-second multiplied by 1,000.
-             *  The hour, minute and second will be unchanged.
-             * @li @c MICRO_OF_DAY -
+             *  The hour, minute and second will be unchanged. <br/>
+             * - @c MICRO_OF_DAY -
              *  Returns a @c LocalTime with the specified micro-of-day.
              *  This completely replaces the time and is equivalent to using @b ofNanoOfDay(long)
-             *  with the micro-of-day multiplied by 1,000.
-             * @li @c MILLI_OF_SECOND -
+             *  with the micro-of-day multiplied by 1,000. <br/>
+             * - @c MILLI_OF_SECOND -
              *  Returns a @c LocalTime with the nano-of-second replaced by the specified
              *  milli-of-second multiplied by 1,000,000.
-             *  The hour, minute and second will be unchanged.
-             * @li @c MILLI_OF_DAY -
+             *  The hour, minute and second will be unchanged. <br/>
+             * - @c MILLI_OF_DAY -
              *  Returns a @c LocalTime with the specified milli-of-day.
              *  This completely replaces the time and is equivalent to using @b ofNanoOfDay(long)
-             *  with the milli-of-day multiplied by 1,000,000.
-             * @li @c SECOND_OF_MINUTE -
+             *  with the milli-of-day multiplied by 1,000,000. <br/>
+             * - @c SECOND_OF_MINUTE -
              *  Returns a @c LocalTime with the specified second-of-minute.
-             *  The hour, minute and nano-of-second will be unchanged.
-             * @li @c SECOND_OF_DAY -
+             *  The hour, minute and nano-of-second will be unchanged. <br/>
+             * - @c SECOND_OF_DAY -
              *  Returns a @c LocalTime with the specified second-of-day.
-             *  The nano-of-second will be unchanged.
-             * @li @c MINUTE_OF_HOUR -
+             *  The nano-of-second will be unchanged. <br/>
+             * - @c MINUTE_OF_HOUR -
              *  Returns a @c LocalTime with the specified minute-of-hour.
-             *  The hour, second-of-minute and nano-of-second will be unchanged.
-             * @li @c MINUTE_OF_DAY -
+             *  The hour, second-of-minute and nano-of-second will be unchanged. <br/>
+             * - @c MINUTE_OF_DAY -
              *  Returns a @c LocalTime with the specified minute-of-day.
-             *  The second-of-minute and nano-of-second will be unchanged.
-             * @li @c HOUR_OF_AMPM -
+             *  The second-of-minute and nano-of-second will be unchanged. <br/>
+             * - @c HOUR_OF_AMPM -
              *  Returns a @c LocalTime with the specified hour-of-am-pm.
-             *  The AM/PM, minute-of-hour, second-of-minute and nano-of-second will be unchanged.
-             * @li @c CLOCK_HOUR_OF_AMPM -
+             *  The AM/PM, minute-of-hour, second-of-minute and nano-of-second will be unchanged. <br/>
+             * - @c CLOCK_HOUR_OF_AMPM -
              *  Returns a @c LocalTime with the specified clock-hour-of-am-pm.
-             *  The AM/PM, minute-of-hour, second-of-minute and nano-of-second will be unchanged.
-             * @li @c HOUR_OF_DAY -
+             *  The AM/PM, minute-of-hour, second-of-minute and nano-of-second will be unchanged. <br/>
+             * - @c HOUR_OF_DAY -
              *  Returns a @c LocalTime with the specified hour-of-day.
-             *  The minute-of-hour, second-of-minute and nano-of-second will be unchanged.
-             * @li @c CLOCK_HOUR_OF_DAY -
+             *  The minute-of-hour, second-of-minute and nano-of-second will be unchanged. <br/>
+             * - @c CLOCK_HOUR_OF_DAY -
              *  Returns a @c LocalTime with the specified clock-hour-of-day.
-             *  The minute-of-hour, second-of-minute and nano-of-second will be unchanged.
-             * @li @c AMPM_OF_DAY -
+             *  The minute-of-hour, second-of-minute and nano-of-second will be unchanged. <br/>
+             * - @c AMPM_OF_DAY -
              *  Returns a @c LocalTime with the specified AM/PM.
-             *  The hour-of-am-pm, minute-of-hour, second-of-minute and nano-of-second will be unchanged.
+             *  The hour-of-am-pm, minute-of-hour, second-of-minute and nano-of-second will be unchanged. <br/>
              *
              * </p>
              * <p>
@@ -553,30 +553,30 @@ namespace core {
              * If the field is a @b ChronoUnit then the addition is implemented here.
              * The supported fields behave as follows:
              *
-             * @li @c NANOS -
+             * - @c NANOS -
              *  Returns a @c LocalTime with the specified number of nanoseconds added.
-             *  This is equivalent to @b plusNanos(glong).
-             * @li @c MICROS -
+             *  This is equivalent to @b plusNanos(glong). <br/>
+             * - @c MICROS -
              *  Returns a @c LocalTime with the specified number of microseconds added.
              *  This is equivalent to @b plusNanos(glong) with the amount
-             *  multiplied by 1,000.
-             * @li @c MILLIS -
+             *  multiplied by 1,000. <br/>
+             * - @c MILLIS -
              *  Returns a @c LocalTime with the specified number of milliseconds added.
              *  This is equivalent to @b plusNanos(glong) with the amount
-             *  multiplied by 1,000,000.
-             * @li @c SECONDS -
+             *  multiplied by 1,000,000. <br/>
+             * - @c SECONDS -
              *  Returns a @c LocalTime with the specified number of seconds added.
-             *  This is equivalent to @b plusSeconds(glong).
-             * @li @c MINUTES -
+             *  This is equivalent to @b plusSeconds(glong). <br/>
+             * - @c MINUTES -
              *  Returns a @c LocalTime with the specified number of minutes added.
-             *  This is equivalent to @b plusMinutes(glong).
-             * @li @c HOURS -
+             *  This is equivalent to @b plusMinutes(glong). <br/>
+             * - @c HOURS -
              *  Returns a @c LocalTime with the specified number of hours added.
-             *  This is equivalent to @b plusHours(glong).
-             * @li @c HALF_DAYS -
+             *  This is equivalent to @b plusHours(glong). <br/>
+             * - @c HALF_DAYS -
              *  Returns a @c LocalTime with the specified number of half-days added.
              *  This is equivalent to @b plusHours(glong) with the amount
-             *  multiplied by 12.
+             *  multiplied by 12. <br/>
              *
              * </p>
              * <p>
@@ -926,13 +926,13 @@ namespace core {
             /**
              * Outputs this time as a @c String, such as @c 10:15.
              * <p>
-             * The output will be one of the following ISO-8601 formats:
+             * The output will be one of the following ISO-8601 formats: <br/>
              *
-             * @li @c HH:mm
-             * @li @c HH:mm:ss
-             * @li @c HH:mm:ss.SSS
-             * @li @c HH:mm:ss.SSSSSS
-             * @li @c HH:mm:ss.SSSSSSSSS
+             * - @c HH:mm <br/>
+             * - @c HH:mm:ss <br/>
+             * - @c HH:mm:ss.SSS <br/>
+             * - @c HH:mm:ss.SSSSSS <br/>
+             * - @c HH:mm:ss.SSSSSSSSS <br/>
              *
              * The format used will be the shortest that outputs the full value of
              * the time when the omitted parts are implied to be zero.

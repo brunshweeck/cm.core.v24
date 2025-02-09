@@ -177,8 +177,8 @@ namespace core {
 
             gbool equals(const Object &obj) const override {
                 return this == &obj ||
-                       Class<IntUnaryOperator>::hasInstance(obj) &&
-                       launcher == CORE_XCAST(IntUnaryOperator const, obj).launcher;
+                       (Class<IntUnaryOperator>::hasInstance(obj) &&
+                       launcher == CORE_XCAST(IntUnaryOperator const, obj).launcher);
             }
 
             Object &clone() const override {

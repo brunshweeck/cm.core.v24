@@ -58,8 +58,8 @@ namespace core {
         public:
             /**
              * Construct new Predicate with specified callable
-             * object. The given callable may be:
-             * @li a <em> binary static function </em>;
+             * object. The given callable may be: <br/>
+             * - a <em> binary static function </em>;
              *     @code
              *       void myFunction(gint, String);
              *
@@ -71,13 +71,13 @@ namespace core {
              *       BiPredicate<Integer, String> bp1 = myFunction;
              *       BiPredicate<Integer, String> bp2 = MyClass::myStaticMethod;
              *     @endcode
-             * @li a <em> binary lambda function </em>;
+             * - a <em> binary lambda function </em>;
              *      @code
              *        BiPredicate<Integer, String> bp1 = [](gint, String) {...}
              *        BiPredicate<Integer, String> bp2 = [&](gint, String) {...}
              *        BiPredicate<Integer, String> bp3 = [=](gint, String) {...}
              *      @endcode
-             * @li an <em>object that implement call operator with two arguments </em>.
+             * - an <em>object that implement call operator with two arguments </em>.
              *      @code
              *        class MyCallableClass {
              *        public:

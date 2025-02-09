@@ -12,7 +12,7 @@ namespace core {
      * An object to which @c gchar sequences and values can be appended.  The
      * @c Appendable interface must be implemented by any class whose
      * instances are intended to receive formatted output from a
-     * @b java.util.Formatter.
+     * @b util::Formatter.
      *
      * <p> The characters to be appended should be valid Unicode characters as
      * described in <a href="Character.html#unicode">Unicode Character

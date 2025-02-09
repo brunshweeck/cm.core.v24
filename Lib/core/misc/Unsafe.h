@@ -76,7 +76,7 @@ namespace core {
              * @return the value fetched from the indicated class variable
              * @throws RuntimeException No defined exceptions are thrown
              */
-            static gint getInt(Object const &obj, glong offset);
+            static gint getInt(Object const& obj, glong offset);
 
             /**
              * Stores a value into a given class variable.
@@ -97,13 +97,13 @@ namespace core {
              * @param x the value to store into the indicated class variable
              * @throws RuntimeException No defined exceptions are thrown
              */
-            static void putInt(Object &o, glong offset, gint x);
+            static void putInt(Object& o, glong offset, gint x);
 
             /**
              * Fetches a reference value from a given class variable.
              * @see Unsafe::getInt(Object, long)
              */
-            static Object &getReference(Object const &obj, glong offset);
+            static Object& getReference(Object const& obj, glong offset);
 
             /**
              * Stores a reference value into a given class variable.
@@ -116,49 +116,49 @@ namespace core {
              *
              * @see Unsafe::putInt(Object, long, int)
              */
-            static void putReference(Object &obj, glong offset, Object &x);
+            static void putReference(Object& obj, glong offset, Object& x);
 
             /** @see Unsafe::getInt(Object, long) */
-            static gbool getBoolean(Object const &obj, glong offset);
+            static gbool getBoolean(Object const& obj, glong offset);
 
             /** @see Unsafe::putInt(Object, long, int) */
-            static void putBoolean(Object &obj, glong offset, gbool x);
+            static void putBoolean(Object& obj, glong offset, gbool x);
 
             /** @see Unsafe::getInt(Object, long) */
-            static gbyte getByte(Object const &obj, glong offset);
+            static gbyte getByte(Object const& obj, glong offset);
 
             /** @see Unsafe::putInt(Object, long, int) */
-            static void putByte(Object &obj, glong offset, gbyte x);
+            static void putByte(Object& obj, glong offset, gbyte x);
 
             /** @see Unsafe::getInt(Object, long) */
-            static gshort getShort(Object const &obj, glong offset);
+            static gshort getShort(Object const& obj, glong offset);
 
             /** @see Unsafe::putInt(Object, long, int) */
-            static void putShort(Object &obj, glong offset, gshort x);
+            static void putShort(Object& obj, glong offset, gshort x);
 
             /** @see Unsafe::getInt(Object, long) */
-            static gchar getChar(Object const &obj, glong offset);
+            static gchar getChar(Object const& obj, glong offset);
 
             /** @see Unsafe::putInt(Object, long, int) */
-            static void putChar(Object &obj, glong offset, gchar x);
+            static void putChar(Object& obj, glong offset, gchar x);
 
             /** @see Unsafe::getInt(Object, long) */
-            static glong getLong(Object const &obj, glong offset);
+            static glong getLong(Object const& obj, glong offset);
 
             /** @see Unsafe::putInt(Object, long, int) */
-            static void putLong(Object &obj, glong offset, glong x);
+            static void putLong(Object& obj, glong offset, glong x);
 
             /** @see Unsafe::getInt(Object, long) */
-            static gfloat getFloat(Object const &obj, glong offset);
+            static gfloat getFloat(Object const& obj, glong offset);
 
             /** @see Unsafe::putInt(Object, long, int) */
-            static void putFloat(Object &obj, glong offset, gfloat x);
+            static void putFloat(Object& obj, glong offset, gfloat x);
 
             /** @see Unsafe::getInt(Object, long) */
-            static gdouble getDouble(Object const &obj, glong offset);
+            static gdouble getDouble(Object const& obj, glong offset);
 
             /** @see Unsafe::putInt(Object, long, int) */
-            static void putDouble(Object &obj, glong offset, gdouble x);
+            static void putDouble(Object& obj, glong offset, gdouble x);
 
             /**
              * Fetches a native pointer from a given memory address.  If the address is
@@ -175,7 +175,7 @@ namespace core {
              * @see Unsafe::allocateMemory
              * @see Unsafe::getInt(Object, long)
              */
-            static glong getAddress(Object const &obj, glong offset);
+            static glong getAddress(Object const& obj, glong offset);
 
             /**
              * Stores a native pointer into a given memory address.  If the address is
@@ -188,7 +188,7 @@ namespace core {
              * @see Unsafe::allocateMemory
              * @see Unsafe::putInt(Object, long, int)
              */
-            static void putAddress(Object &obj, glong offset, glong x);
+            static void putAddress(Object& obj, glong offset, glong x);
 
             // These work on values in the C heap.
 
@@ -334,7 +334,7 @@ namespace core {
              *
              * @throws RuntimeException if any of the arguments is invalid
              */
-            static void setMemory(Object &obj, glong offset, glong bytes, gbyte value);
+            static void setMemory(Object& obj, glong offset, glong bytes, gbyte value);
 
             /**
              * Sets all bytes in a given block of memory to a fixed value
@@ -371,8 +371,8 @@ namespace core {
              *
              * @throws RuntimeException if any of the arguments is invalid
              */
-            static void copyMemory(Object const &srcBase, glong srcOffset,
-                                   Object &destBase, glong destOffset,
+            static void copyMemory(Object const& srcBase, glong srcOffset,
+                                   Object& destBase, glong destOffset,
                                    glong bytes);
 
             /**
@@ -404,8 +404,8 @@ namespace core {
              *
              * @throws RuntimeException if any of the arguments is invalid
              */
-            static void copySwapMemory(Object const &srcBase, glong srcOffset,
-                                       Object &destBase, glong destOffset,
+            static void copySwapMemory(Object const& srcBase, glong srcOffset,
+                                       Object& destBase, glong destOffset,
                                        glong bytes, glong elemSize);
 
             /**
@@ -489,10 +489,10 @@ namespace core {
             static gint pageSize();
 
         private:
-            template<class T>
+            template <class T>
             CORE_ALIAS(Unref, typename Class<T>::NRef);
 
-            template<class T>
+            template <class T>
             CORE_ALIAS(Unref2, typename Class<Unref<T>>::NConst);
 
         public:
@@ -502,8 +502,8 @@ namespace core {
              *
              * @note It's necessary that it exist +1 public corresponding constructor.
              */
-            template<class T, class... Args>
-            static Unref2<T> &newInstance(Args &&... args) {
+            template <class T, class... Args>
+            static Unref2<T>& newInstance(Args&&... args) {
                 // basic check for T
                 CORE_FULL_CHECK_SLIMMED_TYPE(Unref2<T>)
                 // T mustn't be incomplete type (all incomplete types are not sizable)
@@ -515,36 +515,36 @@ namespace core {
                 CORE_ALIAS(REF, typename Class<Unref2<T>>::Pointer);
 
                 glong address = 0;
-                REF newRef = {};
+                REF newRef = { };
                 try {
                     // allocate sufficient memory space to store new instance of T
                     address = allocateMemory(sizeof(T));
 
                     // construct desired object at memory address allocated previously.
-                    newRef = new(CORE_CAST(REF, address)) Unref2<T>(forwardInstance<Args>(args)...);
+                    newRef = new((REF)address) Unref2<T>(forwardInstance<Args>(args)...);
 
                     // Store, allocated object.
-                    return Store<Unref2<T> >::store(*newRef);
-                } catch (Throwable const &cse) {
+                    return Store<Unref2<T>>::store(*newRef);
+                } catch (Throwable const& cse) {
                     // Storage failed.
                     if (newRef) return *newRef;
                     // Construction failed.
                     if (address != 0 && !newRef) freeMemory(address);
 
-                    Error("Unable to create new object instance"_S, cse).throws($ftrace());
-                } catch (std::exception const &cse) {
+                    Error("Unable to create new object instance"_Sl, cse).throws($ftrace());
+                } catch (std::exception const& cse) {
                     // Storage failed. (legacy code)
                     if (newRef) return *newRef;
                     // Construction failed.
                     if (address != 0 && !newRef) freeMemory(address);
 
-                    Error("Unable to create new object instance"_S, Exception(""_S + cse.what()))
+                    Error("Unable to create new object instance"_Sl, Exception(String(cse.what())))
                             .throws($ftrace());
                 } catch (...) {
                     // Construction failed.
                     if (address != 0 && !newRef) freeMemory(address);
 
-                    Error("Unable to create new object instance"_S).throws($ftrace());
+                    Error("Unable to create new object instance"_Sl).throws($ftrace());
                 }
             }
 
@@ -565,10 +565,10 @@ namespace core {
              *
              * @note It's necessary that it exist +1 public corresponding constructor.
              */
-            template<class T, class... Args>
-            static Unref2<T> &newReplaceableInstance(gint requiredSpace, Args &&... args) {
+            template <class T, class... Args>
+            static Unref2<T>& newReplaceableInstance(gint requiredSpace, Args&&... args) {
                 // basic check for T
-                CORE_FULL_CHECK_SLIMMED_TYPE(Unref2<T>);
+                CORE_FULL_CHECK_SLIMMED_TYPE(Unref2<T>)
                 // T mustn't be incomplete type (all incomplete types are not sizable)
                 CORE_FAST_ASSERT(Class<T>::isComplete());
                 // T mustn't be abstract type
@@ -578,36 +578,36 @@ namespace core {
                 CORE_ALIAS(REF, typename Class<Unref2<T>>::Pointer);
 
                 glong address = 0;
-                REF newRef = {};
+                REF newRef = { };
                 try {
                     // allocate sufficient memory space to store new instance of T
                     address = allocateMemory(sizeof(T));
 
                     // construct desired object at memory address allocated previously.
-                    newRef = new(CORE_CAST(REF, address)) Unref2<T>(forwardInstance<Args>(args)...);
+                    newRef = new((REF)address) Unref2<T>(forwardInstance<Args>(args)...);
 
                     // Store, allocated object.
-                    return Store<Unref2<T> >::store(*newRef);
-                } catch (Throwable const &cse) {
+                    return Store<Unref2<T>>::store(*newRef);
+                } catch (Throwable const& cse) {
                     // Storage failed.
                     if (newRef) return *newRef;
                     // Construction failed.
                     if (address != 0 && !newRef) freeMemory(address);
 
-                    Error("Unable to create new object instance"_S, cse).throws($ftrace());
-                } catch (std::exception const &cse) {
+                    Error("Unable to create new object instance"_Sl, cse).throws($ftrace());
+                } catch (std::exception const& cse) {
                     // Storage failed. (legacy code)
                     if (newRef) return *newRef;
                     // Construction failed.
                     if (address != 0 && !newRef) freeMemory(address);
 
-                    Error("Unable to create new object instance"_S, Exception(""_S + cse.what()))
+                    Error("Unable to create new object instance"_Sl, Exception(String(cse.what())))
                             .throws($ftrace());
                 } catch (...) {
                     // Construction failed.
                     if (address != 0 && !newRef) freeMemory(address);
 
-                    Error("Unable to create new object instance"_S).throws($ftrace());
+                    Error("Unable to create new object instance"_Sl).throws($ftrace());
                 }
             }
 
@@ -618,10 +618,10 @@ namespace core {
              *
              * @note It's necessary that it exist +1 public corresponding constructor.
              */
-            template<class T, class... Args>
-            static Unref2<T> &replaceInstance(Object &replaceableObj, Args &&... args) {
+            template <class T, class... Args>
+            static Unref2<T>& replaceInstance(Object& replaceableObj, Args&&... args) {
                 // basic check for T
-                CORE_FULL_CHECK_SLIMMED_TYPE(Unref2<T>);
+                CORE_FULL_CHECK_SLIMMED_TYPE(Unref2<T>)
                 // T mustn't be incomplete type (all incomplete types are not sizable)
                 CORE_FAST_ASSERT(Class<T>::isComplete());
                 // T mustn't be abstract type
@@ -632,13 +632,13 @@ namespace core {
                 try {
                     // construct desired object at memory address of replaceObj.
                     return *new(&replaceableObj) Unref2<T>(forwardInstance<Args>(args)...);
-                } catch (Throwable const &cse) {
-                    Error("Unable to create new object instance"_S, cse).throws($ftrace());
-                } catch (std::exception const &cse) {
-                    Error("Unable to create new object instance"_S, Exception(""_S + cse.what()))
+                } catch (Throwable const& cse) {
+                    Error("Unable to create new object instance"_Sl, cse).throws($ftrace());
+                } catch (std::exception const& cse) {
+                    Error("Unable to create new object instance"_Sl, Exception(String(cse.what())))
                             .throws($ftrace());
                 } catch (...) {
-                    Error("Unable to create new object instance"_S).throws($ftrace());
+                    Error("Unable to create new object instance"_Sl).throws($ftrace());
                 }
             }
 
@@ -662,15 +662,15 @@ namespace core {
              * @param duplicate boolean value used to force this operation to create new instance.
              * @throws Error If duplication failed
              */
-            template<class T>
-            static Unref2<T> &copyInstance(T &&original, gbool duplicate = false) {
-                CORE_CHECK_TYPE(Unref2<T>);
+            template <class T>
+            static Unref2<T>& copyInstance(T&& original, gbool duplicate = false) {
+                CORE_CHECK_TYPE(Unref2<T>)
                 if (Class<NIL>::isSame<T>() || Class<Thread>::isSame<T>() || original == null)
                     return CORE_CAST(Unref2<T> &, original);
 
                 if (!duplicate && Class<Object>::hasInstance(original)) {
                     // Preserve old object if it already stored in backend.
-                    Object const &object = CORE_XCAST(Object const, original);
+                    Object const& object = CORE_XCAST(Object const, original);
                     if (isAlreadyAllocated(object))
                         return CORE_CAST(Unref2<T> &, original);
 
@@ -679,9 +679,9 @@ namespace core {
                 }
 
                 try {
-                    return Instance<Unref2<T> >::newCopy(forwardInstance<T>(original));
-                } catch (Throwable const &cse) {
-                    Error("Unable to duplicate object of type "_S + typeName(original), cse).throws($ftrace());
+                    return Instance<Unref2<T>>::newCopy(forwardInstance<T>(original));
+                } catch (Throwable const& cse) {
+                    Error("Unable to duplicate object of type "_Sl + typeName(original), cse).throws($ftrace());
                 }
             }
 
@@ -690,8 +690,8 @@ namespace core {
              *
              * @param var The given value.
              */
-            template<class T>
-            static CORE_FAST Unref<T> &&moveInstance(T &&var) {
+            template <class T>
+            static CORE_FAST Unref<T>&& moveInstance(T&& var) {
                 return CORE_CAST(Unref<T>&&, var);
             }
 
@@ -700,8 +700,8 @@ namespace core {
              *
              * @param var The given value.
              */
-            template<class T>
-            static CORE_FAST T &&forwardInstance(Unref<T> &var) CORE_NOTHROW {
+            template <class T>
+            static CORE_FAST T&& forwardInstance(Unref<T>& var) CORE_NOTHROW {
                 return CORE_CAST(T&&, var);
             }
 
@@ -710,8 +710,8 @@ namespace core {
              *
              * @param var The given value.
              */
-            template<class T>
-            static CORE_FAST T &&forwardInstance(Unref<T> &&var) CORE_NOTHROW {
+            template <class T>
+            static CORE_FAST T&& forwardInstance(Unref<T>&& var) CORE_NOTHROW {
                 CORE_FAST_XASSERT(!Class<T>::isLvalue(), "Forwarding is not supported by lvalue reference");
                 return CORE_CAST(T&&, var);
             }
@@ -719,8 +719,8 @@ namespace core {
             /**
              * Swap two values
              */
-            template<class From, class To = From>
-            static void swapValues(From &from, To &to) {
+            template <class From, class To = From>
+            static void swapValues(From& from, To& to) {
                 CORE_FAST_ASSERT(!Class<From>::isConstant());
                 CORE_FAST_ASSERT(!Class<To>::isConstant());
                 CORE_FAST_ASSERT(
@@ -736,8 +736,8 @@ namespace core {
              * Destroy and free instance created dynamically.
              * @note the given instance must be allocated by calling of Unsafe::newInstance() method.
              */
-            template<class T>
-            static gbool deleteInstance(T &&var, gbool optional = false) CORE_NOTHROW {
+            template <class T>
+            static gbool deleteInstance(T&& var, gbool optional = false) CORE_NOTHROW {
                 CORE_FAST_ASSERT(!Class<T>::isPrimitive());
                 if (!optional) {
                     Destructor<T>::destroy(forwardInstance<T>(var));
@@ -754,8 +754,8 @@ namespace core {
              * Destroy and free instance created dynamically.
              * @note the given instance must be allocated by calling of Unsafe::newInstance() method.
              */
-            template<class T>
-            static gbool deleteRegInstance(T &&var, gbool optional = false) CORE_NOTHROW {
+            template <class T>
+            static gbool deleteRegInstance(T&& var, gbool optional = false) CORE_NOTHROW {
                 CORE_FAST_ASSERT(!Class<T>::isPrimitive());
                 if (!optional) {
                     return Destructor<T>::destroyRegistered(forwardInstance<T>(var));
@@ -774,37 +774,37 @@ namespace core {
              *
              * @return @c true if successful
              */
-            static gbool compareAndSetReference(Object &o, glong offset,
-                                                Object const &expected,
-                                                Object &x);
+            static gbool compareAndSetReference(Object& o, glong offset,
+                                                Object const& expected,
+                                                Object& x);
 
-            static Object &compareAndExchangeReference(Object &o, glong offset,
-                                                       Object const &expected,
-                                                       Object &x);
+            static Object& compareAndExchangeReference(Object& o, glong offset,
+                                                       Object const& expected,
+                                                       Object& x);
 
-            static Object &compareAndExchangeReferenceAcquire(Object &o, glong offset,
-                                                              Object const &expected,
-                                                              Object &x);
+            static Object& compareAndExchangeReferenceAcquire(Object& o, glong offset,
+                                                              Object const& expected,
+                                                              Object& x);
 
-            static Object &compareAndExchangeReferenceRelease(Object &o, glong offset,
-                                                              Object const &expected,
-                                                              Object &x);
+            static Object& compareAndExchangeReferenceRelease(Object& o, glong offset,
+                                                              Object const& expected,
+                                                              Object& x);
 
-            static gbool weakCompareAndSetReferencePlain(Object &o, glong offset,
-                                                         Object const &expected,
-                                                         Object &x);
+            static gbool weakCompareAndSetReferencePlain(Object& o, glong offset,
+                                                         Object const& expected,
+                                                         Object& x);
 
-            static gbool weakCompareAndSetReferenceAcquire(Object &o, glong offset,
-                                                           Object const &expected,
-                                                           Object &x);
+            static gbool weakCompareAndSetReferenceAcquire(Object& o, glong offset,
+                                                           Object const& expected,
+                                                           Object& x);
 
-            static gbool weakCompareAndSetReferenceRelease(Object &o, glong offset,
-                                                           Object const &expected,
-                                                           Object &x);
+            static gbool weakCompareAndSetReferenceRelease(Object& o, glong offset,
+                                                           Object const& expected,
+                                                           Object& x);
 
-            static gbool weakCompareAndSetReference(Object &o, glong offset,
-                                                    Object const &expected,
-                                                    Object &x);
+            static gbool weakCompareAndSetReference(Object& o, glong offset,
+                                                    Object const& expected,
+                                                    Object& x);
 
             /**
              * Atomically updates class variable to @c x if it is currently
@@ -815,227 +815,227 @@ namespace core {
              *
              * @return @c true if successful
              */
-            static gbool compareAndSetInt(Object &o, glong offset,
+            static gbool compareAndSetInt(Object& o, glong offset,
                                           gint expected,
                                           gint x);
 
-            static gint compareAndExchangeInt(Object &o, glong offset,
+            static gint compareAndExchangeInt(Object& o, glong offset,
                                               gint expected,
                                               gint x);
 
-            static gint compareAndExchangeIntAcquire(Object &o, glong offset,
+            static gint compareAndExchangeIntAcquire(Object& o, glong offset,
                                                      gint expected,
                                                      gint x);
 
-            static gint compareAndExchangeIntRelease(Object &o, glong offset,
+            static gint compareAndExchangeIntRelease(Object& o, glong offset,
                                                      gint expected,
                                                      gint x);
 
-            static gbool weakCompareAndSetIntPlain(Object &o, glong offset,
+            static gbool weakCompareAndSetIntPlain(Object& o, glong offset,
                                                    gint expected,
                                                    gint x);
 
-            static gbool weakCompareAndSetIntAcquire(Object &o, glong offset,
+            static gbool weakCompareAndSetIntAcquire(Object& o, glong offset,
                                                      gint expected,
                                                      gint x);
 
-            static gbool weakCompareAndSetIntRelease(Object &o, glong offset,
+            static gbool weakCompareAndSetIntRelease(Object& o, glong offset,
                                                      gint expected,
                                                      gint x);
 
-            static gbool weakCompareAndSetInt(Object &o, glong offset,
+            static gbool weakCompareAndSetInt(Object& o, glong offset,
                                               gint expected,
                                               gint x);
 
-            static gbool compareAndSetByte(Object &o, glong offset,
+            static gbool compareAndSetByte(Object& o, glong offset,
                                            gbyte expected,
                                            gbyte x);
 
-            static gbyte compareAndExchangeByte(Object &o, glong offset,
+            static gbyte compareAndExchangeByte(Object& o, glong offset,
                                                 gbyte expected,
                                                 gbyte x);
 
-            static gbyte compareAndExchangeByteAcquire(Object &o, glong offset,
+            static gbyte compareAndExchangeByteAcquire(Object& o, glong offset,
                                                        gbyte expected,
                                                        gbyte x);
 
-            static gbyte compareAndExchangeByteRelease(Object &o, glong offset,
+            static gbyte compareAndExchangeByteRelease(Object& o, glong offset,
                                                        gbyte expected,
                                                        gbyte x);
 
-            static gbool weakCompareAndSetBytePlain(Object &o, glong offset,
+            static gbool weakCompareAndSetBytePlain(Object& o, glong offset,
                                                     gbyte expected,
                                                     gbyte x);
 
-            static gbool weakCompareAndSetByteAcquire(Object &o, glong offset,
+            static gbool weakCompareAndSetByteAcquire(Object& o, glong offset,
                                                       gbyte expected,
                                                       gbyte x);
 
-            static gbool weakCompareAndSetByteRelease(Object &o, glong offset,
+            static gbool weakCompareAndSetByteRelease(Object& o, glong offset,
                                                       gbyte expected,
                                                       gbyte x);
 
-            static gbool weakCompareAndSetByte(Object &o, glong offset,
+            static gbool weakCompareAndSetByte(Object& o, glong offset,
                                                gbyte expected,
                                                gbyte x);
 
-            static gbool compareAndSetShort(Object &o, glong offset,
+            static gbool compareAndSetShort(Object& o, glong offset,
                                             gshort expected,
                                             gshort x);
 
-            static gshort compareAndExchangeShort(Object &o, glong offset,
+            static gshort compareAndExchangeShort(Object& o, glong offset,
                                                   gshort expected,
                                                   gshort x);
 
-            static gshort compareAndExchangeShortAcquire(Object &o, glong offset,
+            static gshort compareAndExchangeShortAcquire(Object& o, glong offset,
                                                          gshort expected,
                                                          gshort x);
 
-            static gshort compareAndExchangeShortRelease(Object &o, glong offset,
+            static gshort compareAndExchangeShortRelease(Object& o, glong offset,
                                                          gshort expected,
                                                          gshort x);
 
-            static gbool weakCompareAndSetShortPlain(Object &o, glong offset,
+            static gbool weakCompareAndSetShortPlain(Object& o, glong offset,
                                                      gshort expected,
                                                      gshort x);
 
-            static gbool weakCompareAndSetShortAcquire(Object &o, glong offset,
+            static gbool weakCompareAndSetShortAcquire(Object& o, glong offset,
                                                        gshort expected,
                                                        gshort x);
 
-            static gbool weakCompareAndSetShortRelease(Object &o, glong offset,
+            static gbool weakCompareAndSetShortRelease(Object& o, glong offset,
                                                        gshort expected,
                                                        gshort x);
 
-            static gbool weakCompareAndSetShort(Object &o, glong offset,
+            static gbool weakCompareAndSetShort(Object& o, glong offset,
                                                 gshort expected,
                                                 gshort x);
 
-            static gbool compareAndSetChar(Object &o, glong offset,
+            static gbool compareAndSetChar(Object& o, glong offset,
                                            gchar expected,
                                            gchar x);
 
-            static gchar compareAndExchangeChar(Object &o, glong offset,
+            static gchar compareAndExchangeChar(Object& o, glong offset,
                                                 gchar expected,
                                                 gchar x);
 
-            static gchar compareAndExchangeCharAcquire(Object &o, glong offset,
+            static gchar compareAndExchangeCharAcquire(Object& o, glong offset,
                                                        gchar expected,
                                                        gchar x);
 
-            static gchar compareAndExchangeCharRelease(Object &o, glong offset,
+            static gchar compareAndExchangeCharRelease(Object& o, glong offset,
                                                        gchar expected,
                                                        gchar x);
 
-            static gbool weakCompareAndSetCharPlain(Object &o, glong offset,
+            static gbool weakCompareAndSetCharPlain(Object& o, glong offset,
                                                     gchar expected,
                                                     gchar x);
 
-            static gbool weakCompareAndSetCharAcquire(Object &o, glong offset,
+            static gbool weakCompareAndSetCharAcquire(Object& o, glong offset,
                                                       gchar expected,
                                                       gchar x);
 
-            static gbool weakCompareAndSetCharRelease(Object &o, glong offset,
+            static gbool weakCompareAndSetCharRelease(Object& o, glong offset,
                                                       gchar expected,
                                                       gchar x);
 
-            static gbool weakCompareAndSetChar(Object &o, glong offset,
+            static gbool weakCompareAndSetChar(Object& o, glong offset,
                                                gchar expected,
                                                gchar x);
 
-            static gbool compareAndSetBoolean(Object &o, glong offset,
+            static gbool compareAndSetBoolean(Object& o, glong offset,
                                               gbool expected,
                                               gbool x);
 
-            static gbool compareAndExchangeBoolean(Object &o, glong offset,
+            static gbool compareAndExchangeBoolean(Object& o, glong offset,
                                                    gbool expected,
                                                    gbool x);
 
-            static gbool compareAndExchangeBooleanAcquire(Object &o, glong offset,
+            static gbool compareAndExchangeBooleanAcquire(Object& o, glong offset,
                                                           gbool expected,
                                                           gbool x);
 
-            static gbool compareAndExchangeBooleanRelease(Object &o, glong offset,
+            static gbool compareAndExchangeBooleanRelease(Object& o, glong offset,
                                                           gbool expected,
                                                           gbool x);
 
-            static gbool weakCompareAndSetBooleanPlain(Object &o, glong offset,
+            static gbool weakCompareAndSetBooleanPlain(Object& o, glong offset,
                                                        gbool expected,
                                                        gbool x);
 
-            static gbool weakCompareAndSetBooleanAcquire(Object &o, glong offset,
+            static gbool weakCompareAndSetBooleanAcquire(Object& o, glong offset,
                                                          gbool expected,
                                                          gbool x);
 
-            static gbool weakCompareAndSetBooleanRelease(Object &o, glong offset,
+            static gbool weakCompareAndSetBooleanRelease(Object& o, glong offset,
                                                          gbool expected,
                                                          gbool x);
 
-            static gbool weakCompareAndSetBoolean(Object &o, glong offset,
+            static gbool weakCompareAndSetBoolean(Object& o, glong offset,
                                                   gbool expected,
                                                   gbool x);
 
-            static gbool compareAndSetFloat(Object &o, glong offset,
+            static gbool compareAndSetFloat(Object& o, glong offset,
                                             gfloat expected,
                                             gfloat x);
 
-            static gfloat compareAndExchangeFloat(Object &o, glong offset,
+            static gfloat compareAndExchangeFloat(Object& o, glong offset,
                                                   gfloat expected,
                                                   gfloat x);
 
-            static gfloat compareAndExchangeFloatAcquire(Object &o, glong offset,
+            static gfloat compareAndExchangeFloatAcquire(Object& o, glong offset,
                                                          gfloat expected,
                                                          gfloat x);
 
-            static gfloat compareAndExchangeFloatRelease(Object &o, glong offset,
+            static gfloat compareAndExchangeFloatRelease(Object& o, glong offset,
                                                          gfloat expected,
                                                          gfloat x);
 
-            static gbool weakCompareAndSetFloatPlain(Object &o, glong offset,
+            static gbool weakCompareAndSetFloatPlain(Object& o, glong offset,
                                                      gfloat expected,
                                                      gfloat x);
 
-            static gbool weakCompareAndSetFloatAcquire(Object &o, glong offset,
+            static gbool weakCompareAndSetFloatAcquire(Object& o, glong offset,
                                                        gfloat expected,
                                                        gfloat x);
 
-            static gbool weakCompareAndSetFloatRelease(Object &o, glong offset,
+            static gbool weakCompareAndSetFloatRelease(Object& o, glong offset,
                                                        gfloat expected,
                                                        gfloat x);
 
-            static gbool weakCompareAndSetFloat(Object &o, glong offset,
+            static gbool weakCompareAndSetFloat(Object& o, glong offset,
                                                 gfloat expected,
                                                 gfloat x);
 
-            static gbool compareAndSetDouble(Object &o, glong offset,
+            static gbool compareAndSetDouble(Object& o, glong offset,
                                              gdouble expected,
                                              gdouble x);
 
-            static gdouble compareAndExchangeDouble(Object &o, glong offset,
+            static gdouble compareAndExchangeDouble(Object& o, glong offset,
                                                     gdouble expected,
                                                     gdouble x);
 
-            static gdouble compareAndExchangeDoubleAcquire(Object &o, glong offset,
+            static gdouble compareAndExchangeDoubleAcquire(Object& o, glong offset,
                                                            gdouble expected,
                                                            gdouble x);
 
-            static gdouble compareAndExchangeDoubleRelease(Object &o, glong offset,
+            static gdouble compareAndExchangeDoubleRelease(Object& o, glong offset,
                                                            gdouble expected,
                                                            gdouble x);
 
-            static gbool weakCompareAndSetDoublePlain(Object &o, glong offset,
+            static gbool weakCompareAndSetDoublePlain(Object& o, glong offset,
                                                       gdouble expected,
                                                       gdouble x);
 
-            static gbool weakCompareAndSetDoubleAcquire(Object &o, glong offset,
+            static gbool weakCompareAndSetDoubleAcquire(Object& o, glong offset,
                                                         gdouble expected,
                                                         gdouble x);
 
-            static gbool weakCompareAndSetDoubleRelease(Object &o, glong offset,
+            static gbool weakCompareAndSetDoubleRelease(Object& o, glong offset,
                                                         gdouble expected,
                                                         gdouble x);
 
-            static gbool weakCompareAndSetDouble(Object &o, glong offset,
+            static gbool weakCompareAndSetDouble(Object& o, glong offset,
                                                  gdouble expected,
                                                  gdouble x);
 
@@ -1048,35 +1048,35 @@ namespace core {
              *
              * @return @c true if successful
              */
-            static gbool compareAndSetLong(Object &o, glong offset,
+            static gbool compareAndSetLong(Object& o, glong offset,
                                            glong expected,
                                            glong x);
 
-            static glong compareAndExchangeLong(Object &o, glong offset,
+            static glong compareAndExchangeLong(Object& o, glong offset,
                                                 glong expected,
                                                 glong x);
 
-            static glong compareAndExchangeLongAcquire(Object &o, glong offset,
+            static glong compareAndExchangeLongAcquire(Object& o, glong offset,
                                                        glong expected,
                                                        glong x);
 
-            static glong compareAndExchangeLongRelease(Object &o, glong offset,
+            static glong compareAndExchangeLongRelease(Object& o, glong offset,
                                                        glong expected,
                                                        glong x);
 
-            static gbool weakCompareAndSetLongPlain(Object &o, glong offset,
+            static gbool weakCompareAndSetLongPlain(Object& o, glong offset,
                                                     glong expected,
                                                     glong x);
 
-            static gbool weakCompareAndSetLongAcquire(Object &o, glong offset,
+            static gbool weakCompareAndSetLongAcquire(Object& o, glong offset,
                                                       glong expected,
                                                       glong x);
 
-            static gbool weakCompareAndSetLongRelease(Object &o, glong offset,
+            static gbool weakCompareAndSetLongRelease(Object& o, glong offset,
                                                       glong expected,
                                                       glong x);
 
-            static gbool weakCompareAndSetLong(Object &o, glong offset,
+            static gbool weakCompareAndSetLong(Object& o, glong offset,
                                                glong expected,
                                                glong x);
 
@@ -1084,88 +1084,88 @@ namespace core {
              * Fetches a reference value from a given class variable, with volatile
              * load semantics. Otherwise, identical to @c Unsafe::getReference(Object, long)
              */
-            static Object &getReferenceVolatile(Object const &o, glong offset);
+            static Object& getReferenceVolatile(Object const& o, glong offset);
 
             /**
              * Stores a reference value into a given class variable, with
              * volatile store semantics. Otherwise, identical to @c Unsafe::putReference(Object, long, Object)
              */
-            static void putReferenceVolatile(Object &o, glong offset, Object &x);
+            static void putReferenceVolatile(Object& o, glong offset, Object& x);
 
             /** Volatile version of @c Unsafe::getInt(Object, long)  */
-            static gint getIntVolatile(Object const &o, glong offset);
+            static gint getIntVolatile(Object const& o, glong offset);
 
             /** Volatile version of @c Unsafe::putInt(Object, long, int)  */
-            static void putIntVolatile(Object &o, glong offset, gint x);
+            static void putIntVolatile(Object& o, glong offset, gint x);
 
             /** Volatile version of @c Unsafe::getBoolean(Object, long)  */
-            static gbool getBooleanVolatile(Object const &o, glong offset);
+            static gbool getBooleanVolatile(Object const& o, glong offset);
 
             /** Volatile version of @c Unsafe::putBoolean(Object, long, bool)  */
-            static void putBooleanVolatile(Object &o, glong offset, gbool x);
+            static void putBooleanVolatile(Object& o, glong offset, gbool x);
 
             /** Volatile version of @c Unsafe::getByte(Object, long)  */
-            static gbyte getByteVolatile(Object const &o, glong offset);
+            static gbyte getByteVolatile(Object const& o, glong offset);
 
             /** Volatile version of @c Unsafe::putByte(Object, long, byte)  */
-            static void putByteVolatile(Object &o, glong offset, gbyte x);
+            static void putByteVolatile(Object& o, glong offset, gbyte x);
 
             /** Volatile version of @c Unsafe::getShort(Object, long)  */
-            static gshort getShortVolatile(Object const &o, glong offset);
+            static gshort getShortVolatile(Object const& o, glong offset);
 
             /** Volatile version of @c Unsafe::putShort(Object, long, short)  */
-            static void putShortVolatile(Object &o, glong offset, gshort x);
+            static void putShortVolatile(Object& o, glong offset, gshort x);
 
             /** Volatile version of @c Unsafe::getChar(Object, long)  */
-            static gchar getCharVolatile(Object const &o, glong offset);
+            static gchar getCharVolatile(Object const& o, glong offset);
 
             /** Volatile version of @c Unsafe::putChar(Object, long, char)  */
-            static void putCharVolatile(Object &o, glong offset, gchar x);
+            static void putCharVolatile(Object& o, glong offset, gchar x);
 
             /** Volatile version of @c Unsafe::getLong(Object, long)  */
-            static glong getLongVolatile(Object const &o, glong offset);
+            static glong getLongVolatile(Object const& o, glong offset);
 
             /** Volatile version of @c Unsafe::putLong(Object, long, long)  */
-            static void putLongVolatile(Object &o, glong offset, glong x);
+            static void putLongVolatile(Object& o, glong offset, glong x);
 
             /** Volatile version of @c Unsafe::getFloat(Object, long)  */
-            static gfloat getFloatVolatile(Object const &o, glong offset);
+            static gfloat getFloatVolatile(Object const& o, glong offset);
 
             /** Volatile version of @c Unsafe::putFloat(Object, long, float)  */
-            static void putFloatVolatile(Object &o, glong offset, gfloat x);
+            static void putFloatVolatile(Object& o, glong offset, gfloat x);
 
             /** Volatile version of @c Unsafe::getDouble(Object, long)  */
-            static gdouble getDoubleVolatile(Object const &o, glong offset);
+            static gdouble getDoubleVolatile(Object const& o, glong offset);
 
             /** Volatile version of @c Unsafe::putDouble(Object, long, double)  */
-            static void putDoubleVolatile(Object &o, glong offset, gdouble x);
+            static void putDoubleVolatile(Object& o, glong offset, gdouble x);
 
             /** Acquire version of @c Unsafe::getReferenceVolatile(Object, long) */
-            static Object &getReferenceAcquire(Object const &o, glong offset);
+            static Object& getReferenceAcquire(Object const& o, glong offset);
 
             /** Acquire version of @c Unsafe::getBooleanVolatile(Object, long) */
-            static gbool getBooleanAcquire(Object const &o, glong offset);
+            static gbool getBooleanAcquire(Object const& o, glong offset);
 
             /** Acquire version of @c Unsafe::getByteVolatile(Object, long) */
-            static gbyte getByteAcquire(Object const &o, glong offset);
+            static gbyte getByteAcquire(Object const& o, glong offset);
 
             /** Acquire version of @c Unsafe::getShortVolatile(Object, long) */
-            static gshort getShortAcquire(Object const &o, glong offset);
+            static gshort getShortAcquire(Object const& o, glong offset);
 
             /** Acquire version of @c Unsafe::getCharVolatile(Object, long) */
-            static gchar getCharAcquire(Object const &o, glong offset);
+            static gchar getCharAcquire(Object const& o, glong offset);
 
             /** Acquire version of @c Unsafe::getIntVolatile(Object, long) */
-            static gint getIntAcquire(Object const &o, glong offset);
+            static gint getIntAcquire(Object const& o, glong offset);
 
             /** Acquire version of @c Unsafe::getLongVolatile(Object, long) */
-            static glong getLongAcquire(Object const &o, glong offset);
+            static glong getLongAcquire(Object const& o, glong offset);
 
             /** Acquire version of @c Unsafe::getFloatVolatile(Object, long) */
-            static gfloat getFloatAcquire(Object const &o, glong offset);
+            static gfloat getFloatAcquire(Object const& o, glong offset);
 
             /** Acquire version of @c Unsafe::getDoubleVolatile(Object, long) */
-            static gdouble getDoubleAcquire(Object const &o, glong offset);
+            static gdouble getDoubleAcquire(Object const& o, glong offset);
 
             /*
              * Versions of @c Unsafe::putReferenceVolatile(Object, long, Object)
@@ -1178,87 +1178,87 @@ namespace core {
              */
 
             /** Release version of @c Unsafe::putReferenceVolatile(Object, long, Object) */
-            static void putReferenceRelease(Object &o, glong offset, Object &x);
+            static void putReferenceRelease(Object& o, glong offset, Object& x);
 
             /** Release version of @c Unsafe::putBooleanVolatile(Object, long, boolean) */
-            static void putBooleanRelease(Object &o, glong offset, gbool x);
+            static void putBooleanRelease(Object& o, glong offset, gbool x);
 
             /** Release version of @c Unsafe::putByteVolatile(Object, long, byte) */
-            static void putByteRelease(Object &o, glong offset, gbyte x);
+            static void putByteRelease(Object& o, glong offset, gbyte x);
 
             /** Release version of @c Unsafe::putShortVolatile(Object, long, short) */
-            static void putShortRelease(Object &o, glong offset, gshort x);
+            static void putShortRelease(Object& o, glong offset, gshort x);
 
             /** Release version of @c Unsafe::putCharVolatile(Object, long, char) */
-            static void putCharRelease(Object &o, glong offset, gchar x);
+            static void putCharRelease(Object& o, glong offset, gchar x);
 
             /** Release version of @c Unsafe::putIntVolatile(Object, long, int) */
-            static void putIntRelease(Object &o, glong offset, gint x);
+            static void putIntRelease(Object& o, glong offset, gint x);
 
             /** Release version of @c Unsafe::putLongVolatile(Object, long, long) */
-            static void putLongRelease(Object &o, glong offset, glong x);
+            static void putLongRelease(Object& o, glong offset, glong x);
 
             /** Release version of @c Unsafe::putFloatVolatile(Object, long, float) */
-            static void putFloatRelease(Object &o, glong offset, gfloat x);
+            static void putFloatRelease(Object& o, glong offset, gfloat x);
 
             /** Release version of @c Unsafe::putDoubleVolatile(Object, long, double) */
-            static void putDoubleRelease(Object &o, glong offset, gdouble x);
+            static void putDoubleRelease(Object& o, glong offset, gdouble x);
 
             // ------------------------------ Opaque --------------------------------------
 
             /** Opaque version of @c Unsafe::getReferenceVolatile(Object, long) */
-            static Object &getReferenceOpaque(Object const &o, glong offset);
+            static Object& getReferenceOpaque(Object const& o, glong offset);
 
             /** Opaque version of @c Unsafe::getBooleanVolatile(Object, long) */
-            static gbool getBooleanOpaque(Object const &o, glong offset);
+            static gbool getBooleanOpaque(Object const& o, glong offset);
 
             /** Opaque version of @c Unsafe::getByteVolatile(Object, long) */
-            static gbyte getByteOpaque(Object const &o, glong offset);
+            static gbyte getByteOpaque(Object const& o, glong offset);
 
             /** Opaque version of @c Unsafe::getShortVolatile(Object, long) */
-            static gshort getShortOpaque(Object const &o, glong offset);
+            static gshort getShortOpaque(Object const& o, glong offset);
 
             /** Opaque version of @c Unsafe::getCharVolatile(Object, long) */
-            static gchar getCharOpaque(Object const &o, glong offset);
+            static gchar getCharOpaque(Object const& o, glong offset);
 
             /** Opaque version of @c Unsafe::getIntVolatile(Object, long) */
-            static gint getIntOpaque(Object const &o, glong offset);
+            static gint getIntOpaque(Object const& o, glong offset);
 
             /** Opaque version of @c Unsafe::getLongVolatile(Object, long) */
-            static glong getLongOpaque(Object const &o, glong offset);
+            static glong getLongOpaque(Object const& o, glong offset);
 
             /** Opaque version of @c Unsafe::getFloatVolatile(Object, long) */
-            static gfloat getFloatOpaque(Object const &o, glong offset);
+            static gfloat getFloatOpaque(Object const& o, glong offset);
 
             /** Opaque version of @c Unsafe::getDoubleVolatile(Object, long) */
-            static gdouble getDoubleOpaque(Object const &o, glong offset);
+            static gdouble getDoubleOpaque(Object const& o, glong offset);
 
             /** Opaque version of @c Unsafe::putReferenceVolatile(Object, long, Object) */
-            static void putReferenceOpaque(Object &o, glong offset, Object &x);
+            static void putReferenceOpaque(Object& o, glong offset, Object& x);
 
             /** Opaque version of @c Unsafe::putBooleanVolatile(Object, long, boolean) */
-            static void putBooleanOpaque(Object &o, glong offset, gbool x);
+            static void putBooleanOpaque(Object& o, glong offset, gbool x);
 
             /** Opaque version of @c Unsafe::putByteVolatile(Object, long, byte) */
-            static void putByteOpaque(Object &o, glong offset, gbyte x);
+            static void putByteOpaque(Object& o, glong offset, gbyte x);
 
             /** Opaque version of @c Unsafe::putShortVolatile(Object, long, short) */
-            static void putShortOpaque(Object &o, glong offset, gshort x);
+            static void putShortOpaque(Object& o, glong offset, gshort x);
 
             /** Opaque version of @c Unsafe::putCharVolatile(Object, long, char) */
-            static void putCharOpaque(Object &o, glong offset, gchar x);
+            static void putCharOpaque(Object& o, glong offset, gchar x);
 
             /** Opaque version of @c Unsafe::putIntVolatile(Object, long, int) */
-            static void putIntOpaque(Object &o, glong offset, gint x);
+            static void putIntOpaque(Object& o, glong offset, gint x);
 
             /** Opaque version of @c Unsafe::putLongVolatile(Object, long, long) */
-            static void putLongOpaque(Object &o, glong offset, glong x);
+            static void putLongOpaque(Object& o, glong offset, glong x);
 
             /** Opaque version of @c Unsafe::putFloatVolatile(Object, long, float) */
-            static void putFloatOpaque(Object &o, glong offset, gfloat x);
+            static void putFloatOpaque(Object& o, glong offset, gfloat x);
 
             /** Opaque version of @c Unsafe::putDoubleVolatile(Object, long, double) */
-            static void putDoubleOpaque(Object &o, glong offset, gdouble x);
+            static void putDoubleOpaque(Object& o, glong offset, gdouble x);
 
             /**
              * Unblocks the given thread blocked on @c park, or, if it is
@@ -1272,7 +1272,7 @@ namespace core {
              *
              * @param thread the thread to unpark.
              */
-            static void unpark(Object &thread);
+            static void unpark(Object& thread);
 
             /**
              * Blocks current thread, returning when a balancing
@@ -1300,11 +1300,11 @@ namespace core {
              * @param delta the value to add
              * @return the previous value
              */
-            static gint getAndAddInt(Object &o, glong offset, gint delta);
+            static gint getAndAddInt(Object& o, glong offset, gint delta);
 
-            static gint getAndAddIntRelease(Object &o, glong offset, gint delta);
+            static gint getAndAddIntRelease(Object& o, glong offset, gint delta);
 
-            static gint getAndAddIntAcquire(Object &o, glong offset, gint delta);
+            static gint getAndAddIntAcquire(Object& o, glong offset, gint delta);
 
             /**
              * Atomically adds the given value to the current value of a field
@@ -1316,51 +1316,35 @@ namespace core {
              * @param delta the value to add
              * @return the previous value
              */
-            static glong getAndAddLong(Object &o, glong offset, glong delta);
+            static glong getAndAddLong(Object& o, glong offset, glong delta);
 
-            static glong getAndAddLongRelease(Object &o, glong offset, glong delta);
+            static glong getAndAddLongRelease(Object& o, glong offset, glong delta);
 
-            static glong getAndAddLongAcquire(Object &o, glong offset, glong delta);
+            static glong getAndAddLongAcquire(Object& o, glong offset, glong delta);
 
-            static gbyte getAndAddByte(Object &o, glong offset, gbyte delta);
+            static gbyte getAndAddByte(Object& o, glong offset, gbyte delta);
 
-            static gbyte getAndAddByteRelease(Object &o, glong offset, gbyte delta);
+            static gbyte getAndAddByteRelease(Object& o, glong offset, gbyte delta);
 
-            static gbyte getAndAddByteAcquire(Object &o, glong offset, gbyte delta);
+            static gbyte getAndAddByteAcquire(Object& o, glong offset, gbyte delta);
 
-            static gshort getAndAddShort(Object &o, glong offset, gshort delta);
+            static gshort getAndAddShort(Object& o, glong offset, gshort delta);
 
-            static gshort getAndAddShortRelease(Object &o, glong offset, gshort delta);
+            static gshort getAndAddShortRelease(Object& o, glong offset, gshort delta);
 
-            static gshort getAndAddShortAcquire(Object &o, glong offset, gshort delta);
+            static gshort getAndAddShortAcquire(Object& o, glong offset, gshort delta);
 
-            static gfloat getAndAddFloat(Object &o, glong offset, gfloat delta);
+            static gfloat getAndAddFloat(Object& o, glong offset, gfloat delta);
 
-            static gfloat getAndAddFloatRelease(Object &o, glong offset, gfloat delta);
+            static gfloat getAndAddFloatRelease(Object& o, glong offset, gfloat delta);
 
-            static gfloat getAndAddFloatAcquire(Object &o, glong offset, gfloat delta);
+            static gfloat getAndAddFloatAcquire(Object& o, glong offset, gfloat delta);
 
-            static gdouble getAndAddDouble(Object &o, glong offset, gdouble delta);
+            static gdouble getAndAddDouble(Object& o, glong offset, gdouble delta);
 
-            static gdouble getAndAddDoubleRelease(Object &o, glong offset, gdouble delta);
+            static gdouble getAndAddDoubleRelease(Object& o, glong offset, gdouble delta);
 
-            static gdouble getAndAddDoubleAcquire(Object &o, glong offset, gdouble delta);
-
-            /**
-             * Atomically exchanges the given value with the current value of
-             * a field or array element within the given object @c o
-             * at the given @c offset.
-             *
-             * @param o object/array to update the field/element in
-             * @param offset field/element offset
-             * @param newValue new value
-             * @return the previous value
-             */
-            static gint getAndSetInt(Object &o, glong offset, gint newValue);
-
-            static gint getAndSetIntRelease(Object &o, glong offset, gint newValue);
-
-            static gint getAndSetIntAcquire(Object &o, glong offset, gint newValue);
+            static gdouble getAndAddDoubleAcquire(Object& o, glong offset, gdouble delta);
 
             /**
              * Atomically exchanges the given value with the current value of
@@ -1372,11 +1356,27 @@ namespace core {
              * @param newValue new value
              * @return the previous value
              */
-            static glong getAndSetLong(Object &o, glong offset, glong newValue);
+            static gint getAndSetInt(Object& o, glong offset, gint newValue);
 
-            static glong getAndSetLongRelease(Object &o, glong offset, glong newValue);
+            static gint getAndSetIntRelease(Object& o, glong offset, gint newValue);
 
-            static glong getAndSetLongAcquire(Object &o, glong offset, glong newValue);
+            static gint getAndSetIntAcquire(Object& o, glong offset, gint newValue);
+
+            /**
+             * Atomically exchanges the given value with the current value of
+             * a field or array element within the given object @c o
+             * at the given @c offset.
+             *
+             * @param o object/array to update the field/element in
+             * @param offset field/element offset
+             * @param newValue new value
+             * @return the previous value
+             */
+            static glong getAndSetLong(Object& o, glong offset, glong newValue);
+
+            static glong getAndSetLongRelease(Object& o, glong offset, glong newValue);
+
+            static glong getAndSetLongAcquire(Object& o, glong offset, glong newValue);
 
             /**
              * Atomically exchanges the given reference value with the current
@@ -1388,153 +1388,153 @@ namespace core {
              * @param newValue new value
              * @return the previous value
              */
-            static Object &getAndSetReference(Object &o, glong offset, Object &newValue);
+            static Object& getAndSetReference(Object& o, glong offset, Object& newValue);
 
-            static Object &getAndSetReferenceRelease(Object &o, glong offset, Object &newValue);
+            static Object& getAndSetReferenceRelease(Object& o, glong offset, Object& newValue);
 
-            static Object &getAndSetReferenceAcquire(Object &o, glong offset, Object &newValue);
+            static Object& getAndSetReferenceAcquire(Object& o, glong offset, Object& newValue);
 
-            static gbool getAndSetBoolean(Object &o, glong offset, gbool newValue);
+            static gbool getAndSetBoolean(Object& o, glong offset, gbool newValue);
 
-            static gbool getAndSetBooleanRelease(Object &o, glong offset, gbool newValue);
+            static gbool getAndSetBooleanRelease(Object& o, glong offset, gbool newValue);
 
-            static gbool getAndSetBooleanAcquire(Object &o, glong offset, gbool newValue);
+            static gbool getAndSetBooleanAcquire(Object& o, glong offset, gbool newValue);
 
-            static gbyte getAndSetByte(Object &o, glong offset, gbyte newValue);
+            static gbyte getAndSetByte(Object& o, glong offset, gbyte newValue);
 
-            static gbyte getAndSetByteRelease(Object &o, glong offset, gbyte newValue);
+            static gbyte getAndSetByteRelease(Object& o, glong offset, gbyte newValue);
 
-            static gbyte getAndSetByteAcquire(Object &o, glong offset, gbyte newValue);
+            static gbyte getAndSetByteAcquire(Object& o, glong offset, gbyte newValue);
 
-            static gshort getAndSetShort(Object &o, glong offset, gshort newValue);
+            static gshort getAndSetShort(Object& o, glong offset, gshort newValue);
 
-            static gshort getAndSetShortRelease(Object &o, glong offset, gshort newValue);
+            static gshort getAndSetShortRelease(Object& o, glong offset, gshort newValue);
 
-            static gshort getAndSetShortAcquire(Object &o, glong offset, gshort newValue);
+            static gshort getAndSetShortAcquire(Object& o, glong offset, gshort newValue);
 
-            static gfloat getAndSetFloat(Object &o, glong offset, gfloat newValue);
+            static gfloat getAndSetFloat(Object& o, glong offset, gfloat newValue);
 
-            static gfloat getAndSetFloatRelease(Object &o, glong offset, gfloat newValue);
+            static gfloat getAndSetFloatRelease(Object& o, glong offset, gfloat newValue);
 
-            static gfloat getAndSetFloatAcquire(Object &o, glong offset, gfloat newValue);
+            static gfloat getAndSetFloatAcquire(Object& o, glong offset, gfloat newValue);
 
-            static gdouble getAndSetDouble(Object &o, glong offset, gdouble newValue);
+            static gdouble getAndSetDouble(Object& o, glong offset, gdouble newValue);
 
-            static gdouble getAndSetDoubleRelease(Object &o, glong offset, gdouble newValue);
+            static gdouble getAndSetDoubleRelease(Object& o, glong offset, gdouble newValue);
 
-            static gdouble getAndSetDoubleAcquire(Object &o, glong offset, gdouble newValue);
+            static gdouble getAndSetDoubleAcquire(Object& o, glong offset, gdouble newValue);
 
 
             // The following contain CAS-based implementations used on
             // platforms not supporting native instructions
 
-            static gbool getAndBitwiseOrBoolean(Object &o, glong offset, gbool mask);
+            static gbool getAndBitwiseOrBoolean(Object& o, glong offset, gbool mask);
 
-            static gbool getAndBitwiseOrBooleanRelease(Object &o, glong offset, gbool mask);
+            static gbool getAndBitwiseOrBooleanRelease(Object& o, glong offset, gbool mask);
 
-            static gbool getAndBitwiseOrBooleanAcquire(Object &o, glong offset, gbool mask);
+            static gbool getAndBitwiseOrBooleanAcquire(Object& o, glong offset, gbool mask);
 
-            static gbool getAndBitwiseAndBoolean(Object &o, glong offset, gbool mask);
+            static gbool getAndBitwiseAndBoolean(Object& o, glong offset, gbool mask);
 
-            static gbool getAndBitwiseAndBooleanRelease(Object &o, glong offset, gbool mask);
+            static gbool getAndBitwiseAndBooleanRelease(Object& o, glong offset, gbool mask);
 
-            static gbool getAndBitwiseAndBooleanAcquire(Object &o, glong offset, gbool mask);
+            static gbool getAndBitwiseAndBooleanAcquire(Object& o, glong offset, gbool mask);
 
-            static gbool getAndBitwiseXorBoolean(Object &o, glong offset, gbool mask);
+            static gbool getAndBitwiseXorBoolean(Object& o, glong offset, gbool mask);
 
-            static gbool getAndBitwiseXorBooleanRelease(Object &o, glong offset, gbool mask);
+            static gbool getAndBitwiseXorBooleanRelease(Object& o, glong offset, gbool mask);
 
-            static gbool getAndBitwiseXorBooleanAcquire(Object &o, glong offset, gbool mask);
+            static gbool getAndBitwiseXorBooleanAcquire(Object& o, glong offset, gbool mask);
 
-            static gbyte getAndBitwiseOrByte(Object &o, glong offset, gbyte mask);
+            static gbyte getAndBitwiseOrByte(Object& o, glong offset, gbyte mask);
 
-            static gbyte getAndBitwiseOrByteRelease(Object &o, glong offset, gbyte mask);
+            static gbyte getAndBitwiseOrByteRelease(Object& o, glong offset, gbyte mask);
 
-            static gbyte getAndBitwiseOrByteAcquire(Object &o, glong offset, gbyte mask);
+            static gbyte getAndBitwiseOrByteAcquire(Object& o, glong offset, gbyte mask);
 
-            static gbyte getAndBitwiseAndByte(Object &o, glong offset, gbyte mask);
+            static gbyte getAndBitwiseAndByte(Object& o, glong offset, gbyte mask);
 
-            static gbyte getAndBitwiseAndByteRelease(Object &o, glong offset, gbyte mask);
+            static gbyte getAndBitwiseAndByteRelease(Object& o, glong offset, gbyte mask);
 
-            static gbyte getAndBitwiseAndByteAcquire(Object &o, glong offset, gbyte mask);
+            static gbyte getAndBitwiseAndByteAcquire(Object& o, glong offset, gbyte mask);
 
-            static gbyte getAndBitwiseXorByte(Object &o, glong offset, gbyte mask);
+            static gbyte getAndBitwiseXorByte(Object& o, glong offset, gbyte mask);
 
-            static gbyte getAndBitwiseXorByteRelease(Object &o, glong offset, gbyte mask);
+            static gbyte getAndBitwiseXorByteRelease(Object& o, glong offset, gbyte mask);
 
-            static gbyte getAndBitwiseXorByteAcquire(Object &o, glong offset, gbyte mask);
+            static gbyte getAndBitwiseXorByteAcquire(Object& o, glong offset, gbyte mask);
 
-            static gshort getAndBitwiseOrShort(Object &o, glong offset, gshort mask);
+            static gshort getAndBitwiseOrShort(Object& o, glong offset, gshort mask);
 
-            static gshort getAndBitwiseOrShortRelease(Object &o, glong offset, gshort mask);
+            static gshort getAndBitwiseOrShortRelease(Object& o, glong offset, gshort mask);
 
-            static gshort getAndBitwiseOrShortAcquire(Object &o, glong offset, gshort mask);
+            static gshort getAndBitwiseOrShortAcquire(Object& o, glong offset, gshort mask);
 
-            static gshort getAndBitwiseAndShort(Object &o, glong offset, gshort mask);
+            static gshort getAndBitwiseAndShort(Object& o, glong offset, gshort mask);
 
-            static gshort getAndBitwiseAndShortRelease(Object &o, glong offset, gshort mask);
+            static gshort getAndBitwiseAndShortRelease(Object& o, glong offset, gshort mask);
 
-            static gshort getAndBitwiseAndShortAcquire(Object &o, glong offset, gshort mask);
+            static gshort getAndBitwiseAndShortAcquire(Object& o, glong offset, gshort mask);
 
-            static gshort getAndBitwiseXorShort(Object &o, glong offset, gshort mask);
+            static gshort getAndBitwiseXorShort(Object& o, glong offset, gshort mask);
 
-            static gshort getAndBitwiseXorShortRelease(Object &o, glong offset, gshort mask);
+            static gshort getAndBitwiseXorShortRelease(Object& o, glong offset, gshort mask);
 
-            static gshort getAndBitwiseXorShortAcquire(Object &o, glong offset, gshort mask);
+            static gshort getAndBitwiseXorShortAcquire(Object& o, glong offset, gshort mask);
 
-            static gchar getAndBitwiseOrChar(Object &o, glong offset, gchar mask);
+            static gchar getAndBitwiseOrChar(Object& o, glong offset, gchar mask);
 
-            static gchar getAndBitwiseOrCharRelease(Object &o, glong offset, gchar mask);
+            static gchar getAndBitwiseOrCharRelease(Object& o, glong offset, gchar mask);
 
-            static gchar getAndBitwiseOrCharAcquire(Object &o, glong offset, gchar mask);
+            static gchar getAndBitwiseOrCharAcquire(Object& o, glong offset, gchar mask);
 
-            static gchar getAndBitwiseAndChar(Object &o, glong offset, gchar mask);
+            static gchar getAndBitwiseAndChar(Object& o, glong offset, gchar mask);
 
-            static gchar getAndBitwiseAndCharRelease(Object &o, glong offset, gchar mask);
+            static gchar getAndBitwiseAndCharRelease(Object& o, glong offset, gchar mask);
 
-            static gchar getAndBitwiseAndCharAcquire(Object &o, glong offset, gchar mask);
+            static gchar getAndBitwiseAndCharAcquire(Object& o, glong offset, gchar mask);
 
-            static gchar getAndBitwiseXorChar(Object &o, glong offset, gchar mask);
+            static gchar getAndBitwiseXorChar(Object& o, glong offset, gchar mask);
 
-            static gchar getAndBitwiseXorCharRelease(Object &o, glong offset, gchar mask);
+            static gchar getAndBitwiseXorCharRelease(Object& o, glong offset, gchar mask);
 
-            static gchar getAndBitwiseXorCharAcquire(Object &o, glong offset, gchar mask);
+            static gchar getAndBitwiseXorCharAcquire(Object& o, glong offset, gchar mask);
 
-            static gint getAndBitwiseOrInt(Object &o, glong offset, gint mask);
+            static gint getAndBitwiseOrInt(Object& o, glong offset, gint mask);
 
-            static gint getAndBitwiseOrIntRelease(Object &o, glong offset, gint mask);
+            static gint getAndBitwiseOrIntRelease(Object& o, glong offset, gint mask);
 
-            static gint getAndBitwiseOrIntAcquire(Object &o, glong offset, gint mask);
+            static gint getAndBitwiseOrIntAcquire(Object& o, glong offset, gint mask);
 
-            static gint getAndBitwiseAndInt(Object &o, glong offset, gint mask);
+            static gint getAndBitwiseAndInt(Object& o, glong offset, gint mask);
 
-            static gint getAndBitwiseAndIntRelease(Object &o, glong offset, gint mask);
+            static gint getAndBitwiseAndIntRelease(Object& o, glong offset, gint mask);
 
-            static gint getAndBitwiseAndIntAcquire(Object &o, glong offset, gint mask);
+            static gint getAndBitwiseAndIntAcquire(Object& o, glong offset, gint mask);
 
-            static gint getAndBitwiseXorInt(Object &o, glong offset, gint mask);
+            static gint getAndBitwiseXorInt(Object& o, glong offset, gint mask);
 
-            static gint getAndBitwiseXorIntRelease(Object &o, glong offset, gint mask);
+            static gint getAndBitwiseXorIntRelease(Object& o, glong offset, gint mask);
 
-            static gint getAndBitwiseXorIntAcquire(Object &o, glong offset, gint mask);
+            static gint getAndBitwiseXorIntAcquire(Object& o, glong offset, gint mask);
 
-            static glong getAndBitwiseOrLong(Object &o, glong offset, glong mask);
+            static glong getAndBitwiseOrLong(Object& o, glong offset, glong mask);
 
-            static glong getAndBitwiseOrLongRelease(Object &o, glong offset, glong mask);
+            static glong getAndBitwiseOrLongRelease(Object& o, glong offset, glong mask);
 
-            static glong getAndBitwiseOrLongAcquire(Object &o, glong offset, glong mask);
+            static glong getAndBitwiseOrLongAcquire(Object& o, glong offset, glong mask);
 
-            static glong getAndBitwiseAndLong(Object &o, glong offset, glong mask);
+            static glong getAndBitwiseAndLong(Object& o, glong offset, glong mask);
 
-            static glong getAndBitwiseAndLongRelease(Object &o, glong offset, glong mask);
+            static glong getAndBitwiseAndLongRelease(Object& o, glong offset, glong mask);
 
-            static glong getAndBitwiseAndLongAcquire(Object &o, glong offset, glong mask);
+            static glong getAndBitwiseAndLongAcquire(Object& o, glong offset, glong mask);
 
-            static glong getAndBitwiseXorLong(Object &o, glong offset, glong mask);
+            static glong getAndBitwiseXorLong(Object& o, glong offset, glong mask);
 
-            static glong getAndBitwiseXorLongRelease(Object &o, glong offset, glong mask);
+            static glong getAndBitwiseXorLongRelease(Object& o, glong offset, glong mask);
 
-            static glong getAndBitwiseXorLongAcquire(Object &o, glong offset, glong mask);
+            static glong getAndBitwiseXorLongAcquire(Object& o, glong offset, glong mask);
 
             /**
              * Ensures that loads before the fence will not be reordered with loads and
@@ -1610,7 +1610,7 @@ namespace core {
              * @return the value fetched from the indicated object
              * @throws RuntimeException No defined exceptions are thrown
              */
-            static glong getLongUnaligned(Object const &o, glong offset);
+            static glong getLongUnaligned(Object const& o, glong offset);
 
             /**
              * As @c Unsafe::getLongUnaligned(Object, long) but with an
@@ -1622,19 +1622,19 @@ namespace core {
              * @param bigEndian The endianness of the value
              * @return the value fetched from the indicated object
              */
-            static glong getLongUnaligned(Object const &o, glong offset, gbool bigEndian);
+            static glong getLongUnaligned(Object const& o, glong offset, gbool bigEndian);
 
-            static gint getIntUnaligned(Object const &o, glong offset);
+            static gint getIntUnaligned(Object const& o, glong offset);
 
-            static gint getIntUnaligned(Object const &o, glong offset, gbool bigEndian);
+            static gint getIntUnaligned(Object const& o, glong offset, gbool bigEndian);
 
-            static gshort getShortUnaligned(Object const &o, glong offset);
+            static gshort getShortUnaligned(Object const& o, glong offset);
 
-            static gshort getShortUnaligned(Object const &o, glong offset, gbool bigEndian);
+            static gshort getShortUnaligned(Object const& o, glong offset, gbool bigEndian);
 
-            static gchar getCharUnaligned(Object const &o, glong offset);
+            static gchar getCharUnaligned(Object const& o, glong offset);
 
-            static gchar getCharUnaligned(Object const &o, glong offset, gbool bigEndian);
+            static gchar getCharUnaligned(Object const& o, glong offset, gbool bigEndian);
 
             /**
              * Stores a value at some byte offset into a given class object.
@@ -1662,7 +1662,7 @@ namespace core {
              * @param x the value to store
              * @throws RuntimeException No defined exceptions are thrown
              */
-            static void putLongUnaligned(Object &o, glong offset, glong x);
+            static void putLongUnaligned(Object& o, glong offset, glong x);
 
             /**
              * As @c Unsafe::putLongUnaligned(Object, long, long) but with an additional
@@ -1673,93 +1673,106 @@ namespace core {
              * @param bigEndian The endianness of the value
              * @throws RuntimeException No defined exceptions are thrown
              */
-            static void putLongUnaligned(Object &o, glong offset, glong x, gbool bigEndian);
+            static void putLongUnaligned(Object& o, glong offset, glong x, gbool bigEndian);
 
             /** @see Unsafe::putLongUnaligned(Object, long, long) */
-            static void putIntUnaligned(Object &o, glong offset, gint x);
+            static void putIntUnaligned(Object& o, glong offset, gint x);
 
             /** @see Unsafe::putLongUnaligned(Object, long, long, boolean) */
-            static void putIntUnaligned(Object &o, glong offset, gint x, gbool bigEndian);
+            static void putIntUnaligned(Object& o, glong offset, gint x, gbool bigEndian);
 
             /** @see Unsafe::putLongUnaligned(Object, long, long) */
-            static void putShortUnaligned(Object &o, glong offset, gshort x);
+            static void putShortUnaligned(Object& o, glong offset, gshort x);
 
             /** @see Unsafe::putLongUnaligned(Object, long, long, boolean) */
-            static void putShortUnaligned(Object &o, glong offset, gshort x, gbool bigEndian);
+            static void putShortUnaligned(Object& o, glong offset, gshort x, gbool bigEndian);
 
             /** @see Unsafe::putLongUnaligned(Object, long, long) */
-            static void putCharUnaligned(Object &o, glong offset, gchar x);
+            static void putCharUnaligned(Object& o, glong offset, gchar x);
 
             /** @see Unsafe::putLongUnaligned(Object, long, long, boolean) */
-            static void putCharUnaligned(Object &o, glong offset, gchar x, gbool bigEndian);
+            static void putCharUnaligned(Object& o, glong offset, gchar x, gbool bigEndian);
 
         private:
             /**
              * Check if address of object exist on the caches.
              */
-            static gbool isAlreadyAllocated(Object const &object);
+            static gbool isAlreadyAllocated(Object const& object);
 
             /**
              * Store allocated object address for reuse.
              */
-            static void storeReference(Object &object);
+            static void storeReference(Object& object);
 
-            static gbool deleteReference(Object &object);
+            static gbool deleteReference(Object& object);
 
-            template<class T,
-                gbool isCloneable = Class<Object>::isSuper<T>(),
-                gbool isCopyable = Class<T>::template isConstructible<T const &>()>
+            template <class T,
+                      gbool isCloneable = Class<Object>::isSuper<T>(),
+                      gbool isCopyable = Class<T>::template isConstructible<T const&>()>
             class Instance final : public Object {
             public:
                 CORE_FAST_ASSERT(isCloneable | isCopyable);
 
-                static T &newCopy(T const &original) { CORE_UNREACHABLE(); }
+                static T& newCopy(T const& original) { CORE_UNREACHABLE(); }
 
-                static T &newCopy(T &&original) { CORE_UNREACHABLE(); }
+                static T& newCopy(T&& original) { CORE_UNREACHABLE(); }
             };
 
-            template<class T>
+            template <class T>
             class Instance<T, true, true> final : public Object {
             public:
-                static T &newCopy(T const &original) CORE_NOTHROW {
+                static T& newCopy(T const& original) CORE_NOTHROW {
                     // try copy instance by cloning.
-                    CORE_TRY(return Instance<T, true, false>::newCopy(original))
-                    // try copy instance by copy constructor.
-                    CORE_CATCH(CloneNotSupportedException,
-                               CORE_TRY_RETHROW(return Instance<T, false, true>::newCopy(original)))
-                    CORE_CATCH(Throwable, ex.throws($ftrace()))
+                    try {
+                        return Instance<T, true, false>::newCopy(original);
+                    } catch (CloneNotSupportedException const&) {
+                        // try copy instance by copy constructor.
+                        try {
+                            return Instance<T, false, true>::newCopy(original);
+                        } catch (Throwable const& ex) { ex.throws($ftrace()); };
+                    }
+                    catch (Throwable const& ex) { ex.throws($ftrace()); }
                 }
 
-                static T &newCopy(T &&original) CORE_NOTHROW {
+                static T& newCopy(T&& original) CORE_NOTHROW {
                     // try copy instance by move constructor.
-                    CORE_TRY(return Instance<T, false, true>::newCopy(moveInstance(original)))
-                    // try copy instance by cloning.
-                    CORE_CATCH(CloneNotSupportedException,
-                               CORE_TRY_RETHROW(return Instance<T, true, false>::newCopy(original)))
-                    CORE_CATCH(Throwable, ex.throws($ftrace()))
+                    try {
+                        return Instance<T, false, true>::newCopy(moveInstance(original));
+                    } catch (CloneNotSupportedException const& _) {
+                        // try copy instance by cloning.
+                        try {
+                            return Instance<T, true, false>::newCopy(original);
+                        } catch (Throwable const& ex) { ex.throws($ftrace()); };
+                    }
+                    catch (Throwable const& ex) { ex.throws($ftrace()); }
                 }
             };
 
-            template<class T>
+            template <class T>
             class Instance<T, false, true> final : public Object {
             public:
-                static T &newCopy(T const &original) CORE_NOTHROW {
-                    CORE_TRY_RETHROW(return newInstance<T>(original))
+                static T& newCopy(T const& original) CORE_NOTHROW {
+                    // try copy instance by duplication
+                    try {
+                        return newInstance<T>(original);
+                    } catch (Throwable const& ex) { ex.throws($ftrace()); }
                 }
 
-                static T &newCopy(T &&original) CORE_NOTHROW {
-                    CORE_TRY_RETHROW(return newInstance<T>(moveInstance(original)))
+                static T& newCopy(T&& original) CORE_NOTHROW {
+                    try {
+                        return newInstance<T>(moveInstance(original));
+                    } catch (Throwable const& ex) { ex.throws($ftrace()); }
                 }
             };
 
-            template<class T>
+            template <class T>
             class Instance<T, true, false> final : public Object {
             public:
-                static T &newCopy(T const &original) {
+                static T& newCopy(T const& original) {
                     // try cast via Class.hasInstance to evict exception during dynamic cast.
                     if (Class<Object>::hasInstance(original)) {
-                        Object const &obj = CORE_XCAST(Object const, original);
-                        Object &copy = obj.clone();
+                        Object const& obj = CORE_XCAST(Object const, original);
+                        Object& copy = obj.clone();
 
                         // assert(Class<T>::hasInstance(copy));
                         return CORE_XCAST(T, copy);
@@ -1776,45 +1789,45 @@ namespace core {
              * @param offset the offset
              * @return the direct access address.
              */
-            static glong tryGetDirectAccess(Object const &o, glong offset);
+            static glong tryGetDirectAccess(Object const& o, glong offset);
 
-            static glong array2DirectAccess(Object const &o, glong offset);
+            static glong array2DirectAccess(Object const& o, glong offset);
 
-            static glong array2DirectAccess2(Object const &o, glong offset);
+            static glong array2DirectAccess2(Object const& o, glong offset);
 
-            template<class T, gbool isObject = Class<Object>::isSuper<T>()>
+            template <class T, gbool isObject = Class<Object>::isSuper<T>()>
             class Store final {
             public:
-                static CORE_FAST T &store(T &obj) { return obj; }
+                static CORE_FAST T& store(T& obj) { return obj; }
             };
 
-            template<class T>
+            template <class T>
             class Store<T, true> final {
             public:
-                static T &store(T &obj) {
+                static T& store(T& obj) {
                     storeReference(CORE_XCAST(Object, obj));
                     return obj;
                 }
             };
 
-            template<class T, gbool isObject = Class<Object>::isSuper<T>()>
+            template <class T, gbool isObject = Class<Object>::isSuper<T>()>
             class Destructor final {
             public:
-                static void destroy(T &&obj) { delete &obj; }
+                static void destroy(T&& obj) { delete &obj; }
 
-                static gbool destroyRegistered(T &&) { return false; }
+                static gbool destroyRegistered(T&&) { return false; }
             };
 
-            template<class T>
+            template <class T>
             class Destructor<T, true> final {
             public:
-                static void destroy(T &&obj) {
-                    Unref2<T> &target = CORE_CAST(Unref2<T> &, obj);
+                static void destroy(T&& obj) {
+                    Unref2<T>& target = CORE_CAST(Unref2<T> &, obj);
                     if (!deleteReference(target)) delete &target;
                 }
 
-                static gbool destroyRegistered(T &&obj) {
-                    Unref2<T> &target = CORE_CAST(Unref2<T> &, obj);
+                static gbool destroyRegistered(T&& obj) {
+                    Unref2<T>& target = CORE_CAST(Unref2<T> &, obj);
                     return deleteReference(target);
                 }
             };
@@ -1883,6 +1896,7 @@ namespace core {
 
         private:
             CORE_ADD_AS_FRIEND(Thread);
+
             static glong threadCount();
         };
 

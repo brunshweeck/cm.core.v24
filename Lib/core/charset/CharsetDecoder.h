@@ -21,21 +21,21 @@ namespace core {
          * of such buffers.  The output character sequence is written to a character buffer
          * or a series of such buffers.  A decoder should always be used by making
          * the following sequence of method invocations, hereinafter referred to as a
-         * <i>decoding operation</i>:
+         * <i>decoding operation</i>: <br/>
          *
-         *   @li Reset the decoder via the @b reset method, unless it
-         *   has not been used before;
+         *   - Reset the decoder via the @b reset method, unless it
+         *   has not been used before; <br/>
          *
-         *   @li Invoke the @b decode method zero or more times, as
+         *   - Invoke the @b decode method zero or more times, as
          *   long as additional input may be available, passing @c false for the
          *   @c endOfInput argument and filling the input buffer and flushing the
-         *   output buffer between invocations;
+         *   output buffer between invocations; <br/>
          *
-         *   @li Invoke the @b decode method one final time, passing
-         *   @c true for the @c endOfInput argument; and then
+         *   - Invoke the @b decode method one final time, passing
+         *   @c true for the @c endOfInput argument; and then <br/>
          *
-         *   @li Invoke the @b flush method so that the decoder can
-         *   flush any internal state to the output buffer.
+         *   - Invoke the @b flush method so that the decoder can
+         *   flush any internal state to the output buffer. <br/>
          *
          * Each invocation of the @b decode method will decode as many
          * bytes as possible from the input buffer, writing the resulting characters
@@ -302,37 +302,37 @@ namespace core {
              * <p>
              * In addition to reading bytes from the input buffer and writing
              * characters to the output buffer, this method returns a @b CoderResult
-             * object to describe its reason for termination:
+             * object to describe its reason for termination: <br/>
              *
-             *   @li @b CoderResult::UNDERFLOW indicates that as much of the
+             *   - @b CoderResult::UNDERFLOW indicates that as much of the
              *   input buffer as possible has been decoded.  If there is no further
              *   input then the invoker can proceed to the next step of the
              *   <a href="#steps">decoding operation</a>.  Otherwise, this method
-             *   should be invoked again with further input.
+             *   should be invoked again with further input. <br/>
              *
-             *   @li @b CoderResult::OVERFLOW indicates that there is
+             *   - @b CoderResult::OVERFLOW indicates that there is
              *   insufficient space in the output buffer to decode any more bytes.
              *   This method should be invoked again with an output buffer that has
              *   more @em remaining characters. This is
              *   typically done by draining any decoded characters from the output
-             *   buffer.
+             *   buffer. <br/>
              *
-             *   @li A @em malformed-input result indicates that a malformed-input
+             *   - A @em malformed-input result indicates that a malformed-input
              *   error has been detected.  The malformed bytes begin at the input
              *   buffer's (possibly incremented) position; the number of malformed
              *   bytes may be determined by invoking the result object's @b length method.
              *   This case applies only if the <em>malformed action</em> of this decoder
              *   is @b CodingErrorAction::REPORT; otherwise the malformed input
-             *   will be ignored or replaced, as requested.
+             *   will be ignored or replaced, as requested. <br/>
              *
-             *   @li An @em unmappable-character result indicates that an
+             *   - An @em unmappable-character result indicates that an
              *   unmappable-character error has been detected.  The bytes that
              *   decode the unmappable character begin at the input buffer's (possibly
              *   incremented) position; the number of such bytes may be determined
              *   by invoking the result object's @b length
              *   method.  This case applies only if the <em>unmappable action</em>
              *   of this decoder is @b CodingErrorAction::REPORT; otherwise the unmappable character will be
-             *   ignored or replaced, as requested.
+             *   ignored or replaced, as requested. <br/>
              *
              * In any case, if this method is to be reinvoked in the same decoding
              * operation then care should be taken to preserve any bytes remaining

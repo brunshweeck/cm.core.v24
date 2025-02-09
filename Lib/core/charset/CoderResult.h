@@ -20,25 +20,25 @@ namespace core {
          * (or characters) from an input buffer, translates them, and writes the
          * resulting characters (or bytes) to an output buffer.  A coding process
          * terminates for one of four categories of reasons, which are described by
-         * instances of this class:
+         * instances of this class: <br/>
          *
-         *   @li  <i>Underflow</i> is reported when there is no more input to be
+         *   -  <i>Underflow</i> is reported when there is no more input to be
          *   processed, or there is insufficient input and additional input is
          *   required.  This condition is represented by the unique result object
-         *   @b UNDERFLOW, whose @b isUnderflow method returns @c true.
+         *   @b UNDERFLOW, whose @b isUnderflow method returns @c true. <br/>
          *
-         *   @li  <i>Overflow</i> is reported when there is insufficient room
+         *   -  <i>Overflow</i> is reported when there is insufficient room
          *   remaining in the output buffer.  This condition is represented by the
-         *   unique result object @b OVERFLOW, whose @b isOverflow method returns @c true.
+         *   unique result object @b OVERFLOW, whose @b isOverflow method returns @c true. <br/>
          *
-         *   @li  A <i>malformed-input error</i> is reported when a sequence of
+         *   -  A <i>malformed-input error</i> is reported when a sequence of
          *   input units is not well-formed.  Such errors are described by instances of
          *   this class whose @b isMalformed method returns
          *   @c true and whose @b length method returns the length
          *   of the malformed sequence.  There is one unique instance of this class for
-         *   all malformed-input errors of a given length.
+         *   all malformed-input errors of a given length. <br/>
          *
-         *   @li  An <i>unmappable-character error</i> is reported when a sequence
+         *   -  An <i>unmappable-character error</i> is reported when a sequence
          *   of input units denotes a character that cannot be represented in the
          *   output charset.  Such errors are described by instances of this class
          *   whose @b isUnmappable method returns @c true and

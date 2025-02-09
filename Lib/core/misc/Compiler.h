@@ -16,32 +16,30 @@ namespace core {
 
         /**
          * The Compiler, must be one of: CORE_COMPILER_?
-         * (where ? represent the name of compiler):
-         *
-         * @li COVERITY - Coverity cov-scan
-         * @li SYM      - Digital Mars C/C++ (used to be Symantec C++)
-         * @li MSVC     - Microsoft Visual C/C++, Intel C++ for Windows
-         * @li BOR      - Borland/Turbo C++
-         * @li WAT      - Watcom C++
-         * @li GNU      - GNU C++
-         * @li COMEAU   - Comeau C++
-         * @li EDG      - Edison Design Group C++
-         * @li OC       - CenterLine C++
-         * @li SUN      - Forte Developer, or Sun Studio C++
-         * @li MIPS     - MIPSpro C++
-         * @li DEC      - DEC C++
-         * @li HPACC    - HP aC++
-         * @li USLC     - SCO OUDK and UDK
-         * @li CDS      - Reliant C++
-         * @li KAI      - KAI C++
-         * @li INTEL    - Intel C++ for Linux, Intel C++ for Windows
-         * @li HIGHC    - MetaWare High C/C++
-         * @li PGI      - Portland Group C++
-         * @li PGI      - Portland Group C++
-         * @li GHS      - Green Hills Optimizing C++ Compilers
-         * @li RVCT     - ARM Realview Compiler Suite
-         * @li CLANG    - C++ front-end for the LLVM compiler
-         *
+         * (where ? represent the name of compiler): <br/>
+         * - COVERITY - Coverity cov-scan <br/>
+         * - SYM      - Digital Mars C/C++ (used to be Symantec C++) <br/>
+         * - MSVC     - Microsoft Visual C/C++, Intel C++ for Windows <br/>
+         * - BOR      - Borland/Turbo C++ <br/>
+         * - WAT      - Watcom C++ <br/>
+         * - GNU      - GNU C++ <br/>
+         * - COMEAU   - Comeau C++ <br/>
+         * - EDG      - Edison Design Group C++ <br/>
+         * - OC       - CenterLine C++ <br/>
+         * - SUN      - Forte Developer, or Sun Studio C++ <br/>
+         * - MIPS     - MIPSpro C++ <br/>
+         * - DEC      - DEC C++ <br/>
+         * - HPACC    - HP aC++ <br/>
+         * - USLC     - SCO OUDK and UDK <br/>
+         * - CDS      - Reliant C++ <br/>
+         * - KAI      - KAI C++ <br/>
+         * - INTEL    - Intel C++ for Linux, Intel C++ for Windows <br/>
+         * - HIGHC    - MetaWare High C/C++ <br/>
+         * - PGI      - Portland Group C++ <br/>
+         * - PGI      - Portland Group C++ <br/>
+         * - GHS      - Green Hills Optimizing C++ Compilers <br/>
+         * - RVCT     - ARM Realview Compiler Suite <br/>
+         * - CLANG    - C++ front-end for the LLVM compiler <br/>
          */
 
 

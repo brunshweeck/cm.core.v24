@@ -69,8 +69,8 @@ namespace core {
         public:
             /**
              * Construct new Function with specified callable
-             * object. The given callable may be:
-             * @li a <em> binary static function </em>;
+             * object. The given callable may be: <br/>
+             * - a <em> binary static function </em>;
              *     @code
              *       gint myFunction(String, gdouble);
              *
@@ -82,13 +82,13 @@ namespace core {
              *       BiFunction<String, Double, Integer> f1 = myFunction;
              *       BiFunction<String, Double, Integer> f2 = MyClass::myStaticMethod;
              *     @endcode
-             * @li a <em> binary lambda function </em>;
+             * - a <em> binary lambda function </em>;
              *      @code
              *        BiFunction<String, Double, Integer> f1 = [](String, gdouble) -> gint {...}
              *        BiFunction<String, Double, Integer> f2 = [&](String, gdouble) -> gint {...}
              *        BiFunction<String, Double, Integer> f3 = [=](String, gdouble) -> gint {...}
              *      @endcode
-             * @li an <em>object that implement call operator with two arguments </em>.
+             * - an <em>object that implement call operator with two arguments </em>.
              *      @code
              *        class MyCallableClass {
              *        public:

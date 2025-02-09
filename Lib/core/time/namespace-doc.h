@@ -192,7 +192,7 @@ namespace core {
      * There are, however, some limited use cases where users believe they need to store and use
      * dates in arbitrary calendar systems throughout the application.
      * This is supported by @b time::chrono::ChronoLocalDate, however it is vital to read
-     * all the associated warnings in the Javadoc of that interface before using it.
+     * all the associated warnings of that interface before using it.
      * In summary, applications that require general interoperation between multiple calendar systems
      * typically need to be written in a very different way to those only using the ISO calendar,
      * thus most applications should just use ISO and avoid @c ChronoLocalDate.

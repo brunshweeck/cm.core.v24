@@ -167,7 +167,7 @@ namespace core
          * @c gdouble such that 1.0 + EPSILON != 1.0 . It is equal to the value returned by
          * @c Double::fromLongBits(0x3cb0000000000000L).
          */
-        static CORE_FAST gdouble EPSILON = 0x1.0P-52;// 2.2204460492503131E-16;
+        static CORE_FAST gdouble EPSILON = 0x1.0p-52;// 2.2204460492503131E-16;
 
         /**
          * A constant holding the positive infinity of type
@@ -198,7 +198,7 @@ namespace core
          * @c 0x1.fffffffffffffP+1023 and also equal to
          * @c Double::fromLongBits(0x7fefffffffffffffL).
          */
-        static CORE_FAST gdouble MAX_VALUE = 0x1.fffffffffffffP+1023; // 1.7976931348623157e+308
+        static CORE_FAST gdouble MAX_VALUE = 0x1.fffffffffffffp+1023; // 1.7976931348623157e+308
 
         /**
          * A constant holding the smallest positive normal value of type
@@ -217,7 +217,7 @@ namespace core
          * @c 0x0.0000000000001P-1022 and also equal to
          * @c Double::fromLongBits(0x1L).
          */
-        static CORE_FAST gdouble MIN_VALUE = 0x0.0000000000001P-1022; // 4.9e-324
+        static CORE_FAST gdouble MIN_VALUE = 0x0.0000000000001p-1022; // 4.9e-324
 
         /**
          * The number of bits used to represent a @c gdouble value.

@@ -93,24 +93,25 @@ namespace core {
             Decimal32() = default;
 
             /**
-             * Returns a string representation of the {@code float}
+             * Returns a string representation of the @c float
              * argument. All characters mentioned below are ASCII characters.
              *
-             * @param   v   the {@code float} to be converted.
+             * @param   v   the @c float to be converted.
              * @return a string representation of the argument.
              * @see Float#toString(float)
              */
             static String toString(gfloat v);
 
             /**
-             * Appends the rendering of the {@code v} to {@code app}.
+             * Appends the rendering of the @c v to @c app.
              *
-             * <p>The outcome is the same as if {@code v} were first
-             * {@link #toString(float) rendered} and the resulting string were then
-             * {@link Appendable#append(CharSequence) appended} to {@code app}.
-             *
-             * @param v the {@code float} whose rendering is appended.
-             * @param app the {@link Appendable} to append to.
+             * <p>
+             * The outcome is the same as if @c v were first
+             * @b rendered and the resulting string were then
+             * @b appended to @c app.
+             * </p>
+             * @param v the @c float whose rendering is appended.
+             * @param app the @b Appendable to append to.
              * @throws IOException If an I/O error occurs
              */
             static Appendable& appendTo(gfloat v, Appendable& app);

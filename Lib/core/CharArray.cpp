@@ -2,19 +2,22 @@
 // Created by bruns on 09/05/2024.
 //
 
+
 #include <core/Array.h>
 #include <core/CharArray.h>
-#include <core/OutOfMemoryError.h>
 #include <core/XString.h>
 #include <core/function/IntSupplier.h>
 #include <core/function/IntUnaryOperator.h>
 
 namespace core {
+
+    using namespace misc;
+
     CharArray::CharArray() CORE_NOTHROW: CharArray(0) {}
 
     CharArray::CharArray(gint length) {
         if (length < 0)
-            IllegalArgumentException("Negative array size"_S).throws($ftrace());
+            IllegalArgumentException("Negative array size"_Sl).throws($ftrace());
 
         try {
             value = CORE_CAST(ARRAY, UNSAFE::allocateMemory(length * 2LL));
@@ -24,7 +27,7 @@ namespace core {
 
     CharArray::CharArray(gint length, gchar initialValue) {
         if (length < 0)
-            IllegalArgumentException("Negative array size"_S).throws($ftrace());
+            IllegalArgumentException("Negative array size"_Sl).throws($ftrace());
 
         try {
             value = CORE_CAST(ARRAY, UNSAFE::allocateMemory(length * 2LL));
@@ -58,7 +61,7 @@ namespace core {
 
     gchar& CharArray::get(gint index) {
         try {
-            misc::Preconditions::checkIndex(index, length());
+            Preconditions::checkIndex(index, length());
 
             return value[index];
         } catch (Exception const& ex) { ex.throws($ftrace()); }
@@ -66,7 +69,7 @@ namespace core {
 
     gchar const& CharArray::get(gint index) const {
         try {
-            misc::Preconditions::checkIndex(index, length());
+            Preconditions::checkIndex(index, length());
 
             return value[index];
         } catch (Exception const& ex) { ex.throws($ftrace()); }
@@ -74,7 +77,7 @@ namespace core {
 
     gchar CharArray::set(gint index, gchar newValue) {
         try {
-            misc::Preconditions::checkIndex(index, length());
+            Preconditions::checkIndex(index, length());
 
             const gchar oldValue = value[index];
             value[index] = newValue;
@@ -147,7 +150,7 @@ namespace core {
 
     CharArray CharArray::ofRange(gchar firstValue, gchar limit, gint offsetByValue) {
         if (offsetByValue == 0)
-            IllegalArgumentException("Zero offset"_S).throws($ftrace());
+            IllegalArgumentException("Zero offset"_Sl).throws($ftrace());
 
         gint len = Math::abs((limit - firstValue) / offsetByValue);
 
@@ -255,7 +258,7 @@ namespace core {
 
     String CharArray::toString() const {
         if (count == 0)
-            return "[]"_S;
+            return "[]"_Sl;
 
         XString str = XString(Math::max(count * (1 + 2) + 2, 16));
         str.append(u'[');

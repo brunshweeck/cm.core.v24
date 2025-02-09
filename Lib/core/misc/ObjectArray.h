@@ -20,6 +20,7 @@ namespace core {
             CORE_ADD_GLOBAL_FRIENDS();
             CORE_ADD_AS_FRIEND(util::Arrays);
             CORE_ADD_AS_FRIEND(Array<Object>);
+
             CORE_ADD_TEMPLATES_AS_FRIEND(Array, T);
 
             /**
@@ -29,12 +30,11 @@ namespace core {
 
         protected:
             template<class T>
-            class Wrapper {
+            class Wrapper final : public Object {
                 T const &value;
 
             public:
-                CORE_FAST CORE_IMPLICIT Wrapper(T const &value) : value(value) {
-                }
+                CORE_FAST CORE_IMPLICIT Wrapper(T const &arg) : value(arg) {}
 
                 T const &get() const { return value; }
             };

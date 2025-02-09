@@ -623,8 +623,8 @@ namespace core {
          */
         static CORE_FAST gbool isString() {
             return TEST<REQUEST::STR_FLAG, NCVRef>::V != 0 ||
-                   isArray() && Class<ArrayElement>::isCharacter() ||
-                   isPointer() && Class<PointerTarget>::isCharacter();
+                   (isArray() && Class<ArrayElement>::isCharacter()) ||
+                   (isPointer() && Class<PointerTarget>::isCharacter());
         }
 
         /**
@@ -696,8 +696,8 @@ namespace core {
         template<class To>
         static CORE_FAST gbool isConvertible() {
             return TEST<REQUEST::CONVERT_FLAG, T, To>::V != 0
-                   || Class<To>::isVoid() && (isArray() || isVoid() || isFunction())
-                   || isSame<To>() && !isArray();
+                   || (Class<To>::isVoid() && (isArray() || isVoid() || isFunction()))
+                   || (isSame<To>() && !isArray());
         }
 
         /**
@@ -882,7 +882,7 @@ namespace core {
                          Class<Prime>::template isConvertible<T>()
                        : isSuper<Clazz>() ||
                          isConstructible<Clazz>() ||
-                         isConstructible<Prim>() && Class<Prime>::template isConvertible<Clazz>() ||
+                         (isConstructible<Prim>() && Class<Prime>::template isConvertible<Clazz>()) ||
                          Class<Arg>::template isConvertible<T>();
         }
     };

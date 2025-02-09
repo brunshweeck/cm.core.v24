@@ -1,50 +1,19 @@
 //
-// Created by admin on 12/01/25.
+// This File has been Created by CMake For Testing in Project CORE-24
 //
+#include "FileTest.h"
 
-#include <lib/Printer.h>
 #include <core/io/File.h>
-#include <core/net/URI.h>
-#include <gtest/gtest.h>
 
-class FileTest : public Object, public testing::Test {
-protected:
-    String path;
-    String uriPath;
-    String filePath;
-    String dirPath;
-    String dirsPath;
-
-    void SetUp() override {
-        uriPath = "file:///Sample.dir/dir%201/dir%202/dir%203";
-        filePath = "Sample.txt";
-        dirPath = "Sample.dir";
-        dirsPath = "Sample.dir/dir1/dir2/dir3";
-        path = "Sample.dir/Sample.txt";
-    }
-
-    void TearDown() override {
-    }
-
-private:
-    void TestBody() override = 0;
-};
-
-TEST_F(FileTest, constructorWithDirectPath) {
-    EXPECT_NO_THROW(File(this->path));
+TEST_F(FileTest, try_construct_new_file_with_absolute_path) {
+    ASSERT_TRUE(File("/Dir1/Sample.txt").isAbsolute());
 }
 
-TEST_F(FileTest, constructorWithParentAndChildPath) {
-    EXPECT_NO_THROW(File(this->dirPath, this->filePath));
+TEST_F(FileTest, try_construct_new_file_with_relative_path) {
+    ASSERT_FALSE(File("Dir1/Sample.txt").isAbsolute());
 }
 
-TEST_F(FileTest, constructorWithURI) {
-    EXPECT_NO_THROW(File(URI(uriPath)));
+TEST_F(FileTest, try_find_absolute_path_of_file) {
+    File file = File("Sample.txt");
+    ASSERT_TRUE(file.absoluteFile().isAbsolute());
 }
-
-TEST_F(FileTest, isAbsolute) {
-    File file = File("/Sample.dir/dir1/dir2/dir3");
-    EXPECT_TRUE(file.isAbsolute());
-}
-
-

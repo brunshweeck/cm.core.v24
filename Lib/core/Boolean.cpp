@@ -15,10 +15,9 @@ namespace core {
         CORE_IGNORE(this);
     }
 
-    Boolean::Boolean(gbool value) : value(value) {
-    }
+    Boolean::Boolean(gbool value) : value(value) {}
 
-    gbool Boolean::parseBoolean(String const &s) {
+    gbool Boolean::parseBoolean(String const& s) {
         if (s.length() != 4)
             return false;
         return s.equals("true"_S);
@@ -32,7 +31,7 @@ namespace core {
         return b ? TRUE : FALSE;
     }
 
-    Boolean Boolean::valueOf(String const &s) {
+    Boolean Boolean::valueOf(String const& s) {
         return valueOf(parseBoolean(s));
     }
 
@@ -52,11 +51,11 @@ namespace core {
         return value ? 1231 : 1237;
     }
 
-    gbool Boolean::equals(Object const &obj) const {
-        return this == &obj || Class<Boolean>::hasInstance(obj) && value == CORE_XCAST(Boolean const, obj).value;
+    gbool Boolean::equals(Object const& obj) const {
+        return this == &obj || (Class<Boolean>::hasInstance(obj) && value == CORE_XCAST(Boolean const, obj).value);
     }
 
-    gint Boolean::compareTo(Boolean const &other) const {
+    gint Boolean::compareTo(Boolean const& other) const {
         return compare(value, other.value);
     }
 
@@ -76,9 +75,9 @@ namespace core {
         return a != b;
     }
 
-    Object &Boolean::clone() const {
+    Object& Boolean::clone() const {
         try {
             return UNSAFE::newInstance<Boolean>(*this);
-        } catch (Throwable const &ex) { ex.throws($ftrace()); }
+        } catch (Throwable const& ex) { ex.throws($ftrace()); }
     }
 } // core

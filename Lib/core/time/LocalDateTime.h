@@ -296,36 +296,36 @@ namespace core {
              * </p>
              * <p>
              * If the field is a @b ChronoField then the query is implemented here.
-             * The supported fields are:
+             * The supported fields are: <br/>
              *
-             * @li @c NANO_OF_SECOND
-             * @li @c NANO_OF_DAY
-             * @li @c MICRO_OF_SECOND
-             * @li @c MICRO_OF_DAY
-             * @li @c MILLI_OF_SECOND
-             * @li @c MILLI_OF_DAY
-             * @li @c SECOND_OF_MINUTE
-             * @li @c SECOND_OF_DAY
-             * @li @c MINUTE_OF_HOUR
-             * @li @c MINUTE_OF_DAY
-             * @li @c HOUR_OF_AMPM
-             * @li @c CLOCK_HOUR_OF_AMPM
-             * @li @c HOUR_OF_DAY
-             * @li @c CLOCK_HOUR_OF_DAY
-             * @li @c AMPM_OF_DAY
-             * @li @c DAY_OF_WEEK
-             * @li @c ALIGNED_DAY_OF_WEEK_IN_MONTH
-             * @li @c ALIGNED_DAY_OF_WEEK_IN_YEAR
-             * @li @c DAY_OF_MONTH
-             * @li @c DAY_OF_YEAR
-             * @li @c EPOCH_DAY
-             * @li @c ALIGNED_WEEK_OF_MONTH
-             * @li @c ALIGNED_WEEK_OF_YEAR
-             * @li @c MONTH_OF_YEAR
-             * @li @c PROLEPTIC_MONTH
-             * @li @c YEAR_OF_ERA
-             * @li @c YEAR
-             * @li @c ERA
+             * - @c NANO_OF_SECOND <br/>
+             * - @c NANO_OF_DAY <br/>
+             * - @c MICRO_OF_SECOND <br/>
+             * - @c MICRO_OF_DAY <br/>
+             * - @c MILLI_OF_SECOND <br/>
+             * - @c MILLI_OF_DAY <br/>
+             * - @c SECOND_OF_MINUTE <br/>
+             * - @c SECOND_OF_DAY <br/>
+             * - @c MINUTE_OF_HOUR <br/>
+             * - @c MINUTE_OF_DAY <br/>
+             * - @c HOUR_OF_AMPM <br/>
+             * - @c CLOCK_HOUR_OF_AMPM <br/>
+             * - @c HOUR_OF_DAY <br/>
+             * - @c CLOCK_HOUR_OF_DAY <br/>
+             * - @c AMPM_OF_DAY <br/>
+             * - @c DAY_OF_WEEK <br/>
+             * - @c ALIGNED_DAY_OF_WEEK_IN_MONTH <br/>
+             * - @c ALIGNED_DAY_OF_WEEK_IN_YEAR <br/>
+             * - @c DAY_OF_MONTH <br/>
+             * - @c DAY_OF_YEAR <br/>
+             * - @c EPOCH_DAY <br/>
+             * - @c ALIGNED_WEEK_OF_MONTH <br/>
+             * - @c ALIGNED_WEEK_OF_YEAR <br/>
+             * - @c MONTH_OF_YEAR <br/>
+             * - @c PROLEPTIC_MONTH <br/>
+             * - @c YEAR_OF_ERA <br/>
+             * - @c YEAR <br/>
+             * - @c ERA <br/>
              * All other @c ChronoField instances will return false.
              * </p>
              * @param field  the field to check, null returns false
@@ -342,23 +342,23 @@ namespace core {
              * </p>
              * <p>
              * If the unit is a @b ChronoUnit then the query is implemented here.
-             * The supported units are:
+             * The supported units are: <br/>
              *
-             * @li @c NANOS
-             * @li @c MICROS
-             * @li @c MILLIS
-             * @li @c SECONDS
-             * @li @c MINUTES
-             * @li @c HOURS
-             * @li @c HALF_DAYS
-             * @li @c DAYS
-             * @li @c WEEKS
-             * @li @c MONTHS
-             * @li @c YEARS
-             * @li @c DECADES
-             * @li @c CENTURIES
-             * @li @c MILLENNIA
-             * @li @c ERAS
+             * - @c NANOS <br/>
+             * - @c MICROS <br/>
+             * - @c MILLIS <br/>
+             * - @c SECONDS <br/>
+             * - @c MINUTES <br/>
+             * - @c HOURS <br/>
+             * - @c HALF_DAYS <br/>
+             * - @c DAYS <br/>
+             * - @c WEEKS <br/>
+             * - @c MONTHS <br/>
+             * - @c YEARS <br/>
+             * - @c DECADES <br/>
+             * - @c CENTURIES <br/>
+             * - @c MILLENNIA <br/>
+             * - @c ERAS <br/>
              *
              * All other @c ChronoUnit instances will return false
              * </p>
@@ -717,11 +717,11 @@ namespace core {
             /**
              * Returns a copy of this @c LocalDateTime with the specified number of years added.
              * <p>
-             * This method adds the specified amount to the years field in three steps:
+             * This method adds the specified amount to the years field in three steps: <br/>
              *
-             * @li Add the input years to the year field
-             * @li Check if the resulting date would be invalid
-             * @li Adjust the day-of-month to the last valid day if necessary
+             * - Add the input years to the year field <br/>
+             * - Check if the resulting date would be invalid <br/>
+             * - Adjust the day-of-month to the last valid day if necessary <br/>
              *
              * </p>
              * <p>
@@ -741,11 +741,11 @@ namespace core {
             /**
              * Returns a copy of this @c LocalDateTime with the specified number of months added.
              * <p>
-             * This method adds the specified amount to the months field in three steps:
+             * This method adds the specified amount to the months field in three steps: <br/>
              *
-             * @li Add the input months to the month-of-year field
-             * @li Check if the resulting date would be invalid
-             * @li Adjust the day-of-month to the last valid day if necessary
+             * - Add the input months to the month-of-year field <br/>
+             * - Check if the resulting date would be invalid <br/>
+             * - Adjust the day-of-month to the last valid day if necessary <br/>
              *
              * </p>
              * <p>
@@ -872,11 +872,11 @@ namespace core {
             /**
              * Returns a copy of this @c LocalDateTime with the specified number of years subtracted.
              * <p>
-             * This method subtracts the specified amount from the years field in three steps:
+             * This method subtracts the specified amount from the years field in three steps: <br/>
              *
-             * @li Subtract the input years from the year field
-             * @li Check if the resulting date would be invalid
-             * @li Adjust the day-of-month to the last valid day if necessary
+             * - Subtract the input years from the year field <br/>
+             * - Check if the resulting date would be invalid <br/>
+             * - Adjust the day-of-month to the last valid day if necessary <br/>
              * </p>
              * <p>
              * For example, 2008-02-29 (leap year) minus one year would result in the
@@ -895,11 +895,11 @@ namespace core {
             /**
              * Returns a copy of this @c LocalDateTime with the specified number of months subtracted.
              * <p>
-             * This method subtracts the specified amount from the months field in three steps:
+             * This method subtracts the specified amount from the months field in three steps: <br/>
              *
-             * @li Subtract the input months from the month-of-year field
-             * @li Check if the resulting date would be invalid
-             * @li Adjust the day-of-month to the last valid day if necessary
+             * - Subtract the input months from the month-of-year field <br/>
+             * - Check if the resulting date would be invalid <br/>
+             * - Adjust the day-of-month to the last valid day if necessary <br/>
              * </p>
              * <p>
              * For example, 2007-03-31 minus one month would result in the invalid date
@@ -1203,13 +1203,13 @@ namespace core {
             /**
              * Outputs this date-time as a @c String, such as @c 2007-12-03T10:15:30.
              * <p>
-             * The output will be one of the following ISO-8601 formats:
+             * The output will be one of the following ISO-8601 formats: <br/>
              *
-             * @li @c uuuu-MM-dd'T'HH:mm
-             * @li @c uuuu-MM-dd'T'HH:mm:ss
-             * @li @c uuuu-MM-dd'T'HH:mm:ss.SSS
-             * @li @c uuuu-MM-dd'T'HH:mm:ss.SSSSSS
-             * @li @c uuuu-MM-dd'T'HH:mm:ss.SSSSSSSSS
+             * - @c uuuu-MM-dd'T'HH:mm <br/>
+             * - @c uuuu-MM-dd'T'HH:mm:ss <br/>
+             * - @c uuuu-MM-dd'T'HH:mm:ss.SSS <br/>
+             * - @c uuuu-MM-dd'T'HH:mm:ss.SSSSSS <br/>
+             * - @c uuuu-MM-dd'T'HH:mm:ss.SSSSSSSSS <br/>
              *
              * The format used will be the shortest that outputs the full value of
              * the time when the omitted parts are implied to be zero.

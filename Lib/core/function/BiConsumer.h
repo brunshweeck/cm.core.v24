@@ -55,8 +55,8 @@ namespace core {
 
             /**
              * Construct new Consumer with specified callable
-             * object. The given callable may be:
-             * @li a <em> binary static function </em>;
+             * object. The given callable may be: <br/>
+             * - a <em> binary static function </em>;
              *     @code
              *       void myFunction(gint, String);
              *
@@ -68,13 +68,15 @@ namespace core {
              *       BiConsumer<Integer, String> bc1 = myFunction;
              *       BiConsumer<Integer, String> bc2 = MyClass::myStaticMethod;
              *     @endcode
-             * @li a <em> binary lambda function </em>;
+             *    <br/>
+             * - a <em> binary lambda function </em>;
              *      @code
              *        BiConsumer<Integer, String> bc1 = [](gint, String) {...}
              *        BiConsumer<Integer, String> bc2 = [&](gint, String) {...}
              *        BiConsumer<Integer, String> bc3 = [=](gint, String) {...}
              *      @endcode
-             * @li an <em>object that implement call operator with two arguments </em>.
+             *    <br/>
+             * - an <em>object that implement call operator with two arguments </em>.
              *      @code
              *        class MyCallableClass {
              *        public:
@@ -83,7 +85,7 @@ namespace core {
              *
              *        BiConsumer<Integer, String> bc = MyCallableClass(...);
              *      @endcode
-             *
+             *    <br/>
              * @note the given callable object must be callable with @c T
              *
              * @param callable the callable object.

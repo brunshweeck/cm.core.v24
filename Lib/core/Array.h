@@ -1144,7 +1144,7 @@ namespace core {
             }
 
             gbool operator==(LinearIterator const& rhs) const {
-                return this == &rhs || &array == &rhs.array && (isEnd && rhs.isEnd || next == rhs.next);
+                return this == &rhs || (&array == &rhs.array && ((isEnd && rhs.isEnd) || next == rhs.next));
             }
 
             gbool operator!=(LinearIterator const& rhs) const { return !(*this == rhs); }
@@ -1176,7 +1176,7 @@ namespace core {
             }
 
             gbool operator==(LinearIterator2 const& rhs) const {
-                return this == &rhs || &array == &rhs.array && (isEnd && rhs.isEnd || next == rhs.next);
+                return this == &rhs || (&array == &rhs.array && ((isEnd && rhs.isEnd) || next == rhs.next));
             }
 
             gbool operator!=(LinearIterator2 const& rhs) const { return !(*this == rhs); }

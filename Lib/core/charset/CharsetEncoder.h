@@ -21,21 +21,21 @@ namespace core {
          * of such buffers.  The output byte sequence is written to a byte buffer
          * or a series of such buffers.  An encoder should always be used by making
          * the following sequence of method invocations, hereinafter referred to as an
-         * <i>encoding operation</i>:
+         * <i>encoding operation</i>: <br/>
          *
-         *   @li Reset the encoder via the @b reset method, unless it
-         *   has not been used before;
+         *   - Reset the encoder via the @b reset method, unless it
+         *   has not been used before; <br/>
          *
-         *   @li Invoke the @b encode method zero or more times, as
+         *   - Invoke the @b encode method zero or more times, as
          *   long as additional input may be available, passing @c false for the
          *   @c endOfInput argument and filling the input buffer and flushing the
-         *   output buffer between invocations;
+         *   output buffer between invocations; <br/>
          *
-         *   @li Invoke the @b encode method one final time, passing
-         *   @c true for the @c endOfInput argument; and then
+         *   - Invoke the @b encode method one final time, passing
+         *   @c true for the @c endOfInput argument; and then <br/>
          *
-         *   @li Invoke the @b flush method so that the encoder can
-         *   flush any internal state to the output buffer.
+         *   - Invoke the @b flush method so that the encoder can
+         *   flush any internal state to the output buffer. <br/>
          *
          * Each invocation of the @b encode method will encode as many
          * characters as possible from the input buffer, writing the resulting bytes
@@ -329,35 +329,35 @@ namespace core {
              * bytes to the output buffer, this method returns a @b CoderResult
              * object to describe its reason for termination:
              *
-             *   @li @b CoderResult::UNDERFLOW indicates that as much of the
+             *   - @b CoderResult::UNDERFLOW indicates that as much of the
              *   input buffer as possible has been encoded.  If there is no further
              *   input then the invoker can proceed to the next step of the
              *   <a href="#steps">encoding operation</a>.  Otherwise, this method
-             *   should be invoked again with further input.
+             *   should be invoked again with further input. <br/>
              *
-             *   @li @b CoderResult::OVERFLOW indicates that there is
+             *   - @b CoderResult::OVERFLOW indicates that there is
              *   insufficient space in the output buffer to encode any more characters.
              *   This method should be invoked again with an output buffer that has
              *   more @em remaining bytes. This is
              *   typically done by draining any encoded bytes from the output
-             *   buffer.
+             *   buffer. <br/>
              *
-             *   @li A @em malformed-input result indicates that a malformed-input
+             *   - A @em malformed-input result indicates that a malformed-input
              *   error has been detected.  The malformed characters begin at the input
              *   buffer's (possibly incremented) position; the number of malformed
              *   characters may be determined by invoking the result object's @em length method.
              *   This case applies only if the <em>malformed action</em> of this encoder
              *   is @b CodingErrorAction::REPORT; otherwise the malformed input
-             *   will be ignored or replaced, as requested.
+             *   will be ignored or replaced, as requested. <br/>
              *
-             *   @li An @em unmappable-character result indicates that an
+             *   - An @em unmappable-character result indicates that an
              *   unmappable-character error has been detected.  The characters that
              *   encode the unmappable character begin at the input buffer's (possibly
              *   incremented) position; the number of such characters may be determined
              *   by invoking the result object's @b length
              *   method.  This case applies only if the <em>unmappable action</em> of this encoder is
              *   @b CodingErrorAction::REPORT; otherwise the unmappable character will be
-             *   ignored or replaced, as requested.
+             *   ignored or replaced, as requested. <br/>
              *
              * In any case, if this method is to be reinvoked in the same encoding
              * operation then care should be taken to preserve any characters remaining

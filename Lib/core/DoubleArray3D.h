@@ -72,18 +72,18 @@ namespace core {
          * Construct new @c DoubleArray3D instance able to contains
          * the given number of rows, columns per row and columns per column.
          * <p>
-         *  @li If the number of rows is zero, all other length will be ignored.
-         *  @li If the number of columns per row is zero, the number of columns per
-         *      column will be ignored.
-         *  @li After construct the number of value supported by this array will
-         *      be: @code nbRows * nbCols * nbSubCols @endcode
-         *  @li All values will be initialized as zero.
+         *  - If the number of rows is zero, all other length will be ignored. <br/>
+         *  - If the number of columns per row is zero, the number of columns per
+         *      column will be ignored. <br/>
+         *  - After construct the number of value supported by this array will
+         *      be: @code nbRows * nbCols * nbSubCols @endcode <br/>
+         *  - All values will be initialized as zero.
          * </p>
          *
-         * @throws IllegalArgumentException If one of following conditions is true:
-         *                             @li @c nbRows is negative.
-         *                             @li @c nbCols is negative.
-         *                             @li @c nbSubCols is negative.
+         * @throws IllegalArgumentException If one of following conditions is true: <br/>
+         *                             - @c nbRows is negative. <br/>
+         *                             - @c nbCols is negative. <br/>
+         *                             - @c nbSubCols is negative.
          *
          * @param nbRows The number of rows to be allocated on this array
          * @param nbCols The number of columns per row to be allocated on this array
@@ -95,17 +95,17 @@ namespace core {
          * Construct new @c DoubleArray3D instance able to contains
          * the given number of rows, columns per row and columns per column.
          * <p>
-         *  @li If the number of rows is zero, all other length will be ignored.
-         *  @li If the number of columns per row is zero, the number of columns per
-         *      column will be ignored.
-         *  @li After construct the number of value supported by this array will
+         *  - If the number of rows is zero, all other length will be ignored. <br/>
+         *  - If the number of columns per row is zero, the number of columns per
+         *      column will be ignored. <br/>
+         *  - After construct the number of value supported by this array will
          *      be: @code nbRows * nbCols * nbSubCols @endcode
          * </p>
          *
-         * @throws IllegalArgumentException If one of following conditions is true:
-         *                             @li @c nbRows is negative.
-         *                             @li @c nbCols is negative.
-         *                             @li @c nbSubCols is negative.
+         * @throws IllegalArgumentException If one of following conditions is true: <br/>
+         *                             - @c nbRows is negative. <br/>
+         *                             - @c nbCols is negative. <br/>
+         *                             - @c nbSubCols is negative.
          *
          * @param nbRows The number of rows to be allocated on this array
          * @param nbCols The number of columns per row to be allocated on this array
