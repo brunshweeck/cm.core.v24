@@ -5,7 +5,7 @@
 #ifndef CORE24_READONLYBUFFEREXCEPTION_H
 #define CORE24_READONLYBUFFEREXCEPTION_H
 
-#include <core/UnsupportedOperationException.h>
+#include <core/lang/UnsupportedOperationException.h>
 
 namespace core {
     namespace io {

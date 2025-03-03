@@ -1,6 +1,6 @@
 
 #include "ru_UA.h"
-#include <core/StringArray.h>
+#include <core/lang/StringArray.h>
 
 
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

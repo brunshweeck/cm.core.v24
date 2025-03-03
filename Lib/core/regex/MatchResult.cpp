@@ -4,7 +4,7 @@
 
 #include "MatchResult.h"
 
-#include <core/UnsupportedOperationException.h>
+#include <core/lang/UnsupportedOperationException.h>
 #include <core/util/Map.h>
 
 namespace core {

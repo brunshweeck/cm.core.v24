@@ -1,6 +1,6 @@
 
 #include "el_POLYTON.h"
-#include <core/StringArray.h>
+#include <core/lang/StringArray.h>
 
 
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

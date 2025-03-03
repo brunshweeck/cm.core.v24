@@ -6,7 +6,7 @@
 #define UNICODE
 #endif
 
-#include <Windows.h>
+#include <core/lang/Windows.h>
 #include <core/util/Locale.h>
 
 namespace core {

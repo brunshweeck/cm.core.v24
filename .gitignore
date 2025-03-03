@@ -13,7 +13,9 @@ Debug/
 .debug/
 cmake-*/
 Utilities/
+Utilities
 Docs
+Docs/
 .run
 banner.*
 ### VS Code ###

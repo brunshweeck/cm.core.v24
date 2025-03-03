@@ -5,7 +5,7 @@
 #ifndef CORE24_ENTRY_H
 #define CORE24_ENTRY_H
 
-#include <core/UnsupportedOperationException.h>
+#include <core/lang/UnsupportedOperationException.h>
 #include <core/util/Comparator.h>
 
 namespace core {

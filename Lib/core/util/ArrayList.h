@@ -5,9 +5,8 @@
 #ifndef CORE24_ARRAYLIST_H
 #define CORE24_ARRAYLIST_H
 
-#include "List.h"
-
 #include <core/function/UnaryOperator.h>
+#include <core/util/List.h>
 
 namespace core {
     namespace util {

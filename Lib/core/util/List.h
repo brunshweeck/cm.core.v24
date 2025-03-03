@@ -5,16 +5,15 @@
 #ifndef CORE24_LIST_H
 #define CORE24_LIST_H
 
-#include "RandomAccess.h"
-#include "SequencedCollection.h"
-
-#include <core/IllegalStateException.h>
-#include <core/IndexOutOfBoundsException.h>
 #include <core/function/UnaryOperator.h>
+#include <core/lang/IllegalStateException.h>
+#include <core/lang/IndexOutOfBoundsException.h>
 #include <core/util/Arrays.h>
 #include <core/util/Comparator.h>
 #include <core/util/ConcurrentModificationException.h>
 #include <core/util/ListIterator.h>
+#include <core/util/RandomAccess.h>
+#include <core/util/SequencedCollection.h>
 
 namespace core {
     namespace util {

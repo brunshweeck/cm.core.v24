@@ -1,6 +1,6 @@
 
 #include "qu_BO.h"
-#include <core/StringArray.h>
+#include <core/lang/StringArray.h>
 
 
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

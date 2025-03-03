@@ -5,7 +5,7 @@
 #ifndef CORE24_MISSINGRESOURCEEXCEPTION_H
 #define CORE24_MISSINGRESOURCEEXCEPTION_H
 
-#include <core/RuntimeException.h>
+#include <core/lang/RuntimeException.h>
 
 namespace core {
     namespace util {

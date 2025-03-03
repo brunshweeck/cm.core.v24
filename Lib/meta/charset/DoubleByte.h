@@ -5,7 +5,7 @@
 #ifndef CORE24_DOUBLEBYTE_H
 #define CORE24_DOUBLEBYTE_H
 
-#include <core/CharArray2D.h>
+#include <core/lang/CharArray2D.h>
 #include <core/charset/CharsetDecoder.h>
 #include <core/charset/CharsetEncoder.h>
 #include <meta/charset/ArrayDecoder.h>

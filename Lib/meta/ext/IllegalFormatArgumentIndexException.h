@@ -4,7 +4,7 @@
 
 #ifndef ILLEGALFORMATARGUMENTINDEXEXCEPTION_H
 #define ILLEGALFORMATARGUMENTINDEXEXCEPTION_H
-#include "core/util/IllegalFormatException.h"
+#include <core/util/IllegalFormatException.h>
 
 namespace core {
     namespace ext {

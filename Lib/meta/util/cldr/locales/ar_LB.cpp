@@ -1,6 +1,6 @@
 
 #include "ar_LB.h"
-#include <core/StringArray.h>
+#include <core/lang/StringArray.h>
 
 
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

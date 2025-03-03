@@ -5,7 +5,7 @@
 #ifndef DECIMALFORMATTER_H
 #define DECIMALFORMATTER_H
 
-#include <core/String.h>
+#include <core/lang/String.h>
 
 namespace core {
     namespace ext {

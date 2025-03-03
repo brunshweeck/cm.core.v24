@@ -4,12 +4,11 @@
 
 #include "CharsetEncoder.h"
 
+#include <core/charset/CharacterCodingException.h>
+#include <core/charset/CharsetDecoder.h>
+#include <core/charset/CoderMalfunctionError.h>
 #include <core/io/ByteBuffer.h>
 #include <core/util/Arrays.h>
-
-#include "CharsetDecoder.h"
-#include "CharacterCodingException.h"
-#include "CoderMalfunctionError.h"
 
 namespace core {
     namespace charset {

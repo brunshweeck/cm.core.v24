@@ -1,6 +1,6 @@
 
 #include "pt_GW.h"
-#include <core/StringArray.h>
+#include <core/lang/StringArray.h>
 
 
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

@@ -5,7 +5,7 @@
 #ifndef CORE24_URISYNTAXEXCEPTION_H
 #define CORE24_URISYNTAXEXCEPTION_H
 
-#include <core/Exception.h>
+#include <core/lang/Exception.h>
 
 namespace core {
     namespace net {

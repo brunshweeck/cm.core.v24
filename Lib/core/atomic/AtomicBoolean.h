@@ -5,7 +5,7 @@
 #ifndef CORE24_ATOMICBOOLEAN_H
 #define CORE24_ATOMICBOOLEAN_H
 
-#include <core/Boolean.h>
+#include <core/lang/Boolean.h>
 
 namespace core {
     namespace atomic {

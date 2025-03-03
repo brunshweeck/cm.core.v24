@@ -5,10 +5,9 @@
 #ifndef DECIMAL64_H
 #define DECIMAL64_H
 #include "DecimalFormatter.h"
-#include "core/Appendable.h"
-#include "core/XString.h"
-#include "core/misc/Unsafe.h"
-#include "meta/MathUtils.h"
+#include <core/lang/Appendable.h>
+#include <core/misc/Unsafe.h>
+#include <meta/lang/MathUtils.h>
 
 namespace core {
     namespace ext {

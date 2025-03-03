@@ -3,10 +3,10 @@
 //
 
 #include <thread>
-#include <Windows.h>
+#include <core/lang/Windows.h>
 #include <core/misc/Event.h>
 
-#include "core/time/Chrono.h"
+#include <core/time/Chrono.h>
 
 namespace core {
     namespace misc {

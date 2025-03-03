@@ -2,7 +2,7 @@
 // Created by brunshweeck on 27 août 2024.
 //
 
-#include <core/IllegalArgumentException.h>
+#include <core/lang/IllegalArgumentException.h>
 #include <core/io/BufferOverflowException.h>
 #include <core/io/BufferUnderflowException.h>
 #include <core/io/DoubleBuffer.h>

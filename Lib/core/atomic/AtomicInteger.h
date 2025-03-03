@@ -5,7 +5,7 @@
 #ifndef CORE24_ATOMICINTEGER_H
 #define CORE24_ATOMICINTEGER_H
 
-#include <core/Integer.h>
+#include <core/lang/Integer.h>
 
 namespace core {
     namespace atomic {

@@ -5,7 +5,7 @@
 #ifndef CORE24_IOERROR_H
 #define CORE24_IOERROR_H
 
-#include <core/Error.h>
+#include <core/lang/Error.h>
 
 namespace core {
     namespace io {

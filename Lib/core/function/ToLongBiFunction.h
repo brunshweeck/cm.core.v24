@@ -5,9 +5,9 @@
 #ifndef CORE24_TOLONGBIFUNCTION_H
 #define CORE24_TOLONGBIFUNCTION_H
 
-#include <core/AssertionError.h>
-#include <core/Long.h>
-#include <core/IllegalArgumentException.h>
+#include <core/lang/AssertionError.h>
+#include <core/lang/Long.h>
+#include <core/lang/IllegalArgumentException.h>
 #include <core/function/Functional.h>
 
 #include <core/misc/Unsafe.h>

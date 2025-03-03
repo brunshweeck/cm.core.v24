@@ -4,9 +4,9 @@
 
 #include "URI.h"
 
-#include <core/AssertionError.h>
-#include <core/NumberFormatException.h>
-#include <core/XString.h>
+#include <core/lang/AssertionError.h>
+#include <core/lang/NumberFormatException.h>
+#include <core/lang/XString.h>
 #include <core/charset/CharacterCodingException.h>
 #include <core/charset/CharsetDecoder.h>
 #include <core/charset/CharsetEncoder.h>
@@ -889,7 +889,7 @@ namespace core {
                 }
 
                 if (i != segs.length())
-                    CORE_ASSERT_AT(false, core::net::URI); // ASSERT
+                    CORE_ASSERT(false); // ASSERT
             } catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
@@ -927,7 +927,7 @@ namespace core {
                             path[p++] = '/';
                         }
                     } else
-                        CORE_ASSERT_AT(false, core::net::URI);
+                        CORE_ASSERT(false);
                 }
 
                 return p;
@@ -1096,7 +1096,7 @@ namespace core {
                     else
                         sb.append((gchar) b);
                 }
-            } catch (CharacterCodingException const&) { CORE_ASSERT_AT(false, core::net::URI); }
+            } catch (CharacterCodingException const&) { CORE_ASSERT(false); }
             catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 
@@ -1161,7 +1161,7 @@ namespace core {
                         sb.append((gchar) b);
                 }
                 return sb.toString();
-            } catch (CharacterCodingException const&) { CORE_ASSERT_AT(false, core::net::URI); }
+            } catch (CharacterCodingException const&) { CORE_ASSERT(false); }
             catch (Throwable const& ex) { ex.throws($ftrace()); }
         }
 

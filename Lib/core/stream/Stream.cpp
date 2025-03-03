@@ -5,6 +5,5 @@
 #include <core/stream/Stream.h>
 
 namespace core {
-    namespace stream {
-    } // stream
+  namespace stream {} // stream
 } // core

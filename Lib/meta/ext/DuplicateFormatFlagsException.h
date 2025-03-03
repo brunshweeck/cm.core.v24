@@ -4,9 +4,8 @@
 
 #ifndef DUPLICATEFORMATFLAGSEXCEPTION_H
 #define DUPLICATEFORMATFLAGSEXCEPTION_H
-#include <core/Object.h>
 
-#include "core/util/IllegalFormatException.h"
+#include <core/util/IllegalFormatException.h>
 
 namespace core {
     using namespace util;

@@ -5,8 +5,8 @@
 #ifndef CORE24_NATIVECONSOLE_H
 #define CORE24_NATIVECONSOLE_H
 
-#include <core/Object.h>
-#include <core/Trace.h>
+#include <core/lang/Object.h>
+#include <core/lang/Trace.h>
 
 namespace core {
     class NativeConsole final : public Object {

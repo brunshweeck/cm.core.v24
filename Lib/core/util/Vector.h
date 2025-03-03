@@ -6,7 +6,7 @@
 #define CORE24_VECTOR_H
 
 #include <core/concurrent/ReentrantLock.h>
-#include <core/LongArray.h>
+#include <core/lang/LongArray.h>
 #include <core/util/Optional.h>
 #include <core/util/List.h>
 

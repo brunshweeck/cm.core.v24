@@ -4,7 +4,7 @@
 
 #include "Matcher.h"
 
-#include <core/IndexOutOfBoundsException.h>
+#include <core/lang/IndexOutOfBoundsException.h>
 #include <core/io/IOException.h>
 #include <core/util/List.h>
 #include <core/util/Map.h>

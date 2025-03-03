@@ -5,7 +5,7 @@
 #ifndef CORE24_ATOMICREFERENCE_H
 #define CORE24_ATOMICREFERENCE_H
 
-#include <core/Object.h>
+#include <core/lang/Object.h>
 
 namespace core {
     namespace atomic {

@@ -4,8 +4,8 @@
 
 #include "Pattern.h"
 
-#include <core/StringArray.h>
-#include <core/XString.h>
+#include <core/lang/StringArray.h>
+#include <core/lang/XString.h>
 #include <core/regex/Matcher.h>
 #include <core/util/ArrayList.h>
 #include <core/util/Map.h>

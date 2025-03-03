@@ -5,7 +5,7 @@
 #ifndef CORE24_ASCII_H
 #define CORE24_ASCII_H
 
-#include <core/String.h>
+#include <core/lang/String.h>
 
 namespace core {
     namespace util {

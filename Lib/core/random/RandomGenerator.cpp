@@ -4,9 +4,9 @@
 
 #include "RandomGenerator.h"
 
-#include <core/ByteArray.h>
-#include <core/Float.h>
-#include <core/IllegalArgumentException.h>
+#include <core/lang/ByteArray.h>
+#include <core/lang/Float.h>
+#include <core/lang/IllegalArgumentException.h>
 #include <core/random/Random.h>
 #include <core/util/Collections.h>
 #include <core/util/HashMap.h>

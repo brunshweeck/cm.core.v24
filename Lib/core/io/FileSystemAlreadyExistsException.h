@@ -5,7 +5,7 @@
 #ifndef CORE24_FILESYSTEMALREADYEXISTSEXCEPTION_H
 #define CORE24_FILESYSTEMALREADYEXISTSEXCEPTION_H
 
-#include "core/RuntimeException.h"
+#include <core/lang/RuntimeException.h>
 
 namespace core {
     namespace io {

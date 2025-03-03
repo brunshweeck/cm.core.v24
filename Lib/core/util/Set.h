@@ -5,7 +5,7 @@
 #ifndef CORE24_SET_H
 #define CORE24_SET_H
 
-#include <core/BooleanArray.h>
+#include <core/lang/BooleanArray.h>
 #include <core/util/Arrays.h>
 #include <core/util/Collection.h>
 

@@ -4,7 +4,7 @@
 
 #include "OptionalValue.h"
 
-#include <core/Throwable.h>
+#include <core/lang/Throwable.h>
 
 namespace core {
     namespace misc {

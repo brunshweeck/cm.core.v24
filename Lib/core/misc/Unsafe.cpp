@@ -4,15 +4,15 @@
 
 #include "Unsafe.h"
 
-#include <core/BooleanArray.h>
-#include <core/DoubleArray.h>
-#include <core/FloatArray.h>
-#include <core/IllegalArgumentException.h>
-#include <core/LongArray.h>
-#include <core/OutOfMemoryError.h>
-#include <core/ShortArray.h>
-#include <core/Thread.h>
-#include <core/time/LocalDateTime.h>
+#include <core/lang/BooleanArray.h>
+#include <core/lang/DoubleArray.h>
+#include <core/lang/FloatArray.h>
+#include <core/lang/IllegalArgumentException.h>
+#include <core/lang/LongArray.h>
+#include <core/lang/OutOfMemoryError.h>
+#include <core/lang/ShortArray.h>
+#include <core/lang/Thread.h>
+#include <core/time/Instant.h>
 #include <core/util/Arrays.h>
 #include <native/Cache.h>
 #include <native/Event.h>
@@ -1475,12 +1475,8 @@ namespace core {
         void Unsafe::park(gbool isAbsolute, glong time) {
             glong timeout = 0;
             if (isAbsolute) {
-                LocalDateTime ldt = LocalDateTime::now();
-                glong timestamp = ldt.toEpochSecond();
-                timestamp *= 1000;
-                timestamp += ldt.nano() / 1000000;
-                if (ldt.nano() % 1000000 > 499999)
-                    timestamp += 1;
+                Instant instant = Instant::now();
+                glong timestamp = instant.toEpochMilli();
                 timeout = time - timestamp;
             } else {
                 timeout = time;

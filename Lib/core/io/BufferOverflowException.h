@@ -5,7 +5,7 @@
 #ifndef CORE24_BUFFEROVERFLOWEXCEPTION_H
 #define CORE24_BUFFEROVERFLOWEXCEPTION_H
 
-#include <core/RuntimeException.h>
+#include <core/lang/RuntimeException.h>
 
 namespace core {
     namespace io {

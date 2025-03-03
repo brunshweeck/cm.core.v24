@@ -4,7 +4,7 @@
 
 #ifndef CORE24_HKSCS_MAP_H
 #define CORE24_HKSCS_MAP_H
-#include <core/Object.h>
+#include <core/lang/Object.h>
 
 namespace core {
     namespace charset {

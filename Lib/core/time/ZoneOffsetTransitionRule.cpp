@@ -4,188 +4,231 @@
 
 #include "ZoneOffsetTransitionRule.h"
 
+#include "Year.h"
 #include "ZoneOffsetTransition.h"
-#include "core/IllegalArgumentException.h"
-#include "core/XString.h"
-#include "core/misc/Unsafe.h"
+#include <core/lang/Enum.h>
+#include <core/lang/IllegalArgumentException.h>
+#include "meta/time/TemporalUtils.h"
 
 namespace core {
-    namespace time {
-        ZoneOffsetTransitionRule::ZoneOffsetTransitionRule(LocalDate::Month month,
-                                                           gint dayOfMonthIndicator,
-                                                           LocalDate::DayOfWeek dayOfWeek,
-                                                           LocalTime const& time,
-                                                           gbool timeEndOfDay,
-                                                           TimeDefinition timeDefinition,
+  namespace time {
+    CORE_ALIAS(Fields, TemporalUtils::Fields);
+
+    static CORE_FAST DayOfWeek INVALID_DAY_OF_WEEK = (DayOfWeek) 0;
+
+    ZoneOffsetTransitionRule::ZoneOffsetTransitionRule(Month month,
+                                                       gint dayOfMonthIndicator,
+                                                       DayOfWeek dayOfWeek,
+                                                       const LocalTime& time,
+                                                       gbool timeEndOfDay,
+                                                       TimeDefinition timeDefinition,
+                                                       const ZoneOffset& standardOffset,
+                                                       const ZoneOffset& offsetBefore,
+                                                       const ZoneOffset& offsetAfter)
+      : month_(month),
+        dom(dayOfMonthIndicator),
+        dow(dayOfWeek),
+        time(time),
+        timeEndOfDay(timeEndOfDay),
+        timeDefinition_(timeDefinition),
+        standardOffset_(standardOffset),
+        offsetBefore_(offsetBefore),
+        offsetAfter_(offsetAfter) {}
+
+    ZoneOffsetTransitionRule ZoneOffsetTransitionRule::of(Month month,
+                                                          gint dayOfMonthIndicator,
+                                                          DayOfWeek dayOfWeek,
+                                                          LocalTime const& time,
+                                                          gbool timeEndOfDay,
+                                                          TimeDefinition timeDefinition,
+                                                          ZoneOffset const& standardOffset,
+                                                          ZoneOffset const& offsetBefore,
+                                                          ZoneOffset const& offsetAfter) {
+      if (dayOfMonthIndicator < -28 || dayOfMonthIndicator > 31 || dayOfMonthIndicator == 0) {
+        IllegalArgumentException("Day of month indicator must be between -28 "
+          "and 31 inclusive excluding zero"_Sl).throws($ftrace());
+      }
+      if (timeEndOfDay && !time.equals(LocalTime::MIDNIGHT)) {
+        IllegalArgumentException("Time must be midnight when end of day flag is true"_Sl).throws($ftrace());
+      }
+      if (time.nano() != 0) {
+        IllegalArgumentException("Time's nano-of-second must be zero"_Sl).throws($ftrace());
+      }
+      return ZoneOffsetTransitionRule(month, dayOfMonthIndicator, dayOfWeek, time, timeEndOfDay, timeDefinition,
+                                      standardOffset, offsetBefore, offsetAfter);
+    }
+
+    Month ZoneOffsetTransitionRule::month() const {
+      return month_;
+    }
+
+    gint ZoneOffsetTransitionRule::dayOfMonthIndicator() const {
+      return dom;
+    }
+
+    DayOfWeek ZoneOffsetTransitionRule::dayOfWeek() const {
+      return dow;
+    }
+
+    LocalTime ZoneOffsetTransitionRule::localTime() const {
+      return time;
+    }
+
+    gbool ZoneOffsetTransitionRule::isMidnightEndOfDay() const {
+      return timeEndOfDay;
+    }
+
+    ZoneOffsetTransitionRule::TimeDefinition ZoneOffsetTransitionRule::timeDefinition() const {
+      return timeDefinition_;
+    }
+
+    ZoneOffset ZoneOffsetTransitionRule::standardOffset() const {
+      return standardOffset_;
+    }
+
+    ZoneOffset ZoneOffsetTransitionRule::offsetBefore() const {
+      return offsetBefore_;
+    }
+
+    ZoneOffset ZoneOffsetTransitionRule::offsetAfter() const {
+      return offsetAfter_;
+    }
+
+    ZoneOffsetTransition ZoneOffsetTransitionRule::createTransition(gint year) const {
+      LocalDate date = LocalDate::EPOCH;
+      if (dom < 0) {
+        date = LocalDate::of(year, month_, TemporalUtils::lengthOfMonth((gint) month_, Year::isLeap(year)) + 1 + dom);
+        if (dow != INVALID_DAY_OF_WEEK) {
+          date = date.with(TemporalAdjuster::previousOrSame(dow));
+        }
+      } else {
+        date = LocalDate::of(year, month_, dom);
+        if (dow != INVALID_DAY_OF_WEEK) {
+          date = date.with(TemporalAdjuster::nextOrSame(dow));
+        }
+      }
+      if (timeEndOfDay) {
+        date = date.plusDays(1);
+      }
+      LocalDateTime localDT = LocalDateTime::of(date, time);
+      LocalDateTime transition = createDateTime(timeDefinition_, localDT, standardOffset_, offsetBefore_);
+      return ZoneOffsetTransition(transition, offsetBefore_, offsetAfter_);
+    }
+
+    gbool ZoneOffsetTransitionRule::equals(Object const& otherRule) const {
+      if (this == &otherRule)
+        return true;
+      if (Class<ZoneOffsetTransitionRule>::hasInstance(otherRule)) {
+        ZoneOffsetTransitionRule const& other = CORE_XCAST(ZoneOffsetTransitionRule const, otherRule);
+        return month_ == other.month_ &&
+            dom == other.dom &&
+            dow == other.dow &&
+            timeDefinition_ == other.timeDefinition_ &&
+            timeEndOfDay == other.timeEndOfDay &&
+            time.equals(other.time) &&
+            standardOffset().equals(other.standardOffset()) &&
+            offsetBefore_.equals(other.offsetBefore_) &&
+            offsetAfter_.equals(other.offsetAfter_);
+      }
+      return false;
+    }
+
+    gint ZoneOffsetTransitionRule::hash() const {
+      gint hash = ((time.toSecondOfDay() + (timeEndOfDay ? 1 : 0)) << 15) +
+          ((gint) month_ << 11) + ((dom + 32) << 5) + ((gint) dow << 2) + (gint) timeDefinition_;
+      return hash ^ standardOffset_.hash() ^ offsetBefore_.hash() ^ offsetAfter_.hash();
+    }
+
+    String ZoneOffsetTransitionRule::toString() const {
+      XString buf;
+      buf.append("TransitionRule[")
+         .append(offsetBefore_.compareTo(offsetAfter_) > 0 ? "Gap " : "Overlap ")
+         .append(offsetBefore_).append(" to ").append(offsetAfter_).append(", ");
+      if (dow != INVALID_DAY_OF_WEEK) {
+        if (dom == -1) {
+          buf.append(dow).append(" on or before last day of ")
+          .append(month_);
+        } else if (dom < 0) {
+          buf.append(dow).append(" on or before last day minus ")
+          .append(-dom - 1).append(" of ").append(month_);
+        } else {
+          buf.append(dow).append(" on or after ")
+          .append(month_).append(' ').append(dom);
+        }
+      } else {
+        buf.append(month_).append(' ').append(dom);
+      }
+      buf.append(" at ").append(timeEndOfDay ? "24:00" : time.toString())
+         .append(" ").append(timeDefinition_)
+         .append(", standard offset ").append(standardOffset_)
+         .append(']');
+      return buf.toString();
+    }
+
+    Object& ZoneOffsetTransitionRule::clone() const {
+      return UNSAFE::newInstance<ZoneOffsetTransitionRule>(*this);
+    }
+
+    LocalDateTime ZoneOffsetTransitionRule::createDateTime(TimeDefinition timeDefinition, LocalDateTime const& dateTime,
                                                            ZoneOffset const& standardOffset,
-                                                           ZoneOffset const& offsetBefore,
-                                                           ZoneOffset const& offsetAfter)
-            : m(month),
-              dom(dayOfMonthIndicator),
-              dow(dayOfWeek),
-              time(time),
-              timeEndOfDay(timeEndOfDay),
-              timeDef(timeDefinition),
-              standard(standardOffset),
-              before(offsetBefore),
-              after(offsetAfter) {
-            if (dayOfMonthIndicator < -28 || dayOfMonthIndicator > 31 || dayOfMonthIndicator == 0) {
-                IllegalArgumentException("Day of month indicator must be between -28 "
-                    "and 31 inclusive excluding zero"_Sl).throws($ftrace());
-            }
-            if (timeEndOfDay && time.equals(LocalTime::MIDNIGHT) == false) {
-                IllegalArgumentException("Time must be midnight when end of day flag is true"_Sl).throws($ftrace());
-            }
-            if (time.nano() != 0) {
-                IllegalArgumentException("Time's nano-of-second must be zero"_Sl).throws($ftrace());
-            }
+                                                           ZoneOffset const& wallOffset) {
+      try {
+        switch (timeDefinition) {
+          case TimeDefinition::UTC: {
+            int difference = wallOffset.totalSeconds() - ZoneOffset::UTC.totalSeconds();
+            return dateTime.plusSeconds(difference);
+          }
+          case TimeDefinition::STANDARD: {
+            int difference = wallOffset.totalSeconds() - standardOffset.totalSeconds();
+            return dateTime.plusSeconds(difference);
+          }
+          default: // WALL
+            return dateTime;
         }
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+  } // time
 
-        LocalDate::Month ZoneOffsetTransitionRule::month() const { return m; }
 
-        gint ZoneOffsetTransitionRule::dayOfMonthIndicator() const { return dom; }
+  namespace time {
+    CORE_ALIAS(TimeDefinition, ZoneOffsetTransitionRule::TimeDefinition);
 
-        LocalDate::DayOfWeek ZoneOffsetTransitionRule::dayOfWeek() const { return dow; }
+#define LABEL(CLASS, NAME) setDefaultLabel(#NAME ## _Sl, CLASS::NAME)
+#define ENUM_CLASS(CLASS, ENUM) \
+    class CLASS ## _ ## ENUM ## Enum final: public Enum<ENUM> { \
+    public:\
+        CLASS ## _ ## ENUM ## Enum (String const &label, ENUM value): Enum/*<ENUM>*/(label, (gint)value) {}\
+        static gbool init();\
+    };\
+    static gint $_ ## CLASS ## _ ## ENUM ## Enum = CLASS ## _ ## ENUM ## Enum::init(); \
+    gbool CLASS ## _ ## ENUM ## Enum::init()
 
-        LocalTime ZoneOffsetTransitionRule::localTime() const { return time; }
 
-        gbool ZoneOffsetTransitionRule::isMidnightEndOfDay() const { return timeEndOfDay; }
+    ENUM_CLASS(Enum, TimeDefinition) {
+      Enum e = (TimeDefinition) 0;
+      static Object& table = labels(null);
 
-        ZoneOffsetTransitionRule::TimeDefinition ZoneOffsetTransitionRule::timeDefinition() const { return timeDef; }
+      LABEL(TimeDefinition , UTC);
+      LABEL(TimeDefinition , WALL);
+      LABEL(TimeDefinition , STANDARD);
 
-        ZoneOffset ZoneOffsetTransitionRule::standardOffset() const { return standard; }
+      labels(table);
+      return true;
+    }
 
-        ZoneOffset ZoneOffsetTransitionRule::offsetBefore() const { return before; }
 
-        ZoneOffset ZoneOffsetTransitionRule::offsetAfter() const { return after; }
+#undef LABEL
+#undef ENUM_CLASS
+  } // time
 
-        ZoneOffsetTransition ZoneOffsetTransitionRule::createTransition(gint year) const {
-            LocalDate date = LocalDate::EPOCH;
-            LocalDate::Month month = m;
-            if (dom < 0) {
-                date = LocalDate(year, month, LocalDate::lengthOfMonth(month, LocalDate::isLeapYear(year)) + 1 + dom);
-                LocalDate::DayOfWeek dayOfWeek = date.dayOfWeek();
-                if (dow == dayOfWeek) {
-                    // Same
-                } else {
-                    // Previous
-                    gint daysDiff = dow - dayOfWeek;
-                    date = date.minusDays(daysDiff < 0 ? 7 - daysDiff : -daysDiff);
-                }
-            } else {
-                date = LocalDate(year, month, dom);
-                LocalDate::DayOfWeek dayOfWeek = date.dayOfWeek();
-                if (dow == dayOfWeek) {
-                    // Same
-                } else {
-                    // Previous
-                    gint daysDiff = dayOfWeek - dow;
-                    date = date.plusDays(daysDiff < 0 ? 7 - daysDiff : -daysDiff);
-                }
-            }
-            if (timeEndOfDay) {
-                date = date.plusDays(1);
-            }
-            try {
-                LocalDateTime localDT = LocalDateTime(date, time);
-                LocalDateTime transition = createDateTime(timeDef, localDT, standard, before);
-                return ZoneOffsetTransition(transition, before, after);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
+  inline namespace literals {
+    using namespace time;
+    String operator+(String const& text, TimeDefinition timeDefinition) {
+      return text + (Enum<TimeDefinition>) timeDefinition;
+    }
 
-        gbool ZoneOffsetTransitionRule::equals(Object const& other) const {
-            if (this == &other)
-                return true;
-            if (Class<ZoneOffsetTransitionRule>::hasInstance(other)) {
-                ZoneOffsetTransitionRule const& otherRule = CORE_XCAST(ZoneOffsetTransitionRule const, other);
-                return m == otherRule.m &&
-                        dom == otherRule.dom &&
-                        dow == otherRule.dow &&
-                        timeDef == otherRule.timeDef &&
-                        timeEndOfDay == otherRule.timeEndOfDay &&
-                        time.equals(otherRule.time) &&
-                        standard.equals(otherRule.standard) &&
-                        before.equals(otherRule.before) &&
-                        after.equals(otherRule.after);
-            }
-            return false;
-        }
-
-        gint ZoneOffsetTransitionRule::hash() const {
-            gint hash = ((time.toSecondOfDay() + (timeEndOfDay ? 1 : 0)) << 15) +
-                    (m << 11) + ((dom + 32) << 5) + (dow << 2) + (gint) timeDef;
-            return hash ^ standard.hash() ^ before.hash() ^ after.hash();
-        }
-
-        static CORE_FAST const char* DAYS[] = {
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-            "Sunday"
-        };
-
-        static CORE_FAST const char* MONTHS[] = {
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December",
-        };
-
-        String ZoneOffsetTransitionRule::toString() const {
-            XString str;
-            str.append("TransitionRule[")
-               .append(before.compareTo(after) > 0 ? "Gap "_Sl : "Overlap "_Sl)
-               .append(before).append(" to ").append(after).append(", ");
-            if (dom == -1) {
-                str.append(DAYS[dow]).append(" on or before last day of ").append(MONTHS[m]);
-            } else if (dom < 0) {
-                str.append(DAYS[dow]).append(" on or before last day minus ").append(-dom - 1).append(" of ").append(MONTHS[m]);
-            } else {
-                str.append(DAYS[dow]).append(" on or after ").append(MONTHS[m]).append(' ').append(dom);
-            }
-            str.append(" at "_Sl)
-            .append(timeEndOfDay ? "24:00"_Sl : time.toString())
-            .append(timeDef == TimeDefinition::WALL
-            ? " WALL"_Sl : timeDef == TimeDefinition::UTC
-            ? " UTC"_Sl : " STANDARD"_Sl)
-            .append(", standard offset ").append(standard)
-            .append(']');
-            return str.toString();
-        }
-
-        Object& ZoneOffsetTransitionRule::clone() const {
-            try {
-                return UNSAFE::newInstance<ZoneOffsetTransitionRule>(*this);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        LocalDateTime ZoneOffsetTransitionRule::createDateTime(TimeDefinition timeDefinition,
-                                                               LocalDateTime const& dateTime,
-                                                               ZoneOffset const& standardOffset,
-                                                               ZoneOffset const& wallOffset) {
-            switch (timeDefinition) {
-                case TimeDefinition::UTC: {
-                    gint difference = wallOffset.totalSeconds() - ZoneOffset::UTC.totalSeconds();
-                    return dateTime.plusSeconds(difference);
-                }
-                case TimeDefinition::STANDARD: {
-                    int difference = wallOffset.totalSeconds() - standardOffset.totalSeconds();
-                    return dateTime.plusSeconds(difference);
-                }
-                default: // WALL
-                    return dateTime;
-            }
-        }
-    } // time
+    String operator+(TimeDefinition timeDefinition, String const& text) {
+      return (Enum<TimeDefinition>) timeDefinition + text;
+    }
+  }
 } // core

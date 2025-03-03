@@ -5,7 +5,7 @@
 #ifndef CORE24_MAP_H
 #define CORE24_MAP_H
 
-#include <core/OutOfMemoryError.h>
+#include <core/lang/OutOfMemoryError.h>
 #include <core/util/ConcurrentModificationException.h>
 #include <core/util/Entry.h>
 #include <core/util/MissingKeyException.h>

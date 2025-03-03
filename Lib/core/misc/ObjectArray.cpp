@@ -2,7 +2,7 @@
 // Created by brunshweeck on 4 sept. 2024.
 //
 
-#include <core/XString.h>
+#include <core/lang/XString.h>
 #include <core/misc/ObjectArray.h>
 #include <core/misc/Unsafe.h>
 

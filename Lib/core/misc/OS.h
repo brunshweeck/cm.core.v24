@@ -53,7 +53,7 @@ namespace core {
 
 
 #if defined(__APPLE__) && defined(__GNUC__) || defined(__xlC__) || defined(__xlc__)
-#include <TargetConditionals.h>
+#include <core/lang/TargetConditionals.h>
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC
 #define CORE_SYSTEM_DARWIN
@@ -195,8 +195,8 @@ namespace core {
 #endif
 
 #ifdef CORE_SYSTEM_DARWIN
-#include <Availability.h>
-#include <AvailabilityMacros.h>
+#include <core/lang/Availability.h>
+#include <core/lang/AvailabilityMacros.h>
 
 #ifdef CORE_SYSTEM_MACOS
 #if !defined(__MAC_OS_X_VERSION_MIN_REQUIRED) || __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_6

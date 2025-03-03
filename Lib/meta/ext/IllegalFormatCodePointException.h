@@ -5,7 +5,7 @@
 #ifndef ILLEGALFORMATCODEPOINTEXCEPTION_H
 #define ILLEGALFORMATCODEPOINTEXCEPTION_H
 
-#include "core/util/IllegalFormatException.h"
+#include <core/util/IllegalFormatException.h>
 
 namespace core {
     namespace ext {

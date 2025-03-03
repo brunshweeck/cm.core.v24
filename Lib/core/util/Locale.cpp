@@ -3,9 +3,9 @@
 //
 
 
-#include <core/Array.h>
-#include <core/StringArray.h>
-#include <core/XString.h>
+#include <core/lang/Array.h>
+#include <core/lang/StringArray.h>
+#include <core/lang/XString.h>
 #include <core/concurrent/ReentrantLock.h>
 #include <core/util/Locale.h>
 #include <core/util/StringJoiner.h>

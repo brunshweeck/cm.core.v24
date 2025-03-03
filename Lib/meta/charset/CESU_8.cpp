@@ -2,7 +2,7 @@
 // Created by brunshweeck on 6 sept. 2024.
 //
 
-#include <core/AssertionError.h>
+#include <core/lang/AssertionError.h>
 #include <core/io/Buffer.h>
 #include <core/io/ByteBuffer.h>
 #include <core/misc/Unsafe.h>

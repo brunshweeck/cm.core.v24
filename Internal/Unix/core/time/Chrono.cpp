@@ -2,7 +2,7 @@
 // Created by brunshweeck on 15 août 2024.
 //
 
-#include <core/ArithmeticException.h>
+#include <core/lang/ArithmeticException.h>
 #include <native/System.h>
 #include <core/time/Chrono.h>
 

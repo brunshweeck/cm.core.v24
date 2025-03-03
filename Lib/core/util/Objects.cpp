@@ -4,11 +4,11 @@
 
 #include "Objects.h"
 
-#include <core/AssertionError.h>
-#include <core/Boolean.h>
-#include <core/Float.h>
-#include <core/Long.h>
-#include <core/Short.h>
+#include <core/lang/AssertionError.h>
+#include <core/lang/Boolean.h>
+#include <core/lang/Float.h>
+#include <core/lang/Long.h>
+#include <core/lang/Short.h>
 #include <core/misc/Preconditions.h>
 
 namespace core {

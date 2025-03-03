@@ -1,7 +1,7 @@
 
 #include "LikelySubtag.h"
-#include <core/IntArray.h>
-#include <core/LongArray.h>
+#include <core/lang/IntArray.h>
+#include <core/lang/LongArray.h>
 
 
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

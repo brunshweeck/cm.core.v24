@@ -2,7 +2,7 @@
 // Created by brunshweeck on 12 sept. 2024.
 //
 
-#include <core/String.h>
+#include <core/lang/String.h>
 #include <meta/util/ASCII.h>
 
 namespace core {

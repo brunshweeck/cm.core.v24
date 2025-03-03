@@ -4,8 +4,8 @@
 
 #include "Buffer.h"
 
-#include <core/IllegalArgumentException.h>
-#include <core/IllegalStateException.h>
+#include <core/lang/IllegalArgumentException.h>
+#include <core/lang/IllegalStateException.h>
 #include <core/io/BufferOverflowException.h>
 #include <core/io/BufferUnderflowException.h>
 #include <core/io/ByteBuffer.h>

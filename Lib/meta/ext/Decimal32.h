@@ -4,8 +4,8 @@
 
 #ifndef DECIMAL32_H
 #define DECIMAL32_H
-#include "core/Float.h"
-#include "core/String.h"
+#include <core/lang/Float.h>
+#include <core/lang/String.h>
 
 namespace core {
     namespace ext {

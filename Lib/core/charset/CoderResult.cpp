@@ -2,7 +2,7 @@
 // Created by brunshweeck on 2 sept. 2024.
 //
 
-#include <core/IllegalArgumentException.h>
+#include <core/lang/IllegalArgumentException.h>
 #include <core/charset/CoderResult.h>
 #include <core/charset/MalformedInputException.h>
 #include <core/charset/UnmappableCharacterException.h>

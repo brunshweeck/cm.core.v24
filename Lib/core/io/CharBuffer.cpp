@@ -4,8 +4,8 @@
 
 #include "CharBuffer.h"
 
-#include <core/IllegalArgumentException.h>
-#include <core/UnsupportedOperationException.h>
+#include <core/lang/IllegalArgumentException.h>
+#include <core/lang/UnsupportedOperationException.h>
 #include <core/io/BufferOverflowException.h>
 #include <core/io/BufferUnderflowException.h>
 #include <core/io/ReadOnlyBufferException.h>

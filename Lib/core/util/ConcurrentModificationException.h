@@ -5,7 +5,7 @@
 #ifndef CORE24_CONCURRENTMODIFICATIONEXCEPTION_H
 #define CORE24_CONCURRENTMODIFICATIONEXCEPTION_H
 
-#include <core/RuntimeException.h>
+#include <core/lang/RuntimeException.h>
 
 namespace core {
     namespace util {

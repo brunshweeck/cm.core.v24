@@ -5,8 +5,8 @@
 #ifndef CORE24_SURROGATE_H
 #define CORE24_SURROGATE_H
 
-#include <core/AssertionError.h>
-#include <core/Character.h>
+#include <core/lang/AssertionError.h>
+#include <core/lang/Character.h>
 #include <core/charset/Charset.h>
 #include <core/charset/CoderResult.h>
 #include <core/io/CharBuffer.h>

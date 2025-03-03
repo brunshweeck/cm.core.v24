@@ -2,8 +2,8 @@
 // Created by bruns on 22/03/2024.
 //
 
-#include <Windows.h>
-#include <core/IllegalArgumentException.h>
+#include <core/lang/Windows.h>
+#include <core/lang/IllegalArgumentException.h>
 #include <core/misc/Cache.h>
 #include <core/misc/MemoryHeap.h>
 

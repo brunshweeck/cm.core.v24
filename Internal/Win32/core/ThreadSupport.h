@@ -5,7 +5,7 @@
 #ifndef CORE24_THREADSUPPORT_H
 #define CORE24_THREADSUPPORT_H
 
-#include <core/Thread.h>
+#include <core/lang/Thread.h>
 
 namespace core {
     /**

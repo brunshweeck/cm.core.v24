@@ -5,7 +5,7 @@
 #ifndef CORE24_IOEXCEPTION_H
 #define CORE24_IOEXCEPTION_H
 
-#include <core/Exception.h>
+#include <core/lang/Exception.h>
 
 namespace core {
     namespace io {

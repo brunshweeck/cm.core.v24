@@ -5,6 +5,5 @@
 #include "ReentrantReadWriteLock.h"
 
 namespace core {
-    namespace concurrent {
-    } // concurrent
+  namespace concurrent {} // concurrent
 } // core

@@ -5,7 +5,7 @@
 #ifndef CORE24_ATOMICLONG_H
 #define CORE24_ATOMICLONG_H
 
-#include <core/Long.h>
+#include <core/lang/Long.h>
 #include <core/misc/Unsafe.h>
 
 namespace core {

@@ -2,9 +2,9 @@
 // Created by brunshweeck on 20/11/24.
 //
 
-#include <core/ArithmeticException.h>
-#include <core/OutOfMemoryError.h>
-#include <core/StringArray.h>
+#include <core/lang/ArithmeticException.h>
+#include <core/lang/OutOfMemoryError.h>
+#include <core/lang/StringArray.h>
 #include <core/regex/Matcher.h>
 #include <core/text/Normalizer.h>
 #include <core/util/ArrayList.h>
@@ -73,7 +73,7 @@ namespace core {
                 dst.append(src, off0, off);
             while (off < limit) {
                 gint ch0 = src.codePointAt(off);
-                if (".$|()[]{}^?*+\\"_Sl.indexOf(ch0) != -1) {
+                if (R"(.$|()[]{}^?*+\)"_Sl.indexOf(ch0) != -1) {
                     dst.append((gchar)ch0);
                     off++;
                     continue;

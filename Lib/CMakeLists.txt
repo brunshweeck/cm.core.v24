@@ -10,71 +10,124 @@
 ]]
 
 PROJECT(CORE
-        VERSION 2025.05.06
-        LANGUAGES C CXX ASM
+    VERSION 2025.05.06
+    LANGUAGES C CXX ASM
 )
 
-INCLUDE("${PROJECT_SOURCE_DIR}/../Config.cmake")
+INCLUDE("../Config.cmake")
 
+MESSAGE(NOTICE ${CMAKE_CURRENT_SOURCE_DIR})
 
 FILE(GLOB LibHeaders
-        "${PROJECT_SOURCE_DIR}/core/*.h"
-        "${PROJECT_SOURCE_DIR}/core/**/*.h"
+    "core/atomic/*.h"
+    "core/charset/*.h"
+    "core/concurrent/*.h"
+    "core/function/*.h"
+    "core/io/*.h"
+    "core/lang/*.h"
+    "core/misc/*.h"
+    "core/net/*.h"
+    "core/random/*.h"
+    "core/regex/*.h"
+    "core/stream/*.h"
+    "core/text/*.h"
+    "core/time/*.h"
+    "core/time/spi/*.h"
+    "core/util/*.h"
 )
 
 FILE(GLOB LibSources
-        "${PROJECT_SOURCE_DIR}/core/*.cpp"
-        "${PROJECT_SOURCE_DIR}/core/**/*.cpp"
+    "core/atomic/*.cpp"
+    "core/charset/*.cpp"
+    "core/concurrent/*.cpp"
+    "core/function/*.cpp"
+    "core/io/*.cpp"
+    "core/lang/*.cpp"
+    "core/misc/*.cpp"
+    "core/net/*.cpp"
+    "core/random/*.cpp"
+    "core/regex/*.cpp"
+    "core/stream/*.cpp"
+    "core/text/*.cpp"
+    "core/time/*.cpp"
+    "core/time/spi/*.cpp"
+    "core/util/*.cpp"
 )
 
 FILE(GLOB MetaSources
-        "${PROJECT_SOURCE_DIR}/meta/*.cpp"
-        "${PROJECT_SOURCE_DIR}/meta/*.h"
-        "${PROJECT_SOURCE_DIR}/meta/*/*.cpp"
-        "${PROJECT_SOURCE_DIR}/meta/*/*.h"
-        "${PROJECT_SOURCE_DIR}/meta/*/*/*.cpp"
-        "${PROJECT_SOURCE_DIR}/meta/*/*/*.h"
-        "${PROJECT_SOURCE_DIR}/meta/*/*/*/*.cpp"
-        "${PROJECT_SOURCE_DIR}/meta/*/*/*/*.h"
-        "${PROJECT_SOURCE_DIR}/meta/*/*/*/*/*.cpp"
-        "${PROJECT_SOURCE_DIR}/meta/*/*/*/*/*.h"
+    "meta/atomic/*.cpp"
+    "meta/atomic/*.h"
+    "meta/charset/*.cpp"
+    "meta/charset/*.h"
+    "meta/concurrent/*.cpp"
+    "meta/concurrent/*.h"
+    "meta/function/*.cpp"
+    "meta/function/*.h"
+    "meta/io/*.cpp"
+    "meta/io/*.h"
+    "meta/lang/*.cpp"
+    "meta/lang/*.h"
+    "meta/misc/*.cpp"
+    "meta/misc/*.h"
+    "meta/net/*.cpp"
+    "meta/net/*.h"
+    "meta/random/*.cpp"
+    "meta/random/*.h"
+    "meta/regex/*.cpp"
+    "meta/regex/*.h"
+    "meta/stream/*.cpp"
+    "meta/stream/*.h"
+    "meta/text/*.cpp"
+    "meta/text/*.h"
+    "meta/time/*.cpp"
+    "meta/time/*.h"
+    "meta/time/spi/*.cpp"
+    "meta/time/spi/*.h"
+    "meta/util/*.cpp"
+    "meta/util/*.h"
+    "meta/util/cldr/*.cpp"
+    "meta/util/cldr/*.h"
+    "meta/util/cldr/locales/*.cpp"
+    "meta/util/cldr/locales/*.h"
+    "meta/ext/*.cpp"
+    "meta/ext/*.h"
 )
 
 FILE(GLOB NativeSources
-        "${PROJECT_SOURCE_DIR}/native/*.cpp"
-        "${PROJECT_SOURCE_DIR}/native/*.h"
-        "${PROJECT_SOURCE_DIR}/native/*/*.cpp"
-        "${PROJECT_SOURCE_DIR}/native/*/*.h"
-        "${PROJECT_SOURCE_DIR}/native/*/*/*.cpp"
-        "${PROJECT_SOURCE_DIR}/native/*/*/*.h"
-        "${PROJECT_SOURCE_DIR}/native/*/*/*/*.cpp"
-        "${PROJECT_SOURCE_DIR}/native/*/*/*/*.h"
-        "${PROJECT_SOURCE_DIR}/native/*/*/*/*/*.cpp"
-        "${PROJECT_SOURCE_DIR}/native/*/*/*/*/*.h"
-        #[[ old dirs ]]
-        "${PROJECT_SOURCE_DIR}/../Internal/${SYSTEM_DIR}/*.cpp"
-        "${PROJECT_SOURCE_DIR}/../Internal/${SYSTEM_DIR}/*.h"
-        "${PROJECT_SOURCE_DIR}/../Internal/${SYSTEM_DIR}/*/*.cpp"
-        "${PROJECT_SOURCE_DIR}/../Internal/${SYSTEM_DIR}/*/*.h"
-        "${PROJECT_SOURCE_DIR}/../Internal/${SYSTEM_DIR}/*/*/*.cpp"
-        "${PROJECT_SOURCE_DIR}/../Internal/${SYSTEM_DIR}/*/*/*.h"
-        "${PROJECT_SOURCE_DIR}/../Internal/${SYSTEM_DIR}/*/*/*/*.cpp"
-        "${PROJECT_SOURCE_DIR}/../Internal/${SYSTEM_DIR}/*/*/*/*.h"
-        "${PROJECT_SOURCE_DIR}/../Internal/${SYSTEM_DIR}/*/*/*/*/*.cpp"
-        "${PROJECT_SOURCE_DIR}/../Internal/${SYSTEM_DIR}/*/*/*/*/*.h"
+    "native/*.cpp"
+    "native/*.h"
+    "native/*/*.cpp"
+    "native/*/*.h"
+    "native/*/*/*.cpp"
+    "native/*/*/*.h"
+    "native/*/*/*/*.cpp"
+    "native/*/*/*/*.h"
+    "native/*/*/*/*/*.cpp"
+    "native/*/*/*/*/*.h"
+    #[[ old dirs ]]
+    "../Internal/${SYSTEM_DIR}/*.cpp"
+    "../Internal/${SYSTEM_DIR}/*.h"
+    "../Internal/${SYSTEM_DIR}/*/*.cpp"
+    "../Internal/${SYSTEM_DIR}/*/*.h"
+    "../Internal/${SYSTEM_DIR}/*/*/*.cpp"
+    "../Internal/${SYSTEM_DIR}/*/*/*.h"
+    "../Internal/${SYSTEM_DIR}/*/*/*/*.cpp"
+    "../Internal/${SYSTEM_DIR}/*/*/*/*.h"
+    "../Internal/${SYSTEM_DIR}/*/*/*/*/*.cpp"
+    "../Internal/${SYSTEM_DIR}/*/*/*/*/*.h"
 )
 
 FILE(GLOB CORE_SOURCES ${LibHeaders} ${LibSources} ${MetaSources} ${NativeSources})
 
 CREATE_SHARED_LIBRARY(
-        core
-        ${CXX_DEFAULT}
-        ${CORE_SOURCES}
+    core
+    ${CXX_DEFAULT}
+    ${CORE_SOURCES}
 )
 
-INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}")
+INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}")
 
 INSTALL_PROJECT_(
-        ${PROJECT_NAME}
-        ${PROJECT_SOURCE_DIR}
-        core)
+    ${PROJECT_NAME}
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    core)

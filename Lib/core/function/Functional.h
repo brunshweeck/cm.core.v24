@@ -5,7 +5,7 @@
 #ifndef CORE24_FUNCTIONAL_H
 #define CORE24_FUNCTIONAL_H
 
-#include <core/Class.h>
+#include <core/lang/Class.h>
 
 namespace core {
     namespace function {

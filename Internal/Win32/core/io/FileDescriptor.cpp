@@ -2,8 +2,8 @@
 // Created by bruns on 12/10/2024.
 //
 
-#include <Windows.h>
-#include <io.h>
+#include <core/lang/Windows.h>
+#include <core/lang/io.h>
 #include <core/io/FileDescriptor.h>
 
 namespace core {

@@ -2,7 +2,7 @@
 // Created by brunshweeck on 8 sept. 2024.
 //
 
-#include <core/StringArray.h>
+#include <core/lang/StringArray.h>
 #include <meta/charset/HKSCS_Map.h>
 #include <meta/charset/MS950_HKSCS.h>
 

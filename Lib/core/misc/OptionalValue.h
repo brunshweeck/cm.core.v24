@@ -5,7 +5,7 @@
 #ifndef CORE24_OPTIONALVALUE_H
 #define CORE24_OPTIONALVALUE_H
 
-#include <core/Class.h>
+#include <core/lang/Class.h>
 
 namespace core {
     namespace misc {

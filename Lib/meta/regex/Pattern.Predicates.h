@@ -5,7 +5,7 @@
 #ifndef CORE24_CHARPREDICATES_H
 #define CORE24_CHARPREDICATES_H
 
-#include <core/BooleanArray.h>
+#include <core/lang/BooleanArray.h>
 #include <core/function/IntPredicate.h>
 #include <core/regex/Pattern.h>
 #include <core/util/Optional.h>

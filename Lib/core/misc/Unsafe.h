@@ -5,17 +5,17 @@
 #ifndef CORE24_UNSAFE_H
 #define CORE24_UNSAFE_H
 
-#include <core/AssertionError.h>
-#include <core/CloneNotSupportedException.h>
+#include <core/lang/AssertionError.h>
+#include <core/lang/CloneNotSupportedException.h>
 #include <core/misc/Nil.h>
 #include <core/misc/ObjectArray.h>
 #include <core/misc/PrimitiveArray.h>
 
-#include <core/Boolean.h>
-#include <core/Double.h>
-#include <core/Float.h>
-#include <core/Long.h>
-#include <core/Short.h>
+#include <core/lang/Boolean.h>
+#include <core/lang/Double.h>
+#include <core/lang/Float.h>
+#include <core/lang/Long.h>
+#include <core/lang/Short.h>
 
 namespace core {
     namespace misc {

@@ -5,7 +5,7 @@
 #ifndef CORE24_PATTERN_NODE_H
 #define CORE24_PATTERN_NODE_H
 
-#include <core/Array.h>
+#include <core/lang/Array.h>
 #include <meta/regex/Pattern.Predicates.h>
 
 namespace core {

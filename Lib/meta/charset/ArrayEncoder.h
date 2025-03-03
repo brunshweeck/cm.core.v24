@@ -5,8 +5,8 @@
 #ifndef CORE24_ARRAYENCODER_H
 #define CORE24_ARRAYENCODER_H
 
-#include <core/ByteArray.h>
-#include <core/CharArray.h>
+#include <core/lang/ByteArray.h>
+#include <core/lang/CharArray.h>
 
 namespace core {
     namespace charset {

@@ -4,8 +4,8 @@
 
 #include "Preconditions.h"
 
-#include <core/IndexOutOfBoundsException.h>
-#include <core/UnsupportedOperationException.h>
+#include <core/lang/IndexOutOfBoundsException.h>
+#include <core/lang/UnsupportedOperationException.h>
 
 namespace core {
     namespace misc {

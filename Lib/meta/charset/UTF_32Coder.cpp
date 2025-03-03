@@ -2,7 +2,7 @@
 // Created by brunshweeck on 9 sept. 2024.
 //
 
-#include <core/Throwable.h>
+#include <core/lang/Throwable.h>
 #include <core/io/ByteBuffer.h>
 #include <meta/charset/UTF_32Coder.h>
 

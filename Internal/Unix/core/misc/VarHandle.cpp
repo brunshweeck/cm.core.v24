@@ -10,7 +10,7 @@
 
 #include "VarHandle.h"
 
-#include <core/IllegalArgumentException.h>
+#include <core/lang/IllegalArgumentException.h>
 
 
 namespace core {

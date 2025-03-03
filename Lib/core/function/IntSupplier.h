@@ -5,8 +5,8 @@
 #ifndef CORE24_INTSUPPLIER_H
 #define CORE24_INTSUPPLIER_H
 
-#include <core/IllegalArgumentException.h>
-#include <core/IllegalStateException.h>
+#include <core/lang/IllegalArgumentException.h>
+#include <core/lang/IllegalStateException.h>
 #include <core/function/Functional.h>
 #include <core/misc/Unsafe.h>
 

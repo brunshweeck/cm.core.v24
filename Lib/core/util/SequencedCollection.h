@@ -7,7 +7,7 @@
 
 #include "Collection.h"
 
-#include <core/UnsupportedOperationException.h>
+#include <core/lang/UnsupportedOperationException.h>
 
 namespace core {
     namespace util {

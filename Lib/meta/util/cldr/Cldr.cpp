@@ -1,11 +1,11 @@
 
 #include "Cldr.h"
 
-#include <core/LongArray.h>
-#include <core/LongArray2D.h>
-#include <core/IntArray.h>
-#include <core/IntArray2D.h>
-#include <core/StringArray.h>
+#include <core/lang/LongArray.h>
+#include <core/lang/LongArray2D.h>
+#include <core/lang/IntArray.h>
+#include <core/lang/IntArray2D.h>
+#include <core/lang/StringArray.h>
 #include <core/util/Arrays.h>
 #include <meta/util/cldr/locales/All.h>
 

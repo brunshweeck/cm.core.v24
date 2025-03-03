@@ -5,7 +5,7 @@
 #ifndef CORE24_STRINGJOINER_H
 #define CORE24_STRINGJOINER_H
 
-#include <core/StringArray.h>
+#include <core/lang/StringArray.h>
 
 namespace core {
     namespace util {

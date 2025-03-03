@@ -4,17 +4,17 @@
 
 #include "Arrays.h"
 
-#include <core/BooleanArray.h>
-#include <core/DoubleArray.h>
-#include <core/FloatArray.h>
-#include <core/LongArray.h>
-#include <core/OutOfMemoryError.h>
-#include <core/ShortArray.h>
-#include <core/StringArray.h>
+#include <core/lang/BooleanArray.h>
+#include <core/lang/DoubleArray.h>
+#include <core/lang/FloatArray.h>
+#include <core/lang/LongArray.h>
+#include <core/lang/OutOfMemoryError.h>
+#include <core/lang/ShortArray.h>
+#include <core/lang/StringArray.h>
 #include <core/function/DoubleUnaryOperator.h>
 #include <core/function/IntUnaryOperator.h>
 #include <core/function/LongUnaryOperator.h>
-#include <meta/DualPivotQuickSort.h>
+#include "meta/lang/DualPivotQuickSort.h"
 
 namespace core {
     using namespace misc;

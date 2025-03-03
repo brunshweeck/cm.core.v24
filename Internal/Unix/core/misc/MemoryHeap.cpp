@@ -7,7 +7,7 @@
 #include "MemoryHeap.h"
 
 #include <native/System.h>
-#include <core/IllegalArgumentException.h>
+#include <core/lang/IllegalArgumentException.h>
 
 namespace core {
     CORE_ALIAS(BYTES, Class<gbyte>::Pointer);

@@ -5,7 +5,7 @@
 #ifndef CORE24_PATTERNSYNTAXEXCEPTION_H
 #define CORE24_PATTERNSYNTAXEXCEPTION_H
 
-#include <core/IllegalArgumentException.h>
+#include <core/lang/IllegalArgumentException.h>
 
 namespace core {
     namespace regex {

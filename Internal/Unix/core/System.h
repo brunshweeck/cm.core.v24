@@ -62,6 +62,8 @@ namespace core {
 
     extern TICK_COUNT GetTickCount();
 
+    extern TICK_COUNT GetTimeStamp();
+
     extern LONG Seed();
 
     extern LPVOID GetFileHandle(INT lpFileDescriptor);

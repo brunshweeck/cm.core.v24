@@ -7,7 +7,7 @@
 
 #include <core/io/Buffer.h>
 #include <core/charset/Charset.h>
-#include <core/IntArray.h>
+#include <core/lang/IntArray.h>
 
 namespace core {
     namespace io {

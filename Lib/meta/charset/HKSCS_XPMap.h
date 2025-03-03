@@ -4,7 +4,7 @@
 
 #ifndef CORE24_HKSCS_XPMAP_H
 #define CORE24_HKSCS_XPMAP_H
-#include <core/StringArray.h>
+#include <core/lang/StringArray.h>
 
 namespace core {
     namespace charset {

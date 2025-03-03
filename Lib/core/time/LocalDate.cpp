@@ -4,594 +4,711 @@
 
 #include "LocalDate.h"
 
-#include <core/Enum.h>
-#include <core/XString.h>
-#include <core/misc/Unsafe.h>
+#include <core/lang/Enum.h>
+#include <core/time/DateTimeException.h>
+#include <core/time/Instant.h>
+#include <core/time/Month.h>
 #include <core/time/LocalDateTime.h>
+#include <core/time/Period.h>
+#include <core/time/TemporalAmount.h>
+#include <core/time/TemporalException.h>
 #include <core/time/TemporalQuery.h>
-#include <core/time/ZoneId.h>
+#include <core/time/ValueRange.h>
+#include <core/time/ZonedDateTime.h>
+#include <core/time/ZoneOffset.h>
 #include <core/time/ZoneOffsetTransition.h>
 #include <core/time/ZoneRules.h>
 #include <core/util/Optional.h>
-
-static gint FIRST_DAY_OF_MONTH_IN_YEAR[] = {0, 1, 32, 60, 91, 121, 152, 182, 213, 244, 305, 355};
-
-static gint FIRST_DAY_OF_MONTH_IN_LEAP_YEAR[] = {0, 1, 32, 61, 92, 122, 153, 183, 214, 245, 306, 356};
-
-static gint MONTH_LENGTH_IN_LEAP_YEAR[] = {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
-static gint MONTH_LENGTH_IN_YEAR[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+#include <meta/time/TemporalUtils.h>
 
 namespace core {
-    using namespace util;
+  using namespace util;
 
-    namespace time {
-        LocalDate const LocalDate::MIN = LocalDate(MIN_YEAR, JANUARY, 01);
-        LocalDate const LocalDate::MAX = LocalDate(MAX_YEAR, DECEMBER, 31);
-        LocalDate const LocalDate::EPOCH = LocalDate(1970, JANUARY, 01);
+  namespace time {
+    CORE_ALIAS(Fields, TemporalUtils::Fields);
+    CORE_ALIAS(Units, TemporalUtils::Units);
 
-        LocalDate::LocalDate(gint year, Month month, gint dayOfMonth) {
-            try {
-                ymd = dateToCompactInt(
-                    checkValue(year, YEAR),
-                    checkValue(month, DAY_OF_MONTH),
-                    checkValue(dayOfMonth, DAY_OF_MONTH)
-                );
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    LocalDate const LocalDate::MIN = LocalDate::of(-999999999, Month::JANUARY, 01);
+
+    LocalDate const LocalDate::MAX = LocalDate::of(+999999999, Month::DECEMBER, 31);
+
+    LocalDate const LocalDate::EPOCH = LocalDate::of(1970, Month::JANUARY, 31);
+
+
+    LocalDate::LocalDate(gint year, gint month, gint dayOfMonth): year_(year), month_(month), day_(dayOfMonth) {}
+
+    LocalDate LocalDate::now() {
+      return now(ZoneId::systemZone());
+    }
+
+    LocalDate LocalDate::now(ZoneId const& zone) {
+      return LocalDateTime::now(zone).toLocalDate();
+    }
+
+    LocalDate LocalDate::of(gint year, Month month, gint dayOfMonth) {
+      try {
+        Fields::checkValue(year, TemporalField::YEAR);
+        Fields::checkValue(dayOfMonth, TemporalField::DAY_OF_MONTH);
+        return create(year, (gint) month, dayOfMonth);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    LocalDate LocalDate::of(gint year, gint month, gint dayOfMonth) {
+      try {
+        Fields::checkValue(year, TemporalField::YEAR);
+        Fields::checkValue(month, TemporalField::MONTH_OF_YEAR);
+        Fields::checkValue(dayOfMonth, TemporalField::DAY_OF_MONTH);
+        return create(year, month, dayOfMonth);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    LocalDate LocalDate::ofYearDay(gint year, gint dayOfYear) {
+      try {
+        Fields::checkValue(year, TemporalField::YEAR);
+        Fields::checkValue(dayOfYear, TemporalField::DAY_OF_YEAR);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+      gbool leap = TemporalUtils::isLeapYear(year);
+      if (dayOfYear == 366 && !leap) {
+        DateTimeException("Invalid date 'DayOfYear 366' as '"_Sl + year + "' is not a leap year"_Sl)
+            .throws($ftrace());
+      }
+      gint moy = (dayOfYear - 1) / 31 + 1;
+      int monthEnd = TemporalUtils::firstDayOfMonthInYear(moy, leap)
+          + TemporalUtils::lengthOfMonth(moy, leap) - 1;
+      if (dayOfYear > monthEnd) {
+        moy = moy == 12 ? 1 : moy + 1;
+      }
+      int dom = dayOfYear - TemporalUtils::firstDayOfMonthInYear(moy, leap) + 1;
+      return LocalDate(year, moy, dom);
+    }
+
+    LocalDate LocalDate::ofInstant(Instant const& instant, ZoneId const& zone) {
+      try {
+        ZoneRules rules = zone.getRules();
+        ZoneOffset offset = rules.offset(instant);
+        glong localSecond = instant.epochSecond() + offset.totalSeconds();
+        glong localEpochDay = Math::floorDiv(localSecond, SECONDS_PER_DAY);
+        return ofEpochDay(localEpochDay);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    LocalDate LocalDate::ofEpochDay(glong epochDay) {
+      try {
+        Fields::checkValue(epochDay, TemporalField::EPOCH_DAY);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+      glong zeroDay = epochDay + DAYS_0000_TO_1970;
+      // find the march-based year
+      zeroDay -= 60; // adjust to 0000-03-01 so leap day is at end of four-year cycle
+      glong adjust = 0;
+      if (zeroDay < 0) {
+        // adjust negative years to positive for calculation
+        glong adjustCycles = (zeroDay + 1) / DAYS_PER_CYCLE - 1;
+        adjust = adjustCycles * 400;
+        zeroDay += -adjustCycles * DAYS_PER_CYCLE;
+      }
+      glong yearEst = (400 * zeroDay + 591) / DAYS_PER_CYCLE;
+      glong doyEst = zeroDay - (365 * yearEst + yearEst / 4 - yearEst / 100 + yearEst / 400);
+      if (doyEst < 0) {
+        // fix estimate
+        yearEst--;
+        doyEst = zeroDay - (365 * yearEst + yearEst / 4 - yearEst / 100 + yearEst / 400);
+      }
+      yearEst += adjust; // reset any negative year
+      gint marchDoy0 = (gint) doyEst;
+
+      // convert march-based values back to january-based
+      gint marchMonth0 = (marchDoy0 * 5 + 2) / 153;
+      gint month = marchMonth0 + 3;
+      if (month > 12) {
+        month -= 12;
+      }
+      gint dom = marchDoy0 - (marchMonth0 * 306 + 5) / 10 + 1;
+      if (marchDoy0 >= 306) {
+        yearEst++;
+      }
+
+      return LocalDate((gint) yearEst, month, dom);
+    }
+
+    LocalDate LocalDate::from(TemporalAccessor const& temporal) {
+      OptionalDate date = temporal.query(TemporalQuery::localDate()).tryCast<LocalDate>();
+      if (date.isEmpty()) {
+        DateTimeException("Unable to obtain LocalDate from TemporalAccessor: "_Sl +
+                  temporal + " of type " + typeName(temporal)).throws($ftrace());
+      }
+      return date.get();
+    }
+
+    LocalDate LocalDate::parse(CharSequence const& text) {
+      // TODO: Implement this method!
+      CORE_ASSERT2(false, "Unimplemented method.");
+    }
+
+    LocalDate LocalDate::parse(CharSequence const& text, DateTimeFormatter const& formatter) {
+      // TODO: Implement this method!
+      CORE_ASSERT2(false, "Unimplemented method.");
+    }
+
+    gbool LocalDate::isSupported(TemporalField field) const {
+      try {
+        return Fields::isDateBased(field);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    gbool LocalDate::isSupported(TemporalUnit unit) const {
+      try {
+        return Units::isDateBased(unit);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    ValueRange LocalDate::range(TemporalField field) const {
+      if (Fields::isDateBased(field)) {
+        switch (field) {
+          case TemporalField::DAY_OF_MONTH:
+            return ValueRange::of(1, lengthOfMonth());
+          case TemporalField::DAY_OF_YEAR:
+            return ValueRange::of(1, lengthOfYear());
+          case TemporalField::ALIGNED_WEEK_OF_MONTH:
+            return ValueRange::of(1, month() == Month::FEBRUARY && isLeapYear() ? 4 : 5);
+          case TemporalField::YEAR_OF_ERA:
+            return year() <= 0
+                     ? ValueRange::of(1, TemporalUtils::MAX_YEAR + 1)
+                     : ValueRange::of(1, TemporalUtils::MAX_YEAR);
+          default: return Fields::range(field);
         }
+      }
+      TemporalException("Unsupported field: "_Sl + field).throws($ftrace());
+    }
 
-        LocalDate::LocalDate(gint year, gint month, gint dayOfMonth) {
-            try {
-                ymd = dateToCompactInt(
-                    checkValue(year, YEAR),
-                    checkValue(month, DAY_OF_MONTH),
-                    checkValue(dayOfMonth, DAY_OF_MONTH)
-                );
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
+    gint LocalDate::get(TemporalField field) const {
+      glong result = 0;
+      try {
+        result = getLong(field);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+      if (result > Integer::MAX_VALUE || result < Integer::MIN_VALUE) {
+        TemporalException("Value of field '"_Sl + field + "' out of range."_Sl).throws($ftrace());
+      }
+      return (gint) result;
+    }
 
-        LocalDate::LocalDate(gint year, gint dayOfYear) {
-            try { checkValue(year, YEAR); } catch (Throwable const& ex) { ex.throws($ftrace()); }
-            try { checkValue(dayOfYear, DAY_OF_YEAR); } catch (Throwable const& ex) { ex.throws($ftrace()); }
-            gbool isLeap = isLeapYear(year);
-            if (dayOfYear == 366 && !isLeap) {
-                DateTimeException("Invalid date 'DayOfYear 366' as '"_Sl +
-                    year + "' is not a leap year").throws($ftrace());
+    glong LocalDate::getLong(TemporalField field) const {
+      switch (field) {
+        case TemporalField::DAY_OF_WEEK: return (gint) dayOfWeek();
+        case TemporalField::ALIGNED_DAY_OF_WEEK_IN_MONTH: return ((day_ - 1) % 7) + 1;
+        case TemporalField::ALIGNED_DAY_OF_WEEK_IN_YEAR: return ((dayOfYear() - 1) % 7) + 1;
+        case TemporalField::DAY_OF_MONTH: return day_;
+        case TemporalField::DAY_OF_YEAR: return dayOfYear();
+        case TemporalField::EPOCH_DAY: return toEpochDay();
+        case TemporalField::ALIGNED_WEEK_OF_MONTH: return ((day_ - 1) / 7) + 1;
+        case TemporalField::ALIGNED_WEEK_OF_YEAR: return ((dayOfYear() - 1) / 7) + 1;
+        case TemporalField::MONTH_OF_YEAR: return month_;
+        case TemporalField::PROLEPTIC_MONTH: return prolepticMonth();
+        case TemporalField::YEAR_OF_ERA: return year_ >= 1 ? year_ : 1 - year_;
+        case TemporalField::YEAR: return year_;
+        case TemporalField::ERA: return year_ >= 1 ? 1 : 0;
+        case TemporalField::DAY_OF_QUARTER: return Fields::getDayOfQuarterFrom(*this);
+        case TemporalField::QUARTER_OF_YEAR: return Fields::getQuarterOfYearFrom(*this);
+        case TemporalField::WEEK_OF_WEEK_BASED_YEAR: return Fields::getWeekOfWeekBasedYearFrom(*this);
+        case TemporalField::WEEK_BASED_YEAR: return Fields::getWeekBasedYearFrom(*this);
+        case TemporalField::JULIAN_DAY: return Fields::getJulianDayFrom(*this);
+        case TemporalField::MODIFIED_JULIAN_DAY: return Fields::getModifiedJulianDayFrom(*this);
+        case TemporalField::RATA_DIE: return Fields::getRataDieFrom(*this);
+        default: TemporalException("Unsupported field: "_Sl + field).throws($ftrace());
+      }
+    }
+
+    gint LocalDate::year() const {
+      return year_;
+    }
+
+    Month LocalDate::month() const {
+      return (Month) month_;
+    }
+
+    gint LocalDate::dayOfMonth() const {
+      return day_;
+    }
+
+    gint LocalDate::dayOfYear() const {
+      return TemporalUtils::firstDayOfMonthInYear(month_, isLeapYear()) + day_ - 1;
+    }
+
+    DayOfWeek LocalDate::dayOfWeek() const {
+      gint dow = Math::floorMod(toEpochDay() + 3, 7);
+      return (DayOfWeek) dow;
+    }
+
+    gbool LocalDate::isLeapYear() const {
+      return TemporalUtils::isLeapYear(year_);
+    }
+
+    gint LocalDate::lengthOfMonth() const {
+      return TemporalUtils::lengthOfMonth(month_, isLeapYear());
+    }
+
+    gint LocalDate::lengthOfYear() const {
+      return isLeapYear() ? 366 : 365;
+    }
+
+    LocalDate LocalDate::with(TemporalAdjuster const& adjuster) const {
+      if (Class<LocalDate>::hasInstance(adjuster))
+        return CORE_XCAST(LocalDate const, adjuster);
+      try {
+        Temporal& t = adjuster.adjustInto(*this);
+        LocalDate date = CORE_XCAST(LocalDate, t);
+        if (&t != this)
+          UNSAFE::deleteRegInstance(t);
+        return date;
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    LocalDate LocalDate::with(TemporalField field, glong newValue) const {
+      try {
+        Fields::checkValue(newValue, field);
+        switch (field) {
+          case TemporalField::DAY_OF_WEEK: return plusDays(newValue - (gint) dayOfWeek());
+          case TemporalField::ALIGNED_DAY_OF_WEEK_IN_MONTH:
+            return plusDays(newValue - getLong(TemporalField::ALIGNED_DAY_OF_WEEK_IN_MONTH));
+          case TemporalField::ALIGNED_DAY_OF_WEEK_IN_YEAR:
+            return plusDays(newValue - getLong(TemporalField::ALIGNED_DAY_OF_WEEK_IN_YEAR));
+          case TemporalField::DAY_OF_MONTH: return withDayOfMonth((gint) newValue);
+          case TemporalField::DAY_OF_YEAR: return withDayOfYear((gint) newValue);
+          case TemporalField::EPOCH_DAY: return LocalDate::ofEpochDay(newValue);
+          case TemporalField::ALIGNED_WEEK_OF_MONTH:
+            return plusWeeks(newValue - getLong(TemporalField::ALIGNED_WEEK_OF_MONTH));
+          case TemporalField::ALIGNED_WEEK_OF_YEAR:
+            return plusWeeks(newValue - getLong(TemporalField::ALIGNED_WEEK_OF_YEAR));
+          case TemporalField::MONTH_OF_YEAR: return withMonth((gint) newValue);
+          case TemporalField::PROLEPTIC_MONTH: return plusMonths(newValue - prolepticMonth());
+          case TemporalField::YEAR_OF_ERA: return withYear((gint) (year_ >= 1 ? newValue : 1 - newValue));
+          case TemporalField::YEAR: return withYear((gint) newValue);
+          case TemporalField::ERA:
+            return getLong(TemporalField::ERA) == newValue ? *this : withYear(1 - year_);
+          case TemporalField::DAY_OF_QUARTER: return withDayOfYear(getLong(TemporalField::DAY_OF_YEAR)
+              + (newValue - getLong(TemporalField::DAY_OF_QUARTER)));
+          case TemporalField::QUARTER_OF_YEAR: return withDayOfYear(getLong(TemporalField::MONTH_OF_YEAR)
+              + (newValue - getLong(TemporalField::QUARTER_OF_YEAR)) * 3);
+          case TemporalField::WEEK_OF_WEEK_BASED_YEAR: return plusWeeks(Math::subtractExact(newValue,
+              getLong(TemporalField::WEEK_OF_WEEK_BASED_YEAR)));
+          case TemporalField::WEEK_BASED_YEAR: {
+            int newWby = (gint) newValue;
+            int dow = get(TemporalField::DAY_OF_WEEK);
+            int week = Fields::getWeek(*this);
+            if (week == 53 && Fields::getWeekRange(newWby) == 52) {
+              week = 52;
             }
-            gint monthOfYear = (dayOfYear - 1) / 31 + 1;
-            gint monthEnd = 0;
-            gint firstDayOfMonth = 0;
-            gint monthLength = 0;
-            if (isLeap) {
-                firstDayOfMonth = FIRST_DAY_OF_MONTH_IN_LEAP_YEAR[monthOfYear];
-                monthLength = MONTH_LENGTH_IN_LEAP_YEAR[monthOfYear];
-            } else {
-                firstDayOfMonth = FIRST_DAY_OF_MONTH_IN_YEAR[monthOfYear];
-                monthLength = MONTH_LENGTH_IN_YEAR[monthOfYear];
-            }
-            monthEnd = firstDayOfMonth + monthLength - 1;
-            if (dayOfYear > monthEnd) {
-                monthOfYear = monthOfYear == 12 ? 1 : monthOfYear + 1;
-                if (isLeap)
-                    firstDayOfMonth = FIRST_DAY_OF_MONTH_IN_LEAP_YEAR[monthOfYear];
-                else
-                    firstDayOfMonth = FIRST_DAY_OF_MONTH_IN_YEAR[monthOfYear];
-            }
-            gint dayOfMonth = dayOfYear - firstDayOfMonth + 1;
-
-            try {
-                ymd = dateToCompactInt(year, monthOfYear, dayOfMonth);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            LocalDate resolved = LocalDate::of(newWby, 1, 4); // 4th is guaranteed to be in week one
+            int days = (dow - resolved.get(TemporalField::DAY_OF_WEEK)) + ((week - 1) * 7);
+            return resolved.plusDays(days);
+          }
+          case TemporalField::JULIAN_DAY:
+            return with(TemporalField::EPOCH_DAY, Math::subtractExact(newValue, JULIAN_DAY_OFFSET));
+          case TemporalField::MODIFIED_JULIAN_DAY:
+            return with(TemporalField::EPOCH_DAY, Math::subtractExact(newValue, 40587L));
+          case TemporalField::RATA_DIE:
+            return with(TemporalField::EPOCH_DAY, Math::subtractExact(newValue, 719163L));
+          default: break;
         }
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+      TemporalException("Unsupported field: "_Sl + field).throws($ftrace());
+    }
 
-        LocalDate LocalDate::ofEpochDay(glong epochDay) {
-            checkValue(epochDay, EPOCH_DAY);
-            glong zeroDay = epochDay + DAYS_0000_TO_1970;
-            // find the march-based year
-            zeroDay -= 60; // adjust to 0000-03-01 so leap day is at end of four years cycle
-            glong adjust = 0;
-            if (zeroDay < 0) {
-                // adjust negative years to positive for calculation
-                glong adjustCycles = (zeroDay + 1) / DAYS_PER_CYCLE - 1;
-                adjust = adjustCycles * 400;
-                zeroDay += -adjustCycles * DAYS_PER_CYCLE;
-            }
-            glong yearEst = (400 * zeroDay + 591) / DAYS_PER_CYCLE;
-            glong doyEst = zeroDay - (365 * yearEst + yearEst / 4 - yearEst / 100 + yearEst / 400);
-            if (doyEst < 0) {
-                // fix estimate
-                yearEst--;
-                doyEst = zeroDay - (365 * yearEst + yearEst / 4 - yearEst / 100 + yearEst / 400);
-            }
-            yearEst += adjust; // reset any negative year
-            gint marchDoy0 = CORE_CAST(gint, doyEst);
+    LocalDate LocalDate::withYear(gint year) const {
+      try {
+        Fields::checkValue(year, TemporalField::YEAR);
+        return resolve(year, month_, day_);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
 
-            // convert march-based values back to january-based
-            gint marchMonth0 = (marchDoy0 * 5 + 2) / 153;
-            gint month = marchMonth0 + 3;
-            if (month > 12) {
-                month -= 12;
-            }
-            gint dom = marchDoy0 - (marchMonth0 * 306 + 5) / 10 + 1;
-            if (marchDoy0 >= 306) {
-                yearEst++;
-            }
+    LocalDate LocalDate::withMonth(gint month) const {
+      try {
+        Fields::checkValue(month, TemporalField::MONTH_OF_YEAR);
+        return resolve(year_, month, day_);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
 
-            return LocalDate(yearEst, month, dom);
+    LocalDate LocalDate::withDayOfMonth(gint dayOfMonth) const {
+      try {
+        Fields::checkValue(dayOfMonth, TemporalField::DAY_OF_MONTH);
+        return of(year_, month_, dayOfMonth);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    LocalDate LocalDate::withDayOfYear(gint dayOfYear) const {
+      try {
+        return ofYearDay(year_, dayOfYear);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    LocalDate LocalDate::plus(TemporalAmount const& amount) const {
+      try {
+        Temporal& temporal = amount.addTo(*this);
+        LocalDate date = CORE_XCAST(LocalDate, temporal);
+        UNSAFE::deleteRegInstance(temporal);
+        return date;
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    LocalDate LocalDate::plus(glong amountToAdd, TemporalUnit unit) const {
+      try {
+        switch (unit) {
+          case TemporalUnit::DAYS: return plusDays(amountToAdd);
+          case TemporalUnit::WEEKS: return plusWeeks(amountToAdd);
+          case TemporalUnit::MONTHS: return plusMonths(amountToAdd);
+          case TemporalUnit::YEARS: return plusYears(amountToAdd);
+          case TemporalUnit::DECADES: return plusYears(Math::multiplyExact(amountToAdd, 10));
+          case TemporalUnit::CENTURIES: return plusYears(Math::multiplyExact(amountToAdd, 100));
+          case TemporalUnit::MILLENNIA: return plusYears(Math::multiplyExact(amountToAdd, 1000));
+          case TemporalUnit::ERAS: return with(TemporalField::ERA, amountToAdd);
+          case TemporalUnit::WEEK_BASED_YEARS:
+            return with(TemporalField::WEEK_BASED_YEAR,
+                        Math::addExact(getLong(TemporalField::WEEK_BASED_YEAR), amountToAdd));
+          case TemporalUnit::QUARTER_YEARS: return plus(amountToAdd / 4, TemporalUnit::YEARS)
+                .plus((amountToAdd % 4) * 3, TemporalUnit::MONTHS);
+          default: break;
         }
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+      TemporalException("Unsupported unit: "_Sl + unit).throws($ftrace());
+    }
 
-        gbool LocalDate::isSupported(ChronoField field) const {
-            return isDateBased(field);
+    LocalDate LocalDate::plusYears(glong yearsToAdd) const {
+      try {
+        gint newYear = (gint) Fields::checkValue(year_ + yearsToAdd, TemporalField::YEAR);
+        return resolve(newYear, month_, day_);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    LocalDate LocalDate::plusMonths(glong monthsToAdd) const {
+      try {
+        glong newYear = year_ + Math::floorDiv(monthsToAdd, 12);
+        gint newMonth = month_ + Math::floorMod(monthsToAdd, 12);
+        if (newMonth > 12) {
+          newYear += 1;
+          newMonth -= 12;
+        } else if (newMonth < 1) {
+          newYear -= 1;
+          newMonth += 12;
         }
+        return resolve(newYear, newMonth, day_);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
 
-        gbool LocalDate::isSupported(ChronoUnit unit) const {
-            return isDateBased(unit);
+    LocalDate LocalDate::plusWeeks(glong weeksToAdd) const {
+      try {
+        return plusDays(Math::multiplyExact(weeksToAdd, 7));
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    LocalDate LocalDate::plusDays(glong daysToAdd) const {
+      try {
+        glong newDay = day_ + daysToAdd;
+        if (newDay > 0) {
+          if (newDay <= 28)
+            return LocalDate::of(year_, month_, (gint) newDay);
+          else if (newDay <= 59) {
+            gint n = lengthOfMonth();
+            if (newDay <= n)
+              return LocalDate::of(year_, month_, (gint) newDay);
+            gint newMonth = (month_ == 12) ? 1 : month_ + 1;
+            gint newYear = (month_ == 12) ? year_ + 1 : year_;
+            return LocalDate::of(newYear, newMonth, (gint) (newDay - n));
+          }
         }
+        return LocalDate::ofEpochDay(Math::addExact(toEpochDay(), daysToAdd));
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
 
-        gint LocalDate::get(ChronoField field) const {
-            switch (field) {
-                case DAY_OF_WEEK: return dayOfWeek();
-                case ALIGNED_DAY_OF_WEEK_IN_MONTH: return (dayOfMonth() - 1) % 7 + 1;
-                case ALIGNED_DAY_OF_WEEK_IN_YEAR: return (dayOfYear() - 1) % 7 + 1;
-                case DAY_OF_MONTH: return dayOfMonth();
-                case DAY_OF_YEAR: return dayOfYear();
-                case EPOCH_DAY: goto RESULT_OVERFLOW;
-                case ALIGNED_WEEK_OF_MONTH: return (dayOfMonth() - 1) / 7 + 1;
-                case ALIGNED_WEEK_OF_YEAR: return (dayOfYear() - 1) / 7 + 1;
-                case MONTH_OF_YEAR: return month();
-                case PROLEPTIC_MONTH: goto RESULT_OVERFLOW;
-                case YEAR_OF_ERA: return year() >= 1 ? year() : 1 - year();
-                case YEAR: return year();
-                case ERA: return year() >= 1 ? 1 : 0;
-                default: break;
-            }
-            TemporalException("Unsupported field "_S + Temporal::toString(field)).throws($ftrace());
-        RESULT_OVERFLOW:
-            TemporalException("Value of field "_S + Temporal::toString(field)
-                + " exceed implementation limit"_S).throws($ftrace());
+    LocalDate LocalDate::minus(TemporalAmount const& amount) const {
+      try {
+        Temporal& temporal = amount.subtractFrom(*this);
+        LocalDate date = CORE_XCAST(LocalDate, temporal);
+        UNSAFE::deleteRegInstance(temporal);
+        return date;
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    LocalDate LocalDate::minus(glong amountToSubtract, TemporalUnit unit) const {
+      try {
+        return (amountToSubtract == Long::MIN_VALUE)
+                 ? plus(Long::MAX_VALUE, unit).plus(1, unit)
+                 : plus(-amountToSubtract, unit);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    LocalDate LocalDate::minusYears(glong yearsToSubtract) const {
+      try {
+        return (yearsToSubtract == Long::MIN_VALUE)
+                 ? plusYears(Long::MAX_VALUE).plusYears(1)
+                 : plusYears(-yearsToSubtract);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    LocalDate LocalDate::minusMonths(glong monthsToSubtract) const {
+      try {
+        return (monthsToSubtract == Long::MIN_VALUE)
+                 ? plusMonths(Long::MAX_VALUE).plusMonths(1)
+                 : plusMonths(-monthsToSubtract);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    LocalDate LocalDate::minusWeeks(glong weeksToSubtract) const {
+      try {
+        return (weeksToSubtract == Long::MIN_VALUE)
+                 ? plusWeeks(Long::MAX_VALUE).plusWeeks(1)
+                 : plusWeeks(-weeksToSubtract);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    LocalDate LocalDate::minusDays(glong daysToSubtract) const {
+      try {
+        return (daysToSubtract == Long::MIN_VALUE)
+                 ? plusDays(Long::MAX_VALUE).plusDays(1)
+                 : plusDays(-daysToSubtract);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    TemporalAccessor::Optional LocalDate::query(TemporalQuery const& query) const {
+      if (query == TemporalQuery::localDate())
+        return *this;
+      if (query == TemporalQuery::precision())
+        return (Enum<TemporalUnit>) TemporalUnit::DAYS;
+      if (query == TemporalQuery::localTime()
+        || query == TemporalQuery::zone()
+        || query == TemporalQuery::zoneId()
+        || query == TemporalQuery::offset())
+        return Optional::empty();
+      try {
+        return query.queryFrom(*this);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    Temporal& LocalDate::adjustInto(Temporal const& temporal) const {
+      try {
+        return adjustFieldTo(TemporalField::EPOCH_DAY, toEpochDay(), temporal);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    glong LocalDate::until(const Temporal& endExclusive, TemporalUnit unit) const {
+      try {
+        LocalDate end = LocalDate::from(endExclusive);
+        switch (unit) {
+          case TemporalUnit::DAYS: return daysUntil(end);
+          case TemporalUnit::WEEKS: return daysUntil(end) / 7;
+          case TemporalUnit::MONTHS: return monthsUntil(end);
+          case TemporalUnit::YEARS: return monthsUntil(end) / 12;
+          case TemporalUnit::DECADES: return monthsUntil(end) / 120;
+          case TemporalUnit::CENTURIES: return monthsUntil(end) / 1200;
+          case TemporalUnit::MILLENNIA: return monthsUntil(end) / 12000;
+          case TemporalUnit::ERAS: return end.getLong(TemporalField::ERA) - getLong(TemporalField::ERA);
+          case TemporalUnit::WEEK_BASED_YEARS:
+            return Math::subtractExact(end.getLong(TemporalField::WEEK_BASED_YEAR),
+                                       getLong(TemporalField::WEEK_BASED_YEAR));
+          case TemporalUnit::QUARTER_YEARS: return monthsUntil(end) / 3;
+          default: break;
         }
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+      TemporalException("Unsupported unit: "_Sl + unit).throws($ftrace());
+    }
 
-        glong LocalDate::getLong(ChronoField field) const {
-            switch (field) {
-                case DAY_OF_WEEK: return dayOfWeek();
-                case ALIGNED_DAY_OF_WEEK_IN_MONTH: return (dayOfMonth() - 1) % 7 + 1;
-                case ALIGNED_DAY_OF_WEEK_IN_YEAR: return (dayOfYear() - 1) % 7 + 1;
-                case DAY_OF_MONTH: return dayOfMonth();
-                case DAY_OF_YEAR: return dayOfYear();
-                case EPOCH_DAY: return toEpochDay();
-                case ALIGNED_WEEK_OF_MONTH: return (dayOfMonth() - 1) / 7 + 1;
-                case ALIGNED_WEEK_OF_YEAR: return (dayOfYear() - 1) / 7 + 1;
-                case MONTH_OF_YEAR: return month();
-                case PROLEPTIC_MONTH: return year() * 12 + month() - 1;
-                case YEAR_OF_ERA: return year() >= 1 ? year() : 1 - year();
-                case YEAR: return year();
-                case ERA: return year() >= 1 ? 1 : 0;
-                default: break;
-            }
-            TemporalException("Unsupported field "_S + Temporal::toString(field)).throws($ftrace());
+    Period LocalDate::until(LocalDate const& endDateExclusive) const {
+      try {
+        LocalDate end = LocalDate::from(endDateExclusive);
+        glong totalMonths = end.prolepticMonth() - prolepticMonth(); // safe
+        gint days = end.day_ - this->day_;
+        if (totalMonths > 0 && days < 0) {
+          totalMonths--;
+          LocalDate calcDate = plusMonths(totalMonths);
+          days = (gint) (end.toEpochDay() - calcDate.toEpochDay()); // safe
+        } else if (totalMonths < 0 && days > 0) {
+          totalMonths++;
+          days -= end.lengthOfMonth();
         }
+        glong years = totalMonths / 12; // safe
+        gint months = (gint) (totalMonths % 12); // safe
+        return Period::of(Math::toIntExact(years), months, days);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
 
-        gint LocalDate::year() const {
-            return (ymd < 0 ? -1 : 1) * CORE_CAST(gint, (ymd & YEAR_MASK) >> YEAR_OFFSET);
+    String LocalDate::format(DateTimeFormatter const& formatter) const {
+      // TODO: implement this method!
+      CORE_ASSERT2(false, "Unimplemented method.");
+    }
+
+    LocalDateTime LocalDate::atTime(LocalTime const& time) const {
+      return LocalDateTime::of(*this, time);
+    }
+
+    LocalDateTime LocalDate::atTime(gint hour, gint minute) const {
+      return LocalDateTime::of(*this, LocalTime::of(hour, minute));
+    }
+
+    LocalDateTime LocalDate::atTime(gint hour, gint minute, gint second) const {
+      return LocalDateTime::of(*this, LocalTime::of(hour, minute, second));
+    }
+
+    LocalDateTime LocalDate::atTime(gint hour, gint minute, gint second, gint nanoOfSecond) const {
+      return LocalDateTime::of(*this, LocalTime::of(hour, minute, second, nanoOfSecond));
+    }
+
+    LocalDateTime LocalDate::atStartOfDay() const {
+      return LocalDateTime::of(*this, LocalTime::MIDNIGHT);
+    }
+
+    ZonedDateTime LocalDate::atStartOfDay(ZoneId const& zone) const {
+      try {
+        LocalDateTime localDT = atStartOfDay();
+        if (!Class<ZoneOffset>::hasInstance(zone)) {
+          ZoneRules rules = zone.getRules();
+          auto transition = rules.transition(localDT);
+          if (transition.isPresent() && transition.get().isGap()) {
+            return ZonedDateTime::of(transition.get().dateTimeAfter(), zone);
+          }
         }
+        return ZonedDateTime::of(localDT, zone);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
 
-        LocalDate::Month LocalDate::month() const {
-            return (Month) ((ymd & MONTH_MASK) >> MONTH_OFFSET);
+    glong LocalDate::toEpochDay() const {
+      glong y = year_;
+      glong m = month_;
+      glong total = 0;
+      total += 365 * y;
+      if (y >= 0) {
+        total += (y + 3) / 4 - (y + 99) / 100 + (y + 399) / 400;
+      } else {
+        total -= y / -4 - y / -100 + y / -400;
+      }
+      total += (367 * m - 362) / 12;
+      total += dayOfMonth() - 1;
+      if (m > 2) {
+        total--;
+        if (!isLeapYear()) {
+          total--;
         }
+      }
+      return total - DAYS_0000_TO_1970;
+    }
 
-        gint LocalDate::dayOfMonth() const {
-            return (gint) (ymd & DAY_MASK) >> DAY_OFFSET;
+    glong LocalDate::toEpochSecond(LocalTime const& time, ZoneOffset const& offset) const {
+      glong secs = toEpochDay() * SECONDS_PER_DAY + time.toSecondOfDay();
+      secs -= offset.totalSeconds();
+      return secs;
+    }
+
+    gint LocalDate::compareTo(const LocalDate& other) const {
+      gint result = year_ - other.year_;
+      if (result == 0) {
+        result = month_ - other.month_;
+        if (result == 0) {
+          result = day_ - other.day_;
         }
+      }
+      return result;
+    }
 
-        gint LocalDate::dayOfYear() const {
-            if (isLeapYear())
-                return FIRST_DAY_OF_MONTH_IN_LEAP_YEAR[month()] + dayOfMonth() - 1;
-            return FIRST_DAY_OF_MONTH_IN_YEAR[month()] + dayOfMonth() - 1;
+    gbool LocalDate::isAfter(LocalDate const& other) const {
+      return compareTo(other) > 0;
+    }
+
+    gbool LocalDate::isBefore(LocalDate const& other) const {
+      return compareTo(other) < 0;
+    }
+
+    gbool LocalDate::equals(const Object& obj) const {
+      return this == &obj ||
+          (Class<LocalDate>::hasInstance(obj) && compareTo(CORE_XCAST(LocalDate const, obj)) == 0);
+    }
+
+    gint LocalDate::hash() const {
+      gint y = year_;
+      gint m = month_;
+      gint d = day_;
+      return ((y & 0xFFFFF800) ^ (y << 11)) | (m << 6) | d;
+    }
+
+    String LocalDate::toString() const {
+      gint y = year_;
+      gint m = month_;
+      gint d = day_;
+      gint absYear = Math::abs(y);
+      XString str = XString(10);
+      if (absYear < 1000) {
+        if (y < 0) {
+          str.append(y - 10000).deleteCharAt(1);
+        } else {
+          str.append(y + 10000).deleteCharAt(0);
         }
-
-        LocalDate::DayOfWeek LocalDate::dayOfWeek() const {
-            return (DayOfWeek) Math::floorMod(toEpochDay() + 3, 7);
+      } else {
+        if (y > 9999) {
+          str.append(u'+');
         }
+        str.append(y);
+      }
+      return str.append(m < 10 ? "-0"_Sl : "-"_Sl).append(m)
+                .append(d < 10 ? "-0"_Sl : "-"_Sl).append(d)
+                .toString();
+    }
 
-        gbool LocalDate::isLeapYear() const {
-            return isLeapYear(year());
+    Object& LocalDate::clone() const {
+      return UNSAFE::newInstance<LocalDate>(*this);
+    }
+
+    LocalDate LocalDate::create(gint year, gint month, gint dayOfMonth) {
+      if (dayOfMonth > 28) {
+        gint dom = 0;
+        switch (month) {
+          case 2:
+            dom = (TemporalUtils::isLeapYear(year) ? 29 : 28);
+            break;
+          case 4:
+          case 6:
+          case 9:
+          case 11: dom = 30;
+            break;
+          default: dom = 31;
+            break;
         }
-
-        gint LocalDate::lengthOfMonth() const {
-            return lengthOfMonth(month(), isLeapYear());
+        if (dayOfMonth > dom) {
+          if (dayOfMonth == 29) {
+            DateTimeException("Invalid date 'February 29' as '"_Sl
+              + year + "' is not a leap year").throws($ftrace());
+          } else {
+            DateTimeException("Invalid date '"_Sl + (Month) month
+              + " " + dayOfMonth + "'").throws($ftrace());
+          }
         }
+      }
+      return LocalDate(year, month, dayOfMonth);
+    }
 
-        gint LocalDate::lengthOfYear() const {
-            return isLeapYear() ? 366 : 365;
-        }
+    LocalDate LocalDate::resolve(gint year, gint month, gint day) {
+      switch (month) {
+        case 2:
+          day = Math::min(day, TemporalUtils::isLeapYear(year) ? 29 : 28);
+          break;
+        case 4:
+        case 6:
+        case 9:
+        case 11:
+          day = Math::min(day, 30);
+        default:
+          break;
+      }
+      return LocalDate(year, month, day);
+    }
 
-        LocalDate LocalDate::with(ChronoField field, glong newValue) const {
-            checkValue(newValue, field);
-            switch (field) {
-                case DAY_OF_WEEK: return plusDays(newValue - dayOfWeek());
-                case ALIGNED_DAY_OF_WEEK_IN_MONTH: return plusDays(newValue - getLong(ALIGNED_DAY_OF_WEEK_IN_MONTH));
-                case ALIGNED_DAY_OF_WEEK_IN_YEAR: return plusDays(newValue - getLong(ALIGNED_DAY_OF_WEEK_IN_YEAR));
-                case DAY_OF_MONTH: return withDayOfMonth(CORE_CAST(gint, newValue));
-                case DAY_OF_YEAR: return withDayOfYear(CORE_CAST(gint, newValue));
-                case EPOCH_DAY: return ofEpochDay(newValue);
-                case ALIGNED_WEEK_OF_MONTH: return plusWeeks(newValue - getLong(ALIGNED_WEEK_OF_MONTH));
-                case ALIGNED_WEEK_OF_YEAR: return plusWeeks(newValue - getLong(ALIGNED_WEEK_OF_YEAR));
-                case MONTH_OF_YEAR: return withMonth(CORE_CAST(gint, newValue));
-                case PROLEPTIC_MONTH: return plusMonths(newValue - getLong(PROLEPTIC_MONTH));
-                case YEAR_OF_ERA: return withYear(CORE_CAST(gint, year() >= 1 ? newValue : 1 - newValue));
-                case YEAR: return withYear(CORE_CAST(gint, newValue));
-                case ERA: return getLong(ERA) == newValue ? *this : withYear(1 - year());
-                default: break;
-            }
-            TemporalException("Unsupported field: "_S + Temporal::toString(field)).throws($ftrace());
-        }
+    gint LocalDate::prolepticMonth() const {
+      return (year_ * 12L + month_ - 1);
+    }
 
-        LocalDate LocalDate::withYear(gint year) const {
-            try {
-                return LocalDate(checkValue(year, YEAR), month(), dayOfMonth());
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
+    glong LocalDate::daysUntil(LocalDate const& end) const {
+      return end.toEpochDay() - toEpochDay(); // no overflow
+    }
 
-        LocalDate LocalDate::withMonth(gint month) const {
-            try {
-                return LocalDate(year(), checkValue(month, MONTH_OF_YEAR), dayOfMonth());
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        LocalDate LocalDate::withDayOfMonth(gint dayOfMonth) const {
-            try {
-                return LocalDate(year(), month(), checkValue(dayOfMonth, DAY_OF_MONTH));
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        LocalDate LocalDate::withDayOfYear(gint dayOfYear) const {
-            try {
-                return LocalDate(year(), checkValue(dayOfYear, DAY_OF_YEAR));
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        LocalDate LocalDate::plus(glong amountToAdd, ChronoUnit unit) const {
-            switch (unit) {
-                case DAYS:
-                    try { return plusDays(amountToAdd); } catch (Throwable const& ex) { ex.throws($ftrace()); }
-                case WEEKS:
-                    try { return plusWeeks(amountToAdd); } catch (Throwable const& ex) { ex.throws($ftrace()); }
-                case MONTHS:
-                    try { return plusMonths(amountToAdd); } catch (Throwable const& ex) { ex.throws($ftrace()); }
-                case YEARS:
-                    try { return plusYears(amountToAdd); } catch (Throwable const& ex) { ex.throws($ftrace()); }
-                case DECADES:
-                    try {
-                        return plusYears(Math::multiplyExact(amountToAdd, 10));
-                    } catch (Throwable const& ex) { ex.throws($ftrace()); }
-                case CENTURIES:
-                    try {
-                        return plusYears(Math::multiplyExact(amountToAdd, 100));
-                    } catch (Throwable const& ex) { ex.throws($ftrace()); }
-                case MILLENNIA:
-                    try {
-                        return plusYears(Math::multiplyExact(amountToAdd, 1000));
-                    } catch (Throwable const& ex) { ex.throws($ftrace()); }
-                case ERAS:
-                    try {
-                        return with(ERA, Math::addExact(getLong(ERA), amountToAdd));
-                    } catch (Throwable const& ex) { ex.throws($ftrace()); }
-                default:
-                    TemporalException("Unsupported unit: "_S + Temporal::toString(unit)).throws($ftrace());
-            }
-        }
-
-        LocalDate LocalDate::plusYears(glong yearsToAdd) const {
-            const glong newYear = year() + yearsToAdd;
-            checkValue(newYear, YEAR);
-            return LocalDate(CORE_CAST(gint, newYear), month(), dayOfMonth());
-        }
-
-        LocalDate LocalDate::plusMonths(glong monthsToAdd) const {
-            glong months = year() * 12LL + month() - 1 + monthsToAdd;
-            gint newYear = year() + Math::floorDiv(months, 12);
-            gint newMonth = year() + Math::floorMod(months, 12);
-            try {
-                return LocalDate(newYear, newMonth, dayOfMonth());
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        LocalDate LocalDate::plusWeeks(glong weeksToAdd) const {
-            try {
-                return plusDays(Math::multiplyExact(weeksToAdd, 7));
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        LocalDate LocalDate::plusDays(glong daysToAdd) const {
-            if (daysToAdd == 0)
-                return *this;
-            glong dom = dayOfMonth() + daysToAdd;
-            if (dom > 0) {
-                if (dom <= 28)
-                    return LocalDate(year(), month(), (gint) dom);
-                if (dom <= 59) {
-                    // 59th Jan is 28th Feb, 59th Feb is 31st Mar
-                    glong monthLen = lengthOfMonth();
-                    try {
-                        if (dom <= monthLen)
-                            return LocalDate(year(), month(), CORE_CAST(gint, dom));
-                        if (month() < 12)
-                            return LocalDate(year(), month() + 1, CORE_CAST(gint, dom - monthLen));
-                        checkValue(year() + 1, YEAR);
-                        return LocalDate(year() + 1, 1, CORE_CAST(gint, dom - monthLen));
-                    } catch (Throwable const& ex) { ex.throws($ftrace()); }
-                }
-            }
-
-            try {
-                glong mjDay = Math::addExact(toEpochDay(), daysToAdd);
-                return ofEpochDay(mjDay);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        LocalDate LocalDate::minus(glong amountToSubtract, ChronoUnit unit) const {
-            try {
-                return amountToSubtract == Long::MIN_VALUE
-                           ? plus(Long::MAX_VALUE, unit).plus(1, unit)
-                           : plus(-amountToSubtract, unit);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        LocalDate LocalDate::minusYears(glong yearsToSubtract) const {
-            try {
-                return yearsToSubtract == Long::MIN_VALUE
-                           ? plusYears(Long::MAX_VALUE).plusYears(1)
-                           : plusYears(-yearsToSubtract);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        LocalDate LocalDate::minusMonths(gint monthsToSubtract) const {
-            try {
-                return monthsToSubtract == Long::MIN_VALUE
-                           ? plusMonths(Long::MAX_VALUE).plusMonths(1)
-                           : plusMonths(-monthsToSubtract);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        LocalDate LocalDate::minusWeeks(gint weeksToSubtract) const {
-            try {
-                return weeksToSubtract == Long::MIN_VALUE
-                           ? plusWeeks(Long::MAX_VALUE).plusWeeks(1)
-                           : plusWeeks(-weeksToSubtract);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        LocalDate LocalDate::minusDays(glong daysToSubtract) const {
-            try {
-                return daysToSubtract == Long::MIN_VALUE
-                           ? plusDays(Long::MAX_VALUE).plusDays(1)
-                           : plusDays(-daysToSubtract);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        glong LocalDate::until(const Temporal& endExclusive, ChronoUnit unit) const {
-            LocalDate end = MIN;
-            try {
-                end = from(endExclusive);
-            } catch (Throwable const &ex) { ex.throws($ftrace()); }
-            switch (unit) {
-                case DAYS: return end.toEpochDay() - toEpochDay();
-                case WEEKS: return (end.toEpochDay() - toEpochDay()) / 7;
-                case MONTHS: {
-                    glong months1 = (year() * 12LL + month() - 1) * 32LL + dayOfMonth();
-                    glong months2 = (end.year() * 12LL + end.month() - 1) * 32LL + end.dayOfMonth();
-                    return months2 - months1;
-                }
-                case YEARS: {
-                    glong months1 = (year() * 12LL + month() - 1) * 32LL + dayOfMonth();
-                    glong months2 = (end.year() * 12LL + end.month() - 1) * 32LL + end.dayOfMonth();
-                    return (months2 - months1) / 12;
-                }
-                case DECADES: {
-                    glong months1 = (year() * 12LL + month() - 1) * 32LL + dayOfMonth();
-                    glong months2 = (end.year() * 12LL + end.month() - 1) * 32LL + end.dayOfMonth();
-                    return (months2 - months1) / 120;
-                }
-                case CENTURIES: {
-                    glong months1 = (year() * 12LL + month() - 1) * 32LL + dayOfMonth();
-                    glong months2 = (end.year() * 12LL + end.month() - 1) * 32LL + end.dayOfMonth();
-                    return (months2 - months1) / 1200;
-                }
-                case MILLENNIA: {
-                    glong months1 = (year() * 12LL + month() - 1) * 32LL + dayOfMonth();
-                    glong months2 = (end.year() * 12LL + end.month() - 1) * 32LL + end.dayOfMonth();
-                    return (months2 - months1) / 12000;
-                }
-                case ERAS: return end.getLong(ERA) - getLong(ERA);
-                default:
-                    TemporalException("Unsupported unit: "_S + Temporal::toString(unit)).throws($ftrace());
-            }
-        }
-
-        LocalDateTime LocalDate::atTime(LocalTime const& time) const {
-            return LocalDateTime(*this, time);
-        }
-
-        LocalDateTime LocalDate::atTime(gint hour, gint minute) const {
-            try {
-                return LocalDateTime(*this, LocalTime(hour, minute));
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        LocalDateTime LocalDate::atTime(gint hour, gint minute, gint second) const {
-            try {
-                return LocalDateTime(*this, LocalTime(hour, minute, second));
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        LocalDateTime LocalDate::atTime(gint hour, gint minute, gint second, gint nanoOfSecond) const {
-            try {
-                return LocalDateTime(*this, LocalTime(hour, minute, second, nanoOfSecond));
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        LocalDateTime LocalDate::atStartOfDay() const {
-            try {
-                return LocalDateTime(*this, LocalTime::MIDNIGHT);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        LocalDateTime LocalDate::atStartOfDay(ZoneId const& zone) const {
-            try {
-                LocalDateTime localDT = atTime(LocalTime::MIDNIGHT);
-                if (!Class<ZoneOffset>::hasInstance(zone)) {
-                    ZoneRules rules = zone.getRules();
-                    Optional<ZoneOffsetTransition> trans = rules.transition(localDT);
-                    if (trans.isPresent() && trans.get().isGap())
-                        localDT = trans.get().dateTimeAfter();
-                }
-                return localDT;
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        glong LocalDate::toEpochDay() const {
-            glong y = year();
-            glong m = month();
-            glong total = 0;
-            total += 365 * y;
-            if (y >= 0) {
-                total += (y + 3) / 4 - (y + 99) / 100 + (y + 399) / 400;
-            } else {
-                total -= y / -4 - y / -100 + y / -400;
-            }
-            total += (367 * m - 362) / 12;
-            total += dayOfMonth() - 1;
-            if (m > 2) {
-                total--;
-                if (isLeapYear() == false) {
-                    total--;
-                }
-            }
-            return total - DAYS_0000_TO_1970;
-        }
-
-        glong LocalDate::toEpochSecond(LocalTime const& time, ZoneOffset const& offset) const {
-            return toEpochDay() * LocalTime::SECONDS_PER_DAY + time.toSecondOfDay()  - offset.totalSeconds();
-        }
-
-        gint LocalDate::compareTo(const LocalDate& other) const {
-            int r = year() - other.year();
-            if (r == 0) {
-                r = month() - other.month();
-                if (r == 0)
-                    r = dayOfMonth() - other.dayOfMonth();
-            }
-            return r;
-        }
-
-        gbool LocalDate::isAfter(LocalDate const& other) const {
-            return compareTo(other) > 0;
-        }
-
-        gbool LocalDate::isBefore(LocalDate const& other) const {
-            return compareTo(other) < 0;
-        }
-
-        Optional<> LocalDate::query(TemporalQuery const& query) const {
-            if (query == TemporalQuery::LOCAL_DATE)
-                return *this;
-            if (query == TemporalQuery::PRECISION)
-                return Optional<Enum<ChronoUnit>>(DAYS);
-            return Optional<>();
-        }
-
-        LocalDate LocalDate::from(Temporal const& temporal) {
-            Optional<LocalDate> date;
-            try {
-                date = (Optional<LocalDate>) temporal.query(TemporalQuery::LOCAL_DATE);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-            if (date.isEmpty())
-                DateTimeException("Unable to obtain LocalDate from Temporal: "_Sl +
-                    temporal + " of type " + typeName(temporal)).throws($ftrace());
-            return date.get();
-        }
-
-        gbool LocalDate::equals(const Object& obj) const {
-            return this == &obj || Class<LocalDate>::hasInstance(obj) && ymd == CORE_XCAST(LocalDate const, obj).ymd;
-        }
-
-        gint LocalDate::hash() const {
-            return Long::hash(ymd);
-        }
-
-        String LocalDate::toString() const {
-            gint year = LocalDate::year();
-            gint month = LocalDate::month();
-            gint day = dayOfMonth();
-            gint absYear = Math::abs(year);
-            XString str = XString(10);
-            if (absYear < 1000)
-                if (year < 0)
-                    str.append(year - 10000).deleteCharAt(1);
-                else
-                    str.append(year + 10000).deleteCharAt(0);
-            else {
-                if (year > 9999)
-                    str.append('+');
-                str.append(year);
-            }
-            return str.append(month < 10 ? "-0"_S : "-"_S)
-                      .append(month)
-                      .append(day < 10 ? "-0"_S : "-"_S)
-                      .append(day)
-                      .toString();
-        }
-
-        Object& LocalDate::clone() const {
-            return UNSAFE::newInstance<LocalDate>(*this);
-        }
-
-        // LocalDate::LocalDate() {
-        //     ymd = dateToCompactInt(1970, JANUARY, 01);
-        // }
-
-        glong LocalDate::dateToCompactInt(gint year, gint month, gint dayOfMonth) {
-            if (dayOfMonth > 28) {
-                gint dom = 0;
-                switch (month) {
-                    case 2: dom = isLeapYear(year) ? 29 : 28;
-                        break;
-                    case 4:
-                    case 6:
-                    case 9:
-                    case 11: dom = 30;
-                        break;
-                    default: dom = 31;
-                        break;
-                }
-                if (dayOfMonth > dom) {
-                    if (dom == 29)
-                        DateTimeException("Invalid date 'February 29' as '"_Sl
-                            + year + "' is not a leap year").throws($ftrace());
-                    DateTimeException("Invalid date '"_Sl + displayMonth(month)
-                        + " " + dayOfMonth + "'").throws($ftrace());
-                }
-            }
-            glong date = 0;
-            date |= (glong) Math::absExact(year) << YEAR_OFFSET & YEAR_MASK;
-            date |= month << MONTH_OFFSET & MONTH_MASK;
-            date |= dayOfMonth << DAY_OFFSET & DAY_MASK;
-            return year < 0 ? -date : date;
-        }
-
-        gbool LocalDate::isLeapYear(gint prolepticYear) {
-            return (prolepticYear & 3) == 0 && (prolepticYear % 100 != 0 || prolepticYear % 400 == 0);
-        }
-
-        gint LocalDate::lengthOfMonth(Month month, gbool leapYear) {
-            switch (month) {
-                case FEBRUARY: return leapYear ? 29 : 28;
-                case APRIL:
-                case JUNE:
-                case SEPTEMBER:
-                case NOVEMBER: return 30;
-                default: return 31;
-            }
-        }
-    } // util
+    glong LocalDate::monthsUntil(LocalDate const& end) const {
+      glong packed1 = prolepticMonth() * 32L + dayOfMonth(); // no overflow
+      glong packed2 = end.prolepticMonth() * 32L + end.dayOfMonth(); // no overflow
+      return (packed2 - packed1) / 32;
+    }
+  } // util
 } // core

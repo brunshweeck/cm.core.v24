@@ -4,18 +4,24 @@
 
 #include <core/concurrent/ConcurrentLinkedQueue.h>
 #include <core/random/Random.h>
+#include <core/lang/Enum.h>
 
 using namespace core;
 using namespace core::util;
 using namespace core::concurrent;
 using namespace core::random;
 
-#define CORE_LAMBDA_TRY_RETHROW(action, executionPoint) \
-    [&]() { try { action; } catch(Throwable const& ex) { ex.throws(executionPoint); } catch(...) { throw; } }()
-
-#define CORE_TRY_(action) CORE_LAMBDA_TRY_RETHROW(action, $ftrace())
-
 int main() {
-    CORE_TRY_RETHROW((IllegalArgumentException().throws($ftrace())))
-    return 0;
+
+  CORE_ALIAS(Category, Character::Category);
+
+  using A = Class<Category>::Object;
+  using E = Class<A>::Prime;
+
+  E e = core::Character::LETTER_NUMBER;
+
+  XString xs;
+  xs.append(e);
+
+  return 0;
 }

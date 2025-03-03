@@ -262,7 +262,7 @@ namespace core {
             return false;\
         }\
 \
-        gbool tryLock(glong time, time::Temporal::ChronoUnit unit) override {\
+        gbool tryLock(glong time, time::TemporalUnit unit) override {\
             if (internalLock.isPresent())\
                 return internalLock.get().tryLock(time, unit);\
             return false;\
@@ -639,43 +639,92 @@ namespace core {
     namespace atomic {
         class AtomicBoolean;
         class AtomicInteger;
+        class AtomicIntegerArray;
         class AtomicLong;
+        class AtomicLongArray;
         template <class T = Object>
         class AtomicReference;
-        class AtomicIntegerArray;
-        class AtomicLongArray;
         template <class T = Object>
         class AtomicReferenceArray;
     }
 
     namespace time {
+
         class Temporal;
+        class TemporalAccessor;
+        class TemporalAmount;
+        class TemporalAdjuster;
+        enum class TemporalField;
+        class TemporalFieldArray;
         class TemporalQuery;
+        enum class TemporalUnit;
+        class TemporalUnitArray;
         class TemporalException;
+        class ValueRange;
+
+        enum class FormatStyle;
+        class FormatStyleArray;
+        enum class SignStyle;
+        class SignStyleArray;
+        enum class TextStyle;
+        class TextStyleArray;
+        class DateTimeFormatter;
+
         class DateTimeException;
-        class LocalTime;
-        class LocalDate;
-        class LocalDateTime;
+        enum class DayOfWeek;
+        class DayOfWeekArray;
         class Duration;
-        class Chrono;
+        class DurationArray;
+        class Instant;
+        class InstantArray;
+        class LocalDate;
+        class LocalDateArray;
+        class LocalDateTime;
+        class LocalDateTimeArray;
+        class LocalTime;
+        class LocalTimeArray;
+        enum class Month;
+        class MonthArray;
+        class MonthDay;
+        class MonthDayArray;
+        class OffsetDateTime;
+        class OffsetDateTimeArray;
+        class OffsetTime;
+        class OffsetTimeArray;
+        class Period;
+        class PeriodArray;
+        class Year;
+        class YearArray;
+        class YearMonth;
+        class YearMonthArray;
+        class ZonedDateTime;
+        class ZonedDateTimeArray;
         class ZoneId;
         class ZoneOffset;
+        class ZoneOffsetArray;
+
+        class Chrono;
         class ZoneRules;
+        class ZoneRulesArray;
         class ZoneOffsetTransition;
+        class ZoneOffsetTransitionArray;
         class ZoneOffsetTransitionRule;
-        class ZonedDateTime;
-        class OffsetTime;
-        class OffsetDateTime;
+        class ZoneOffsetTransitionRuleArray;
+
         class Calendar;
-        class TimeZone;
         class Date;
+        class TimeZone;
+
+        class Chronology;
+        class ChronoLocalDate;
+        class ChronoLocalDateTime;
+        class ChronoZonedDateTime;
+        class Era;
     }
 
     namespace random {
         class Random;
         class RandomGenerator;
-        class RealDistribution;
-        class IntegerDistribution;
     }
 
     namespace text {

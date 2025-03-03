@@ -5,23 +5,24 @@
 #include "AutoSync.h"
 
 #include <core/concurrent/Lock.h>
+#include <core/lang/Throwable.h>
 
 namespace core {
-    namespace text {
-        AutoSync::AutoSync(concurrent::Lock& lock): lock(lock) {
-            try { relock(); } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
+  namespace text {
+    AutoSync::AutoSync(concurrent::Lock& lock): lock(lock) {
+      try { relock(); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
 
-        void AutoSync::relock() const {
-            lock.lock();
-        }
+    void AutoSync::relock() const {
+      lock.lock();
+    }
 
-        void AutoSync::unlock() const {
-            lock.unlock();
-        }
+    void AutoSync::unlock() const {
+      lock.unlock();
+    }
 
-        AutoSync::~AutoSync() {
-            try { unlock(); } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-    } // icu
+    AutoSync::~AutoSync() {
+      try { unlock(); } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+  } // icu
 } // core

@@ -9,402 +9,418 @@
 #include <core/time/ZoneId.h>
 
 namespace core {
-    namespace time {
-        /**
-         * A time-zone offset from Greenwich/UTC, such as @c +02:00.
-         * <p>
-         * A time-zone offset is the amount of time that a time-zone differs from Greenwich/UTC.
-         * This is usually a fixed number of hours and minutes.
-         * </p>
-         * <p>
-         * Different parts of the world have different time-zone offsets.
-         * The rules for how offsets vary by place and time of year are captured in the
-         * @b ZoneId class.
-         * </p>
-         * <p>
-         * For example, Paris is one hour ahead of Greenwich/UTC in winter and two hours
-         * ahead in summer. The @c ZoneId instance for Paris will reference two
-         * @c ZoneOffset instances - a @c +01:00 instance for winter,
-         * and a @c +02:00 instance for summer.
-         * </p>
-         * <p>
-         * In 2008, time-zone offsets around the world extended from -12:00 to +14:00.
-         * To prevent any problems with that range being extended, yet still provide
-         * validation, the range of offsets is restricted to -18:00 to 18:00 inclusive.
-         * </p>
-         * <p>
-         * This class is designed for use with the ISO calendar system.
-         * The fields of hours, minutes and seconds make assumptions that are valid for the
-         * standard ISO definitions of those fields. This class may be used with other
-         * calendar systems providing the definition of the time fields matches those
-         * of the ISO calendar system.
-         * </p>
-         * <p>
-         * Instances of @c ZoneOffset must be compared using @b equals.
-         * Implementations may choose to cache certain common offsets, however
-         * applications must not rely on such caching.
-         * </p>
-         * <p>
-         * This is a value-based class; programmers should treat instances that are
-         * @em equal as interchangeable and should not
-         * use instances for synchronization, or unpredictable behavior may
-         * occur. For example, in a future release, synchronization may fail.
-         * The @c equals method should be used for comparisons.
-         * </p>
-         * @note
-         * This class is immutable and thread-safe.
-         */
-        class ZoneOffset final : public virtual ZoneId, public virtual Comparable<ZoneOffset> {
-            CORE_ALIAS(Rules, Class<ZoneRules>::Pointer);
+  namespace time {
+    /**
+     * A time-zone offset from Greenwich/UTC, such as @c +02:00.
+     * <p>
+     * A time-zone offset is the amount of time that a time-zone differs from Greenwich/UTC.
+     * This is usually a fixed number of hours and minutes.
+     * </p>
+     * <p>
+     * Different parts of the world have different time-zone offsets.
+     * The rules for how offsets vary by place and time of year are captured in the
+     * @b ZoneId class.
+     * </p>
+     * <p>
+     * For example, Paris is one hour ahead of Greenwich/UTC in winter and two hours
+     * ahead in summer. The @c ZoneId instance for Paris will reference two
+     * @c ZoneOffset instances - a @c +01:00 instance for winter,
+     * and a @c +02:00 instance for summer.
+     * </p>
+     * <p>
+     * In 2008, time-zone offsets around the world extended from -12:00 to +14:00.
+     * To prevent any problems with that range being extended, yet still provide
+     * validation, the range of offsets is restricted to -18:00 to 18:00 inclusive.
+     * </p>
+     * <p>
+     * This class is designed for use with the ISO calendar system.
+     * The fields of hours, minutes and seconds make assumptions that are valid for the
+     * standard ISO definitions of those fields. This class may be used with other
+     * calendar systems providing the definition of the time fields matches those
+     * of the ISO calendar system.
+     * </p>
+     * <p>
+     * Instances of @c ZoneOffset must be compared using @b equals.
+     * Implementations may choose to cache certain common offsets, however
+     * applications must not rely on such caching.
+     * </p>
+     * <p>
+     * This is a value-based class; programmers should treat instances that are
+     * @em equal as interchangeable and should not
+     * use instances for synchronization, or unpredictable behavior may
+     * occur. For example, in a future release, synchronization may fail.
+     * The @c equals method should be used for comparisons.
+     * </p>
+     * @note
+     * This class is immutable and thread-safe.
+     */
+    class ZoneOffset final : public virtual ZoneId,
+                             public virtual TemporalAccessor,
+                             public virtual Comparable<ZoneOffset> {
+      CORE_IMPORT_FIELD_OR_METHOD(TemporalAccessor, Optional);
+      static gint CORE_FAST SECONDS_PER_HOUR = LocalTime::SECONDS_PER_HOUR;
+      static gint CORE_FAST SECONDS_PER_MINUTE = LocalTime::SECONDS_PER_MINUTE;
 
-            CORE_ADD_AS_FRIEND(OffsetTime);
-            CORE_ADD_AS_FRIEND(OffsetDateTime);
-            CORE_ADD_AS_FRIEND(ZonedDateTime);
+      /**
+       * The abs maximum seconds.
+       */
+      static CORE_FAST gint MAX_SECONDS = 18 * SECONDS_PER_HOUR;
 
-            /**
-             * The abs maximum seconds.
-             */
-            static CORE_FAST gint MAX_SECONDS = MAX_OFFSET_SECONDS;
+      /**
+       * The total offset in seconds.
+       */
+      gint totalSeconds_;
 
-            /**
-             * The total offset in seconds.
-             */
-            gint totalSecs = 0;
+      /**
+       * The string form of the time-zone offset.
+       */
+      String id;
 
-            /**
-             * The string form of the time-zone offset.
-             */
-            String id;
+      /**
+       * Constructor.
+       *
+       * @param totalSeconds  the total time-zone offset in seconds, from -64800 to +64800
+       */
+      ZoneOffset(gint totalSeconds);
 
-            /**
-             * The zone rules for an offset will always return this offset. Cache it for efficiency.
-             */
-            Rules mutable rules = null;
+    public:
+      /**
+       * The time-zone offset for UTC, with an ID of 'Z'.
+       */
+      static ZoneOffset const UTC;
 
-        public:
-            /**
-             * The time-zone offset for UTC, with an ID of 'Z'.
-             */
-            static ZoneOffset const UTC;
+      /**
+       * Constant for the minimum supported offset.
+       */
+      static ZoneOffset const MIN;
 
-            /**
-             * Constant for the minimum supported offset.
-             */
-            static ZoneOffset const MIN;
+      /**
+       * Constant for the maximum supported offset.
+       */
+      static ZoneOffset const MAX;
 
-            /**
-             * Constant for the maximum supported offset.
-             */
-            static ZoneOffset const MAX;
-            /**
-             * Obtains an instance of @c ZoneOffset using the ID.
-             * <p>
-             * This method parses the string ID of a @c ZoneOffset to
-             * return an instance. The parsing accepts all the formats generated by
-             * @b getId(), plus some additional formats:
-             *
-             * @li @c Z - for UTC
-             * @li @c +h
-             * @li @c +hh
-             * @li @c +hh:mm
-             * @li @c -hh:mm
-             * @li @c +hhmm
-             * @li @c -hhmm
-             * @li @c +hh:mm:ss
-             * @li @c -hh:mm:ss
-             * @li @c +hhmmss
-             * @li @c -hhmmss
-             *
-             * Note that &plusmn; means either the plus or minus symbol.
-             * </p>
-             * <p>
-             * The ID of the returned offset will be normalized to one of the formats
-             * described by @b getId().
-             * </p>
-             * <p>
-             * The maximum supported range is from +18:00 to -18:00 inclusive.
-             * </p>
-             * @param offsetId  the offset ID
-             * @return the zone-offset
-             * @throws DateTimeException if the offset ID is invalid
-             */
-            static ZoneOffset of(String const& offsetId);
+      /**
+       * Obtains an instance of @c ZoneOffset using the ID.
+       * <p>
+       * This method parses the string ID of a @c ZoneOffset to
+       * return an instance. The parsing accepts all the formats generated by
+       * @b getId(), plus some additional formats:
+       *
+       * @li @c Z - for UTC
+       * @li @c +h
+       * @li @c +hh
+       * @li @c +hh:mm
+       * @li @c -hh:mm
+       * @li @c +hhmm
+       * @li @c -hhmm
+       * @li @c +hh:mm:ss
+       * @li @c -hh:mm:ss
+       * @li @c +hhmmss
+       * @li @c -hhmmss
+       *
+       * Note that &plusmn; means either the plus or minus symbol.
+       * </p>
+       * <p>
+       * The ID of the returned offset will be normalized to one of the formats
+       * described by @b getId().
+       * </p>
+       * <p>
+       * The maximum supported range is from +18:00 to -18:00 inclusive.
+       * </p>
+       * @param offsetId  the offset ID
+       * @return the zone-offset
+       * @throws DateTimeException if the offset ID is invalid
+       */
+      static ZoneOffset of(String const& offsetId);
 
-            /**
-             * Obtains an instance of @c ZoneOffset using an offset in hours.
-             *
-             * @param hours  the time-zone offset in hours, from -18 to +18
-             * @return the zone-offset
-             * @throws DateTimeException if the offset is not in the required range
-             */
-            static ZoneOffset ofHours(gint hours);
+      /**
+       * Obtains an instance of @c ZoneOffset using an offset in hours.
+       *
+       * @param hours  the time-zone offset in hours, from -18 to +18
+       * @return the zone-offset
+       * @throws DateTimeException if the offset is not in the required range
+       */
+      static ZoneOffset ofHours(gint hours);
 
-            /**
-             * Obtains an instance of @c ZoneOffset using an offset in
-             * hours and minutes.
-             * <p>
-             * The sign of the hours and minutes components must match.
-             * Thus, if the hours is negative, the minutes must be negative or zero.
-             * If the hours is zero, the minutes may be positive, negative or zero.
-             * </p>
-             * @param hours  the time-zone offset in hours, from -18 to +18
-             * @param minutes  the time-zone offset in minutes, from 0 to &plusmn;59, sign matches hours
-             * @return the zone-offset
-             * @throws DateTimeException if the offset is not in the required range
-             */
-            static ZoneOffset ofHoursMinutes(gint hours, gint minutes);
+      /**
+       * Obtains an instance of @c ZoneOffset using an offset in
+       * hours and minutes.
+       * <p>
+       * The sign of the hours and minutes components must match.
+       * Thus, if the hours is negative, the minutes must be negative or zero.
+       * If the hours is zero, the minutes may be positive, negative or zero.
+       * </p>
+       * @param hours  the time-zone offset in hours, from -18 to +18
+       * @param minutes  the time-zone offset in minutes, from 0 to &plusmn;59, sign matches hours
+       * @return the zone-offset
+       * @throws DateTimeException if the offset is not in the required range
+       */
+      static ZoneOffset ofHoursMinutes(gint hours, gint minutes);
 
-            /**
-             * Obtains an instance of @c ZoneOffset using an offset in
-             * hours, minutes and seconds.
-             * <p>
-             * The sign of the hours, minutes and seconds components must match.
-             * Thus, if the hours is negative, the minutes and seconds must be negative or zero.
-             * </p>
-             * @param hours  the time-zone offset in hours, from -18 to +18
-             * @param minutes  the time-zone offset in minutes, from 0 to &plusmn;59, sign matches hours and seconds
-             * @param seconds  the time-zone offset in seconds, from 0 to &plusmn;59, sign matches hours and minutes
-             * @return the zone-offset
-             * @throws DateTimeException if the offset is not in the required range
-             */
-            static ZoneOffset ofHoursMinutesSeconds(gint hours, gint minutes, gint seconds);
+      /**
+       * Obtains an instance of @c ZoneOffset using an offset in
+       * hours, minutes and seconds.
+       * <p>
+       * The sign of the hours, minutes and seconds components must match.
+       * Thus, if the hours is negative, the minutes and seconds must be negative or zero.
+       * </p>
+       * @param hours  the time-zone offset in hours, from -18 to +18
+       * @param minutes  the time-zone offset in minutes, from 0 to &plusmn;59, sign matches hours and seconds
+       * @param seconds  the time-zone offset in seconds, from 0 to &plusmn;59, sign matches hours and minutes
+       * @return the zone-offset
+       * @throws DateTimeException if the offset is not in the required range
+       */
+      static ZoneOffset ofHoursMinutesSeconds(gint hours, gint minutes, gint seconds);
 
-            /**
-             * Obtains an instance of @c ZoneOffset from a temporal object.
-             * <p>
-             * This obtains an offset based on the specified temporal.
-             * A @c Temporal represents an arbitrary set of date and time information,
-             * which this factory converts to an instance of @c ZoneOffset.
-             * </p>
-             * <p>
-             * A @c Temporal represents some form of date and time information.
-             * This factory converts the arbitrary temporal object to an instance of @c ZoneOffset.
-             * </p>
-             * <p>
-             * The conversion uses the @b TemporalQuery::OFFSET query, which relies
-             * on extracting the @b OFFSET_SECONDS field.
-             * </p>
-             * <p>
-             * This method matches the signature of the functional interface @b TemporalQuery
-             * allowing it to be used as a query via method reference, @c ZoneOffset::from.
-             * </p>
-             * @param temporal  the temporal object to convert
-             * @return the zone-offset
-             * @throws DateTimeException if unable to convert to an @c ZoneOffset
-             */
-            static ZoneOffset from(Temporal const& temporal);
+      /**
+       * Obtains an instance of @c ZoneOffset from a temporal object.
+       * <p>
+       * This obtains an offset based on the specified temporal.
+       * A @c Temporal represents an arbitrary set of date and time information,
+       * which this factory converts to an instance of @c ZoneOffset.
+       * </p>
+       * <p>
+       * A @c Temporal represents some form of date and time information.
+       * This factory converts the arbitrary temporal object to an instance of @c ZoneOffset.
+       * </p>
+       * <p>
+       * The conversion uses the @b TemporalQuery::OFFSET query, which relies
+       * on extracting the @b OFFSET_SECONDS field.
+       * </p>
+       * <p>
+       * This method matches the signature of the functional interface @b TemporalQuery
+       * allowing it to be used as a query via method reference, @c ZoneOffset::from.
+       * </p>
+       * @param temporal  the temporal object to convert
+       * @return the zone-offset
+       * @throws DateTimeException if unable to convert to an @c ZoneOffset
+       */
+      static ZoneOffset from(TemporalAccessor const& temporal);
 
-            /**
-             * Obtains an instance of @c ZoneOffset specifying the total offset in seconds
-             * <p>
-             * The offset must be in the range @c -18:00 to @c +18:00, which corresponds to -64800 to +64800.
-             * </p>
-             * @param totalSeconds  the total time-zone offset in seconds, from -64800 to +64800
-             * @return the ZoneOffset
-             * @throws DateTimeException if the offset is not in the required range
-             */
-            CORE_EXPLICIT ZoneOffset(gint totalSeconds);
+      /**
+       * Obtains an instance of @c ZoneOffset specifying the total offset in seconds
+       * <p>
+       * The offset must be in the range @c -18:00 to @c +18:00, which corresponds to -64800 to +64800.
+       * </p>
+       * @param totalSeconds  the total time-zone offset in seconds, from -64800 to +64800
+       * @return the ZoneOffset
+       * @throws DateTimeException if the offset is not in the required range
+       */
+      static ZoneOffset ofTotalSeconds(gint totalSeconds);
 
-            ZoneOffset(ZoneOffset const& other);
+      /**
+       * Gets the total zone offset in seconds.
+       * <p>
+       * This is the primary way to access the offset amount.
+       * It returns the total of the hours, minutes and seconds fields as a
+       * single offset that can be added to a time.
+       * </p>
+       * @return the total zone offset amount in seconds
+       */
+      gint totalSeconds() const;
 
-            ZoneOffset(ZoneOffset&& other) CORE_NOTHROW;
+      /**
+       * Gets the normalized zone offset ID.
+       * <p>
+       * The ID is minor variation to the standard ISO-8601 formatted string
+       * for the offset. There are three formats:
+       *
+       * @li @c Z - for UTC (ISO-8601)
+       * @li @c +hh:mm or @c -hh:mm - if the seconds are zero (ISO-8601)
+       * @li @c +hh:mm:ss or @c -hh:mm:ss - if the seconds are non-zero (not ISO-8601)
+       * </p>
+       * @return the zone offset ID
+       */
+      String getId() const override;
 
-            ZoneOffset& operator=(ZoneOffset const& other);
+      /**
+       * Gets the associated time-zone rules.
+       * <p>
+       * The rules will always return this offset when queried.
+       * The implementation class is immutable, thread-safe and serializable.
+       * </p>
+       * @return the rules
+       */
+      ZoneRules getRules() const override;
 
-            ZoneOffset& operator=(ZoneOffset&& other) CORE_NOTHROW;
+      ZoneOffset const& normalized() const override;
 
-            ~ZoneOffset() override;
+      /**
+       * Checks if the specified field is supported.
+       * <p>
+       * This checks if this offset can be queried for the specified field.
+       * If false, then calling the @b range and @b get methods will throw an exception.
+       * </p>
+       * <p>
+       * If the field is a @b TemporalField then the query is implemented here.
+       * The @c OFFSET_SECONDS field returns true.
+       * All other @c TemporalField instances will return false.
+       * </p>
+       * @param field  the field to check, null returns false
+       * @return true if the field is supported on this offset, false if not
+       */
+      gbool isSupported(TemporalField field) const override;
 
-            /**
-             * Gets the total zone offset in seconds.
-             * <p>
-             * This is the primary way to access the offset amount.
-             * It returns the total of the hours, minutes and seconds fields as a
-             * single offset that can be added to a time.
-             * </p>
-             * @return the total zone offset amount in seconds
-             */
-            gint totalSeconds() const;
+      /**
+       * Gets the range of valid values for the specified field.
+       * <p>
+       * The range object expresses the minimum and maximum valid values for a field.
+       * This offset is used to enhance the accuracy of the returned range.
+       * If it is not possible to return the range, because the field is not supported
+       * or for some other reason, an exception is thrown.
+       * </p>
+       * @param field  the field to query the range for, not null
+       * @return the range of valid values for the field, not null
+       * @throws DateTimeException if the range for the field cannot be obtained
+       * @throws UnsupportedTemporalTypeException if the field is not supported
+       */
+      ValueRange range(TemporalField field) const override;
 
-            /**
-             * Gets the normalized zone offset ID.
-             * <p>
-             * The ID is minor variation to the standard ISO-8601 formatted string
-             * for the offset. There are three formats:
-             *
-             * @li @c Z - for UTC (ISO-8601)
-             * @li @c +hh:mm or @c -hh:mm - if the seconds are zero (ISO-8601)
-             * @li @c +hh:mm:ss or @c -hh:mm:ss - if the seconds are non-zero (not ISO-8601)
-             * </p>
-             * @return the zone offset ID
-             */
-            String getId() const override;
+      /**
+       * Gets the value of the specified field from this offset as an @c int.
+       * <p>
+       * This queries this offset for the value of the specified field.
+       * The returned value will always be within the valid range of values for the field.
+       * If it is not possible to return the value, because the field is not supported
+       * or for some other reason, an exception is thrown.
+       * </p>
+       * <p>
+       * If the field is a @b TemporalField then the query is implemented here.
+       * The @c OFFSET_SECONDS field returns the value of the offset.
+       * All other @c TemporalField instances will throw an @c TemporalException.
+       * </p>
+       * @param field  the field to get
+       * @return the value for the field
+       * @throws DateTimeException if a value for the field cannot be obtained or
+       *         the value is outside the range of valid values for the field
+       * @throws TemporalException if the field is not supported or
+       *         the range of values exceeds an @c int
+       * @throws ArithmeticException if numeric overflow occurs
+       */
+      gint get(TemporalField field) const override;
 
-            /**
-             * Gets the associated time-zone rules.
-             * <p>
-             * The rules will always return this offset when queried.
-             * The implementation class is immutable, thread-safe and serializable.
-             * </p>
-             * @return the rules
-             */
-            ZoneRules getRules() const override;
+      /**
+       * Gets the value of the specified field from this offset as a @c long.
+       * <p>
+       * This queries this offset for the value of the specified field.
+       * If it is not possible to return the value, because the field is not supported
+       * or for some other reason, an exception is thrown.
+       * </p>
+       * <p>
+       * If the field is a @b TemporalField then the query is implemented here.
+       * The @c OFFSET_SECONDS field returns the value of the offset.
+       * All other @c TemporalField instances will throw an @c TemporalException.
+       * </p>
+       * @param field  the field to get
+       * @return the value for the field
+       * @throws DateTimeException if a value for the field cannot be obtained
+       * @throws TemporalException if the field is not supported
+       * @throws ArithmeticException if numeric overflow occurs
+       */
+      glong getLong(TemporalField field) const override;
 
-            ZoneOffset const& normalized() const override;
+      /**
+       * Queries this offset using the specified query.
+       * <p>
+       * This queries this offset using the specified query strategy object.
+       * The @c TemporalQuery object defines the logic to be used to
+       * obtain the result. Read the documentation of the query to understand
+       * what the result of this method will be.
+       * </p>
+       * @param query  the query to invoke
+       * @return the query result, null may be returned (defined by the query)
+       * @throws DateTimeException if unable to query (defined by the query)
+       * @throws ArithmeticException if numeric overflow occurs (defined by the query)
+       */
+      Optional query(TemporalQuery const& query) const override;
 
-            gbool isSupported(ChronoUnit unit) const override;
+      /**
+       * Compares this offset to another offset in descending order.
+       * <p>
+       * The offsets are compared in the order that they occur for the same time
+       * of day around the world. Thus, an offset of @c +10:00 comes before an
+       * offset of @c +09:00 and so on down to @c -18:00.
+       * </p>
+       * <p>
+       * The comparison is "consistent with equals", as defined by @b Comparable.
+       * </p>
+       * @param otherOffset  the other date to compare to
+       * @return the comparator value, that is less than zero if this totalSeconds is
+       *          less than @c other totalSeconds, zero if they are equal,
+       *          greater than zero if this totalSeconds is greater than @c other totalSeconds
+       */
+      gint compareTo(ZoneOffset const& otherOffset) const override;
 
-            /**
-             * Checks if the specified field is supported.
-             * <p>
-             * This checks if this offset can be queried for the specified field.
-             * If false, then calling the @b range and @b get methods will throw an exception.
-             * </p>
-             * <p>
-             * If the field is a @b ChronoField then the query is implemented here.
-             * The @c OFFSET_SECONDS field returns true.
-             * All other @c ChronoField instances will return false.
-             * </p>
-             * @param field  the field to check, null returns false
-             * @return true if the field is supported on this offset, false if not
-             */
-            gbool isSupported(ChronoField field) const override;
+      /**
+       * Checks if this offset is equal to another offset.
+       * <p>
+       * The comparison is based on the amount of the offset in seconds.
+       * This is equivalent to a comparison by ID.
+       * </p>
+       * @param other  the object to check, null returns false
+       * @return true if this is equal to the other offset
+       */
+      gbool equals(Object const& other) const override;
 
-            /**
-             * Gets the value of the specified field from this offset as an @c int.
-             * <p>
-             * This queries this offset for the value of the specified field.
-             * The returned value will always be within the valid range of values for the field.
-             * If it is not possible to return the value, because the field is not supported
-             * or for some other reason, an exception is thrown.
-             * </p>
-             * <p>
-             * If the field is a @b ChronoField then the query is implemented here.
-             * The @c OFFSET_SECONDS field returns the value of the offset.
-             * All other @c ChronoField instances will throw an @c TemporalException.
-             * </p>
-             * @param field  the field to get
-             * @return the value for the field
-             * @throws DateTimeException if a value for the field cannot be obtained or
-             *         the value is outside the range of valid values for the field
-             * @throws TemporalException if the field is not supported or
-             *         the range of values exceeds an @c int
-             * @throws ArithmeticException if numeric overflow occurs
-             */
-            gint get(ChronoField field) const override;
+      /**
+       * A hash code for this offset.
+       *
+       * @return a suitable hash code
+       */
+      gint hash() const override;
 
-            /**
-             * Gets the value of the specified field from this offset as a @c long.
-             * <p>
-             * This queries this offset for the value of the specified field.
-             * If it is not possible to return the value, because the field is not supported
-             * or for some other reason, an exception is thrown.
-             * </p>
-             * <p>
-             * If the field is a @b ChronoField then the query is implemented here.
-             * The @c OFFSET_SECONDS field returns the value of the offset.
-             * All other @c ChronoField instances will throw an @c TemporalException.
-             * </p>
-             * @param field  the field to get
-             * @return the value for the field
-             * @throws DateTimeException if a value for the field cannot be obtained
-             * @throws TemporalException if the field is not supported
-             * @throws ArithmeticException if numeric overflow occurs
-             */
-            glong getLong(ChronoField field) const override;
+      /**
+       * Outputs this offset as a @c String, using the normalized ID.
+       *
+       * @return a string representation of this offset
+       */
+      String toString() const override;
 
-            /**
-             * Queries this offset using the specified query.
-             * <p>
-             * This queries this offset using the specified query strategy object.
-             * The @c TemporalQuery object defines the logic to be used to
-             * obtain the result. Read the documentation of the query to understand
-             * what the result of this method will be.
-             * </p>
-             * @param query  the query to invoke
-             * @return the query result, null may be returned (defined by the query)
-             * @throws DateTimeException if unable to query (defined by the query)
-             * @throws ArithmeticException if numeric overflow occurs (defined by the query)
-             */
-            util::Optional<> query(TemporalQuery const& query) const override;
+      /**
+       * Return the shadow copy of this object
+       *
+       * @return the shadow copy of this object
+       */
+      Object& clone() const override;
 
-            /**
-             * Compares this offset to another offset in descending order.
-             * <p>
-             * The offsets are compared in the order that they occur for the same time
-             * of day around the world. Thus, an offset of @c +10:00 comes before an
-             * offset of @c +09:00 and so on down to @c -18:00.
-             * </p>
-             * <p>
-             * The comparison is "consistent with equals", as defined by @b Comparable.
-             * </p>
-             * @param otherOffset  the other date to compare to
-             * @return the comparator value, that is less than zero if this totalSeconds is
-             *          less than @c other totalSeconds, zero if they are equal,
-             *          greater than zero if this totalSeconds is greater than @c other totalSeconds
-             */
-            gint compareTo(ZoneOffset const& otherOffset) const override;
+    private:
+      /**
+       * Parse a two digit zero-prefixed number.
+       *
+       * @param offsetId  the offset ID, not null
+       * @param pos  the position to parse, valid
+       * @param precededByColon  should this number be prefixed by a precededByColon
+       * @return the parsed number, from 0 to 99
+       */
+      static gint parseNumber(CharSequence const& offsetId, gint pos, gbool precededByColon);
 
-            /**
-             * Checks if this offset is equal to another offset.
-             * <p>
-             * The comparison is based on the amount of the offset in seconds.
-             * This is equivalent to a comparison by ID.
-             * </p>
-             * @param other  the object to check, null returns false
-             * @return true if this is equal to the other offset
-             */
-            gbool equals(Object const& other) const override;
+      /**
+       * Validates the offset fields.
+       *
+       * @param hours  the time-zone offset in hours, from -18 to +18
+       * @param minutes  the time-zone offset in minutes, from 0 to &plusmn;59
+       * @param seconds  the time-zone offset in seconds, from 0 to &plusmn;59
+       * @throws DateTimeException if the offset is not in the required range
+       */
+      static void validate(gint hours, gint minutes, gint seconds);
 
-            /**
-             * A hash code for this offset.
-             *
-             * @return a suitable hash code
-             */
-            gint hash() const override;
+      /**
+       * Calculates the total offset in seconds.
+       *
+       * @param hours  the time-zone offset in hours, from -18 to +18
+       * @param minutes  the time-zone offset in minutes, from 0 to &plusmn;59, sign matches hours and seconds
+       * @param seconds  the time-zone offset in seconds, from 0 to &plusmn;59, sign matches hours and minutes
+       * @return the total in seconds
+       */
+      static gint totalSeconds(gint hours, gint minutes, gint seconds);
 
-            /**
-             * Outputs this offset as a @c String, using the normalized ID.
-             *
-             * @return a string representation of this offset
-             */
-            String toString() const override;
+      static String buildId(gint totalSeconds);
 
-            /**
-             * Return the shadow copy of this object
-             *
-             * @return the shadow copy of this object
-             */
-            Object& clone() const override;
+      ZoneOffset getOffset(glong epochSecond) const override;
 
-        private:
-            ZoneOffset() = default;
-
-            ZoneOffset getOffset(glong epochSecond) const override;
-
-            /**
-             * Validates the offset fields.
-             *
-             * @param hours  the time-zone offset in hours, from -18 to +18
-             * @param minutes  the time-zone offset in minutes, from 0 to &plusmn;59
-             * @param seconds  the time-zone offset in seconds, from 0 to &plusmn;59
-             * @throws DateTimeException if the offset is not in the required range
-             */
-            static void validate(gint hours, gint minutes, gint seconds);
-
-            static String createID(gint totalSeconds);
-
-            /**
-             * Parse a two digit zero-prefixed number.
-             *
-             * @param id  the offset ID, not null
-             * @param pos  the position to parse, valid
-             * @param precededByColon  should this number be prefixed by a precededByColon
-             * @return the parsed number, from 0 to 99
-             */
-            static gint parseID(String const& id, gint pos, gbool precededByColon);
-        };
-    } // time
+      CORE_ADD_AS_FRIEND(ZoneOffsetArray);
+    };
+  } // time
 } // core
 
 #endif //CORE24_ZONEOFFSET_H

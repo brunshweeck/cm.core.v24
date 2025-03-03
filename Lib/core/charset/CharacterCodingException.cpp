@@ -2,8 +2,9 @@
 // Created by brunshweeck on 1 sept. 2024.
 //
 
+#include "CharacterCodingException.h"
+
 #include <core/misc/Unsafe.h>
-#include <core/charset/CharacterCodingException.h>
 
 namespace core {
     namespace charset {

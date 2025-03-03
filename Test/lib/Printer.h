@@ -7,9 +7,9 @@
 
 #include <native/Console.h>
 
-#include "core/Throwable.h"
-#include "core/misc/Unsafe.h"
-#include "core/util/Locale.h"
+#include <core/lang/Throwable.h>
+#include <core/misc/Unsafe.h>
+#include <core/util/Locale.h>
 
 using namespace core;
 using namespace core::text;

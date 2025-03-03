@@ -2,11 +2,11 @@
 // Created by brunshweeck on 20 août 2024.
 //
 
-#include <core/LongArray.h>
+#include <core/lang/LongArray.h>
 #include <meta/random/L64X256MixRandom.h>
 #include <meta/random/RandomSupport.h>
 
-#include "core/atomic/AtomicLong.h"
+#include <core/atomic/AtomicLong.h>
 
 namespace core {
     namespace random {

@@ -2,7 +2,7 @@
 // Created by brunshweeck on 20 août 2024.
 //
 
-#include <core/LongArray.h>
+#include <core/lang/LongArray.h>
 #include <core/atomic/AtomicLong.h>
 #include <meta/random/L64X1024MixRandom.h>
 #include <meta/random/RandomSupport.h>

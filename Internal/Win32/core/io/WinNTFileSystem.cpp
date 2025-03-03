@@ -6,11 +6,11 @@
 #define UNICODE
 #endif
 
-#include <AclAPI.h> // GetNamedSecurityInfo
-#include <Windows.h>
-#include <ShlObj.h>
-#include <core/StringArray.h>
-#include <core/XString.h>
+#include <core/lang/AclAPI.h> // GetNamedSecurityInfo
+#include <core/lang/Windows.h>
+#include <core/lang/ShlObj.h>
+#include <core/lang/StringArray.h>
+#include <core/lang/XString.h>
 #include <core/io/FileArray.h>
 #include <core/io/WinNTFileSystem.h>
 #include <core/misc/Unsafe.h>

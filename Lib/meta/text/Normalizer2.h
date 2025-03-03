@@ -6,7 +6,7 @@
 #define CORE24_NORMALIZER2_H
 
 #include "Version.h"
-#include "core/text/Normalizer.h"
+#include <core/text/Normalizer.h>
 
 namespace core {
     namespace text {

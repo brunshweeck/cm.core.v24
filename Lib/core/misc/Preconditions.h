@@ -5,7 +5,7 @@
 #ifndef CORE24_PRECONDITION_H
 #define CORE24_PRECONDITION_H
 
-#include <core/Object.h>
+#include <core/lang/Object.h>
 
 namespace core {
     namespace misc {

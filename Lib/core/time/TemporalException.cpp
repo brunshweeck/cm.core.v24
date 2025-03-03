@@ -6,21 +6,21 @@
 #include <core/misc/Unsafe.h>
 
 namespace core {
-    namespace time {
-        TemporalException::TemporalException(String const &message)
-                : Throwable(message), DateTimeException(message) {}
+  namespace time {
+    TemporalException::TemporalException(String const& message)
+      : DateTimeException(message), Throwable(message) {}
 
-        TemporalException::TemporalException(String const &message, Throwable const &cause)
-                : Throwable(message, cause), DateTimeException(message, cause) {}
+    TemporalException::TemporalException(String const& message, Throwable const& cause)
+      : DateTimeException(message, cause), Throwable(message, cause) {}
 
-        Object &TemporalException::clone() const {
-            try {
-                return UNSAFE::newInstance<DateTimeException>(*this);
-            } catch (Throwable const &ex) { ex.throws($ftrace()); }
-        }
+    Object& TemporalException::clone() const {
+      try {
+        return UNSAFE::newInstance<DateTimeException>(*this);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
 
-        void TemporalException::selfThrow() const {
-            throw TemporalException(*this);
-        }
-    } // time
+    void TemporalException::selfThrow() const {
+      throw TemporalException(*this);
+    }
+  } // time
 } // core

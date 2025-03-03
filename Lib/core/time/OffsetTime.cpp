@@ -4,285 +4,385 @@
 
 #include "OffsetTime.h"
 
+#include <core/lang/Enum.h>
+#include <core/time/Duration.h>
+#include <core/time/Instant.h>
+#include <core/time/OffsetDateTime.h>
+#include <core/time/TemporalQuery.h>
+#include <core/time/ValueRange.h>
+#include <core/time/ZoneRules.h>
 #include <core/util/Optional.h>
-#include "OffsetDateTime.h"
-#include "TemporalQuery.h"
+#include <meta/time/TemporalUtils.h>
 
 namespace core {
-    using namespace util;
+  using namespace util;
+  CORE_ALIAS(Fields, time::TemporalUtils::Fields);
+  CORE_ALIAS(Units, time::TemporalUtils::Units);
 
-    namespace time {
-        OffsetTime const OffsetTime::MAX = OffsetTime(MAX_HOUR, MAX_MINUTE, MAX_SECOND, MAX_NANOSECOND,
-                                                      ZoneOffset(MIN_OFFSET_SECONDS));
-        OffsetTime const OffsetTime::MIN = OffsetTime(MAX_HOUR, MAX_MINUTE, MAX_SECOND, MAX_NANOSECOND,
-                                                      ZoneOffset(MAX_OFFSET_SECONDS));
+  namespace time {
+    OffsetTime const OffsetTime::MIN = LocalTime::MIN.atOffset(ZoneOffset::MAX);
+    OffsetTime const OffsetTime::MAX = LocalTime::MAX.atOffset(ZoneOffset::MIN);
 
+    OffsetTime::OffsetTime(LocalTime const& time, ZoneOffset const& offset): time(time), offset(offset) {}
 
-        OffsetTime::OffsetTime(LocalTime const& time, ZoneOffset const& offset)
-            : time(time), zone(offset) {}
+    OffsetTime OffsetTime::now() {
+      return now(ZoneId::systemZone());
+    }
 
-        OffsetTime::OffsetTime(gint hour, gint minute, ZoneOffset const& offset)
-            : time(hour, minute), zone(offset) {}
+    OffsetTime OffsetTime::now(ZoneId const& zone) {
+      Instant now = Instant::now();
+      ZoneOffset offset = zone.getRules().offset(now);
+      return ofInstant(now, offset);
+    }
 
-        OffsetTime::OffsetTime(gint hour, gint minute, gint second, ZoneOffset const& offset)
-            : time(hour, minute, second), zone(offset) {}
+    OffsetTime OffsetTime::of(LocalTime const& time, ZoneOffset const& offset) {
+      return OffsetTime(time, offset);
+    }
 
-        OffsetTime::OffsetTime(gint hour, gint minute, gint second, gint nanoOfSecond, ZoneOffset const& offset)
-            : time(hour, minute, second, nanoOfSecond), zone(offset) {}
+    OffsetTime OffsetTime::of(gint hour, gint minute, gint second, gint nanoOfSecond, ZoneOffset const& offset) {
+      try {
+        LocalTime time = LocalTime::of(hour, minute, second, nanoOfSecond);
+        return OffsetTime(time, offset);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
 
-        OffsetTime OffsetTime::from(Temporal const& temporal) {
-            if (Class<OffsetTime>::hasInstance(temporal))
-                return CORE_XCAST(OffsetTime const, temporal);
-            try {
-                LocalTime time = LocalTime::from(temporal);
-                ZoneOffset zone = ZoneOffset::from(temporal);
-                return OffsetTime(time, zone);
-            } catch (DateTimeException const& ex) {
-                DateTimeException("Unable to obtain OffsetTime from Temporal "_Sl +
-                                  temporal + " of type " + typeName(temporal), ex).throws($ftrace());
-            }
+    OffsetTime OffsetTime::ofInstant(Instant const& instant, ZoneId const& zone) {
+      try {
+        ZoneRules rules = zone.getRules();
+        ZoneOffset offset = rules.offset(instant);
+        glong totalSeconds = instant.epochSecond() + offset.totalSeconds();
+        glong secondOfDay = Math::floorMod(totalSeconds, SECONDS_PER_DAY);
+
+        LocalTime time = LocalTime::ofNanoOfDay(secondOfDay * NANOS_PER_SECOND + instant.nano());
+        return OffsetTime(time, offset);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    OffsetTime OffsetTime::from(TemporalAccessor const& temporal) {
+      if (Class<OffsetTime>::hasInstance(temporal))
+        return CORE_XCAST(OffsetTime const, temporal);
+      try {
+        LocalTime time = LocalTime::from(temporal);
+        ZoneOffset offset = ZoneOffset::from(temporal);
+        return OffsetTime(time, offset);
+      } catch (Throwable const& ex) {
+        DateTimeException("Unable to obtain OffsetTime from Temporal: " +
+                          temporal + " of type " + typeName(temporal), ex).throws($ftrace());
+      }
+    }
+
+    OffsetTime OffsetTime::parse(CharSequence const& text) {
+      // TODO: Implement this method!
+      CORE_ASSERT2(false, "Unimplemented method.");
+    }
+
+    OffsetTime OffsetTime::parse(CharSequence const& text, DateTimeFormatter const& formatter) {
+      // TODO: Implement this method!
+      CORE_ASSERT2(false, "Unimplemented method.");
+    }
+
+    gbool OffsetTime::isSupported(TemporalField field) const {
+      return time.isSupported(field) || offset.isSupported(field) || Fields::isSupportedBy(*this, field);
+    }
+
+    gbool OffsetTime::isSupported(TemporalUnit unit) const {
+      return time.isSupported(unit) || Units::isSupportedBy(*this, unit);
+    }
+
+    ValueRange OffsetTime::range(TemporalField field) const {
+      try {
+        if (field == TemporalField::OFFSET_SECONDS)
+          return Fields::range(*this, field);
+        return time.range(field);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    gint OffsetTime::get(TemporalField field) const {
+      try {
+        return Temporal::get(field);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    glong OffsetTime::getLong(TemporalField field) const {
+      try {
+        if (field == TemporalField::OFFSET_SECONDS)
+          return offset.totalSeconds();
+        if (time.isSupported(field))
+          return time.getLong(field);
+        return Fields::getFrom(*this, field);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    ZoneOffset OffsetTime::toOffset() const {
+      return offset;
+    }
+
+    OffsetTime OffsetTime::withOffsetSameLocal(ZoneOffset const& offset) const {
+      return OffsetTime(time, offset);
+    }
+
+    OffsetTime OffsetTime::withOffsetSameInstant(ZoneOffset const& offset) const {
+      try {
+        glong secondsUntil = offset.totalSeconds() - toOffset().totalSeconds();
+        LocalTime t = time.plusSeconds(secondsUntil);
+        return OffsetTime(t, offset);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    LocalTime OffsetTime::toLocalTime() const {
+      return time;
+    }
+
+    gint OffsetTime::hour() const {
+      return time.hash();
+    }
+
+    gint OffsetTime::minute() const {
+      return time.minute();
+    }
+
+    gint OffsetTime::second() const {
+      return time.second();
+    }
+
+    gint OffsetTime::nano() const {
+      return time.nano();
+    }
+
+    OffsetTime OffsetTime::with(TemporalAdjuster const& adjuster) const {
+      if (Class<LocalTime>::hasInstance(adjuster))
+        return with(CORE_XCAST(LocalTime const, adjuster), offset);
+      if (Class<ZoneOffset>::hasInstance(adjuster))
+        return with(time, CORE_XCAST(ZoneOffset const, adjuster));
+      if (Class<OffsetTime>::hasInstance(adjuster))
+        return CORE_XCAST(OffsetTime const, adjuster);
+      try {
+        return CORE_XCAST(OffsetTime, adjuster.adjustInto(*this));
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    OffsetTime OffsetTime::with(TemporalField field, glong newValue) const {
+      try {
+        if (field == TemporalField::OFFSET_SECONDS) {
+          Fields::checkValue(newValue, field);
+          return with(time, ZoneOffset::ofTotalSeconds(newValue));
         }
+        return with(time.with(field, newValue), offset);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
 
-        gbool OffsetTime::isSupported(ChronoField field) const {
-            return field == OFFSET_SECONDS || time.isSupported(field);
+    OffsetTime OffsetTime::withHour(gint hour) const {
+      try {
+        return with(time.withHour(hour), offset);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    OffsetTime OffsetTime::withMinute(gint minute) const {
+      try {
+        return with(time.withMinute(minute), offset);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    OffsetTime OffsetTime::withSecond(gint second) const {
+      try {
+        return with(time.withSecond(second), offset);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    OffsetTime OffsetTime::withNano(gint nanoOfSecond) const {
+      try {
+        return with(time.withNano(nanoOfSecond), offset);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    OffsetTime OffsetTime::truncatedTo(TemporalUnit unit) const {
+      try {
+        return with(time.truncatedTo(unit), offset);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    OffsetTime OffsetTime::plus(TemporalAmount const& amountToAdd) const {
+      try {
+        return CORE_XCAST(OffsetTime, amountToAdd.addTo(*this));
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    OffsetTime OffsetTime::plus(glong amountToAdd, TemporalUnit unit) const {
+      try {
+        return with(time.plus(amountToAdd, unit), offset);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    OffsetTime OffsetTime::plusHours(glong hours) const {
+      try {
+        return with(time.plusHours(hours), offset);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    OffsetTime OffsetTime::plusMinutes(glong minutes) const {
+      try {
+        return with(time.plusMinutes(minutes), offset);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    OffsetTime OffsetTime::plusSeconds(glong seconds) const {
+      try {
+        return with(time.plusSeconds(seconds), offset);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    OffsetTime OffsetTime::plusNanos(glong nanos) const {
+      try {
+        return with(time.plusNanos(nanos), offset);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    OffsetTime OffsetTime::minus(TemporalAmount const& amountToSubtract) const {
+      try {
+        return CORE_XCAST(OffsetTime, amountToSubtract.subtractFrom(*this));
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    OffsetTime OffsetTime::minus(glong amountToSubtract, TemporalUnit unit) const {
+      try {
+        return with(time.minus(amountToSubtract, unit), offset);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    OffsetTime OffsetTime::minusHours(glong hours) const {
+      try {
+        return with(time.minusHours(hours), offset);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    OffsetTime OffsetTime::minusMinutes(glong minutes) const {
+      try {
+        return with(time.minusMinutes(minutes), offset);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    OffsetTime OffsetTime::minusSeconds(glong seconds) const {
+      try {
+        return with(time.minusSeconds(seconds), offset);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    OffsetTime OffsetTime::minusNanos(gint nanos) const {
+      try {
+        return with(time.minusNanos(nanos), offset);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    TemporalAdjuster::Optional OffsetTime::query(TemporalQuery const& query) const {
+      if (query == TemporalQuery::offset() || query == TemporalQuery::zone())
+        return toOffset();
+      if (query == TemporalQuery::localTime())
+        return toLocalTime();
+      if (query == TemporalQuery::precision())
+        return (Enum<TemporalUnit>) TemporalUnit::NANOS;
+      if (query == TemporalQuery::zoneId() ||
+        query == TemporalQuery::chronology() ||
+        query == TemporalQuery::localDate())
+        return toOffset();
+
+      try {
+        return query.queryFrom(*this);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    Temporal& OffsetTime::adjustInto(Temporal const& temporal) const {
+      try {
+        return adjustFieldTo(
+          TemporalField::NANO_OF_DAY, time.toNanoOfDay(),
+          adjustFieldTo(
+            TemporalField::OFFSET_SECONDS, toOffset().totalSeconds(), temporal));
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
+
+    glong OffsetTime::until(Temporal const& endExclusive, TemporalUnit unit) const {
+      try {
+        OffsetTime end = OffsetTime::from(endExclusive);
+        glong nanosUntil = end.toEpochNano() - toEpochNano();
+        switch (unit) {
+          case TemporalUnit::NANOS: return nanosUntil;
+          case TemporalUnit::MICROS: return nanosUntil / 1000;
+          case TemporalUnit::MILLIS: return nanosUntil / NANOS_PER_MILLI;
+          case TemporalUnit::SECONDS: return nanosUntil / NANOS_PER_SECOND;
+          case TemporalUnit::MINUTES: return nanosUntil / NANOS_PER_MINUTE;
+          case TemporalUnit::HOURS: return nanosUntil / NANOS_PER_HOUR;
+          case TemporalUnit::HALF_DAYS: return nanosUntil / (12L * NANOS_PER_HOUR);
+          default: break;
         }
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+      TemporalException("Unsupported unit "_Sl + unit).throws($ftrace());
+    }
 
-        gbool OffsetTime::isSupported(ChronoUnit unit) const {
-            return time.isSupported(unit);
-        }
+    String OffsetTime::format(DateTimeFormatter const& formatter) const {
+      // TODO: Implement this method!
+      CORE_ASSERT2(false, "Unimplemented method.");
+    }
 
-        gint OffsetTime::get(ChronoField field) const {
-            try {
-                return Temporal::get(field);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
+    OffsetDateTime OffsetTime::atDate(LocalDate const& date) const {
+      try {
+        return OffsetDateTime::of(date, time, offset);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
 
-        glong OffsetTime::getLong(ChronoField field) const {
-            if (field == OFFSET_SECONDS)
-                return zone.totalSeconds();
-            try {
-                return time.getLong(field);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
+    glong OffsetTime::toEpochSecond(LocalDate const& date) const {
+      try {
+        glong epochDay = date.toEpochDay();
+        glong secs = epochDay * 86400L + time.toSecondOfDay();
+        secs -= offset.totalSeconds();
+        return secs;
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
 
-        ZoneOffset OffsetTime::offset() const {
-            return zone;
-        }
+    gint OffsetTime::compareTo(OffsetTime const& other) const {
+      if (offset.equals(other.offset)) {
+        return time.compareTo(other.time);
+      }
+      gint compare = Long::compare(toEpochNano(), other.toEpochNano());
+      if (compare == 0) {
+        compare = time.compareTo(other.time);
+      }
+      return compare;
+    }
 
-        OffsetTime OffsetTime::withOffsetSameLocal(ZoneOffset const& offset) const {
-            return OffsetTime(time, offset);
-        }
+    gbool OffsetTime::isAfter(OffsetTime const& other) const {
+      return toEpochNano() > other.toEpochNano();
+    }
 
-        OffsetTime OffsetTime::withOffsetSameInstant(ZoneOffset const& offset) const {
-            if (zone == offset)
-                return *this;
-            gint difference = -zone.totalSeconds() + offset.totalSeconds();
-            LocalTime adjusted = time.plusSeconds(difference);
-            return OffsetTime(adjusted, offset);
-        }
+    gbool OffsetTime::isBefore(OffsetTime const& other) const {
+      return toEpochNano() < other.toEpochNano();
+    }
 
-        LocalTime OffsetTime::toLocalTime() const {
-            return time;
-        }
+    gbool OffsetTime::equals(Object const& other) const {
+      return this == &other ||
+          (Class<OffsetTime>::hasInstance(other) && compareTo(CORE_XCAST(OffsetTime const, other)) == 0);
+    }
 
-        gint OffsetTime::hour() const {
-            return time.hour();
-        }
+    gint OffsetTime::hash() const {
+      return time.hash() ^ offset.hash();
+    }
 
-        gint OffsetTime::minute() const {
-            return time.minute();
-        }
+    String OffsetTime::toString() const {
+      return time.toString() + offset.toString();
+    }
 
-        gint OffsetTime::second() const {
-            return time.second();
-        }
+    Object& OffsetTime::clone() const {
+      return UNSAFE::newInstance<OffsetTime>(*this);
+    }
 
-        gint OffsetTime::nano() const {
-            return time.nano();
-        }
+    OffsetTime OffsetTime::with(LocalTime const& time, ZoneOffset const& offset) const {
+      if (time == toLocalTime() && offset == toOffset())
+        return *this;
+      return OffsetTime(time, offset);
+    }
 
-        OffsetTime OffsetTime::with(ChronoField field, glong newValue) const {
-            try {
-                if (field == OFFSET_SECONDS)
-                    return OffsetTime(time, ZoneOffset(checkValue(newValue, field)));
-
-                return OffsetTime(time.with(field, newValue), zone);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        OffsetTime OffsetTime::withHour(gint hour) const {
-            try {
-                return OffsetTime(time.withHour(hour), zone);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        OffsetTime OffsetTime::withMinute(gint minute) const {
-            try {
-                return OffsetTime(time.withMinute(minute), zone);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        OffsetTime OffsetTime::withSecond(gint second) const {
-            try {
-                return OffsetTime(time.withSecond(second), zone);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        OffsetTime OffsetTime::withNano(gint nanoOfSecond) const {
-            try {
-                return OffsetTime(time.withNano(nanoOfSecond), zone);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        OffsetTime OffsetTime::truncateTo(ChronoUnit unit) const {
-            try {
-                return OffsetTime(time.truncateTo(unit), zone);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        OffsetTime OffsetTime::plus(glong amountToAdd, ChronoUnit unit) const {
-            try {
-                return OffsetTime(time.plus(amountToAdd, unit), zone);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        OffsetTime OffsetTime::plusHours(glong hours) const {
-            try {
-                return OffsetTime(time.plusHours(hours), zone);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        OffsetTime OffsetTime::plusMinutes(glong minutes) const {
-            try {
-                return OffsetTime(time.plusMinutes(minutes), zone);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        OffsetTime OffsetTime::plusSeconds(glong seconds) const {
-            try {
-                return OffsetTime(time.plusSeconds(seconds), zone);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        OffsetTime OffsetTime::plusNanos(gint nanos) const {
-            try {
-                return OffsetTime(time.plusNanos(nanos), zone);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        OffsetTime OffsetTime::minus(glong amountToSubtract, ChronoUnit unit) const {
-            try {
-                return amountToSubtract == Long::MIN_VALUE
-                           ? plus(Long::MAX_VALUE, unit).plus(1, unit)
-                           : plus(-amountToSubtract, unit);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        OffsetTime OffsetTime::minusHours(glong hours) const {
-            try {
-                return hours == Long::MIN_VALUE ? plusHours(Long::MAX_VALUE).plusHours(1) : plusHours(-hours);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        OffsetTime OffsetTime::minusMinutes(glong minutes) const {
-            try {
-                return minutes == Long::MIN_VALUE ? plusMinutes(Long::MAX_VALUE).plusMinutes(1) : plusMinutes(-minutes);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        OffsetTime OffsetTime::minusSeconds(glong seconds) const {
-            try {
-                return seconds == Long::MIN_VALUE ? plusSeconds(Long::MAX_VALUE).plusSeconds(1) : plusSeconds(-seconds);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        OffsetTime OffsetTime::minusNanos(gint nanos) const {
-            try {
-                return nanos == Long::MIN_VALUE ? plusSeconds(Long::MAX_VALUE).plusNanos(1) : plusSeconds(-nanos);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-
-        Optional<> OffsetTime::query(TemporalQuery const& query) const {
-            if (query == TemporalQuery::OFFSET || query == TemporalQuery::ZONE)
-                return zone;
-            if (query == TemporalQuery::ZONE_ID)
-                return Optional<>();
-            if (query == TemporalQuery::LOCAL_TIME)
-                return toLocalTime();
-            if (query == TemporalQuery::LOCAL_DATE)
-                return Optional<>();
-            return query.queryFrom(*this);
-        }
-
-        glong OffsetTime::until(Temporal const& endExclusive, ChronoUnit unit) const {
-            OffsetTime end = MIN;
-            try {
-                end = from(endExclusive);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-            glong nanoUntil = (end.time.toNanoOfDay() - end.zone.totalSeconds() * LocalTime::NANOS_PER_SECOND)
-                    - (time.toNanoOfDay() - zone.totalSeconds() * LocalTime::NANOS_PER_SECOND);
-            switch (unit) {
-                case NANOS: return nanoUntil;
-                case MICROS: return nanoUntil / 1000;
-                case MILLIS: return nanoUntil / LocalTime::NANOS_PER_MILLI;
-                case SECONDS: return nanoUntil / LocalTime::NANOS_PER_SECOND;
-                case MINUTES: return nanoUntil / LocalTime::NANOS_PER_MINUTE;
-                case HOURS: return nanoUntil / LocalTime::NANOS_PER_HOUR;
-                case HALF_DAYS: return nanoUntil / (12 * LocalTime::NANOS_PER_HOUR);
-                default: TemporalException("Unsupported unit: " + Temporal::toString(unit)).throws($ftrace());
-            }
-        }
-
-        OffsetDateTime OffsetTime::atDate(LocalDate const& date) const {
-            return OffsetDateTime(date, time, zone);
-        }
-
-        glong OffsetTime::toEpochSecond(LocalDate const& date) const {
-            glong epochDay = date.toEpochDay();
-            glong seconds = epochDay * 86400 + time.toSecondOfDay();
-            seconds -= zone.totalSeconds();
-            return seconds;
-        }
-
-        gint OffsetTime::compareTo(OffsetTime const& other) const {
-            if (zone == other.zone)
-                return time.compareTo(other.time);
-            gint cmp = Long::compare(time.toNanoOfDay() - zone.totalSeconds(),
-                                     other.time.toNanoOfDay() - other.zone.totalSeconds());
-            if (cmp == 0)
-                return time.compareTo(other.time);
-            return cmp;
-        }
-
-        gbool OffsetTime::isAfter(OffsetTime const& other) const {
-            return compareTo(other) > 0;
-        }
-
-        gbool OffsetTime::isBefore(OffsetTime const& other) const {
-            return compareTo(other) < 0;
-        }
-
-        gbool OffsetTime::equals(Object const& other) const {
-            if (this == &other)
-                return true;
-            if (!Class<OffsetTime>::hasInstance(other))
-                return false;
-            OffsetTime const& otherOffset = CORE_XCAST(OffsetTime const, other);
-            return time.equals(otherOffset.time) && zone.equals(otherOffset.zone);
-        }
-
-        gint OffsetTime::hash() const {
-            return time.hash() ^ zone.hash();
-        }
-
-        String OffsetTime::toString() const {
-            return time.toString() + zone.toString();
-        }
-
-        Object& OffsetTime::clone() const {
-            try {
-                return UNSAFE::newInstance<OffsetTime>(*this);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
-    } // time
+    glong OffsetTime::toEpochNano() const {
+      glong nod = time.toNanoOfDay();
+      glong offsetNanos = offset.totalSeconds() * NANOS_PER_SECOND;
+      return nod - offsetNanos;
+    }
+  } // time
 } // core

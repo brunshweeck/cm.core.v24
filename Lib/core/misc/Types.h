@@ -58,6 +58,11 @@ namespace core {
 #define CORE_ADD_TEMPLATES_AS_FRIEND(T, ...) template<class $(__VA_ARGS__)> friend class T
 #endif
 
+#ifndef CORE_SEALED
+#define CORE_SEALED(permits, ...) $()
+#endif
+
+
 #ifndef STRINGIFY
 #define STRINGIFY(...) #__VA_ARGS__
 #endif
@@ -242,12 +247,26 @@ namespace core {
 
 #ifndef CORE_ASSERT
 
-#define CORE_ASSERT_AT(expression, ClassName) do{ if(!(expression)) AssertionError(STRINGIFY(expression)""_S).throws($ftrace(ClassName)); } while (false)
+#define __CORE_ASSERT_AT(expression, ClassName) \
+    do{ \
+        if((gbool)(expression) == true) {\
+            break; \
+        } else { \
+            AssertionError(STRINGIFY(expression)""_S).throws($ftrace(ClassName));\
+        } \
+    } while (false)
 
-#define CORE_ASSERT_AT2(expression, message, ClassName) do{ if(!(expression)) AssertionError(message).throws($ftrace(ClassName)); } while (false)
+#define __CORE_ASSERT_AT2(expression, message, ClassName) \
+    do{ \
+        if((gbool)(expression) == true) {\
+            break;\
+        } else { \
+            AssertionError(message).throws($ftrace(ClassName));\
+        } \
+    } while (false)
 
-#define CORE_ASSERT(...) CORE_ASSERT_AT($(__VA_ARGS__), )
-#define CORE_ASSERT2(expression, message) CORE_ASSERT_AT2(expression, message, )
+#define CORE_ASSERT(...) __CORE_ASSERT_AT($(__VA_ARGS__), )
+#define CORE_ASSERT2(expression, message) __CORE_ASSERT_AT2(expression, message, )
 #endif
 
 

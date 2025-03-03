@@ -3,7 +3,7 @@
 //
 
 #include <core/misc/Cache.h>
-#include <Windows.h>
+#include <core/lang/Windows.h>
 
 namespace core {
     namespace misc {

@@ -2,13 +2,13 @@
 // Created by bruns on 19/10/2024.
 //
 
-#include <Windows.h>
-#include <io.h>
-#include <core/ByteArray.h>
+#include <core/lang/Windows.h>
+#include <core/lang/io.h>
+#include <core/lang/ByteArray.h>
 #include <core/misc/Event.h>
 #include <core/misc/Unsafe.h>
-#include <core/Array.h>
-#include <dbghelp.h>
+#include <core/lang/Array.h>
+#include <core/lang/dbghelp.h>
 
 namespace core {
     static gint volatile status = 0;

@@ -6,12 +6,12 @@
 #define CORE24_THREADSUPPORT_H
 
 
-#include <core/Class.h>
+#include <core/lang/Class.h>
 
 #ifdef CORE_SYSTEM_WINDOWS
-#include "../../Internal/Win32/core/ThreadSupport.h"
+#include <core/ThreadSupport.h>
 #else
-#include "../../Internal/Unix/core/ThreadSupport.h"
+#include <core/ThreadSupport.h>
 #endif
 
 

@@ -4,10 +4,10 @@
 
 #ifndef CORE24_OBJECTS_H
 #define CORE24_OBJECTS_H
-#include <core/Float.h>
-#include <core/Long.h>
-#include <core/IllegalArgumentException.h>
-#include <core/XString.h>
+#include <core/lang/Float.h>
+#include <core/lang/IllegalArgumentException.h>
+#include <core/lang/Long.h>
+#include <core/lang/XString.h>
 
 namespace core {
     namespace util {

@@ -5,10 +5,9 @@
 #ifndef FORMATTER_H
 #define FORMATTER_H
 
-#include <core/StringArray.h>
-
-#include "FormatParser.h"
-#include "core/time/Temporal.h"
+#include <core/lang/StringArray.h>
+#include <core/time/FormatStyle.h>
+#include <meta/ext/FormatParser.h>
 
 
 namespace core {
@@ -167,10 +166,10 @@ namespace core {
             };
 
             static String query(gint LID, gint SID, gint RID, Request request,
-                                Temporal::FormatStyle style = Temporal::FULL);
+                                FormatStyle style = FormatStyle::FULL);
 
             static StringArray queryArray(gint LID, gint SID, gint RID, Request request,
-                Temporal::FormatStyle style = Temporal::FULL);
+                FormatStyle style = FormatStyle::FULL);
         };
     } // ext
 } // core

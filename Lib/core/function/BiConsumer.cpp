@@ -4,16 +4,16 @@
 
 #include "BiConsumer.h"
 
-#include <core/Boolean.h>
-#include <core/Byte.h>
-#include <core/Short.h>
-#include <core/Integer.h>
-#include <core/Long.h>
-#include <core/Float.h>
-#include <core/Double.h>
-#include <core/Complex.h>
-#include <core/Character.h>
-#include <core/String.h>
+#include <core/lang/Boolean.h>
+#include <core/lang/Byte.h>
+#include <core/lang/Short.h>
+#include <core/lang/Integer.h>
+#include <core/lang/Long.h>
+#include <core/lang/Float.h>
+#include <core/lang/Double.h>
+#include <core/lang/Complex.h>
+#include <core/lang/Character.h>
+#include <core/lang/String.h>
 
 namespace core {
     namespace function {

@@ -9,8 +9,8 @@
 
 #include "UnixFileSystem.h"
 
-#include <core/StringArray.h>
-#include <core/XString.h>
+#include <core/lang/StringArray.h>
+#include <core/lang/XString.h>
 #include <core/io/FileArray.h>
 #include <core/util/Arrays.h>
 #include <native/System.h>

@@ -16,6 +16,7 @@ INCLUDE("${PROJECT_SOURCE_DIR}/Config.cmake")
 
 #[[ Base ]]
 CREATE_CLASS_TEST(String "${CMAKE_CURRENT_SOURCE_DIR}/core")
+CREATE_CLASS_TEST(Trace "${CMAKE_CURRENT_SOURCE_DIR}/core")
 
 #[[ Charsets ]]
 CREATE_CLASS_TEST(Charset "${CMAKE_CURRENT_SOURCE_DIR}/core/charset")

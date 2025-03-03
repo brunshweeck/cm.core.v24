@@ -2,8 +2,8 @@
 // Created by brunshweeck on 15 août 2024.
 //
 
-#include <Windows.h>
-#include <core/Error.h>
+#include <core/lang/Windows.h>
+#include <core/lang/Error.h>
 #include <core/time/Chrono.h>
 
 namespace core {

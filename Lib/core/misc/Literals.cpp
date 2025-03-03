@@ -2,11 +2,11 @@
 // Created by bruns on 05/05/2024.
 //
 
-#include <core/AssertionError.h>
-#include <core/IllegalArgumentException.h>
-#include <core/OutOfMemoryError.h>
-#include <core/String.h>
-#include <core/Complex.h>
+#include <core/lang/AssertionError.h>
+#include <core/lang/IllegalArgumentException.h>
+#include <core/lang/OutOfMemoryError.h>
+#include <core/lang/String.h>
+#include <core/lang/Complex.h>
 #include <core/misc/Literals.h>
 #include <core/misc/Unsafe.h>
 

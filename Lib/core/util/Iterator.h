@@ -5,11 +5,11 @@
 #ifndef CORE24_ITERATOR_H
 #define CORE24_ITERATOR_H
 
-#include <core/UnsupportedOperationException.h>
 #include <core/function/Consumer.h>
 #include <core/function/DoubleConsumer.h>
 #include <core/function/IntConsumer.h>
 #include <core/function/LongConsumer.h>
+#include <core/lang/UnsupportedOperationException.h>
 
 namespace core {
     namespace util {

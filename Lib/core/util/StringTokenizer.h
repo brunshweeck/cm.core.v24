@@ -5,7 +5,7 @@
 #ifndef CORE24_STRINGTOKENIZER_H
 #define CORE24_STRINGTOKENIZER_H
 
-#include <core/String.h>
+#include <core/lang/String.h>
 
 namespace core {
     namespace util {
@@ -135,7 +135,7 @@ namespace core {
              * If the @c returnDelims flag is @c true, then
              * the delimiter characters are also returned as tokens. Each
              * delimiter is returned as a string consisting of a single
-             * <a href="../lang/Character.html#unicode">Unicode code point</a>
+             * <a href="core/lang/Character.html#unicode">Unicode code point</a>
              * of the delimiter (which may be one or two @c chars). If the
              * flag is @c false, the delimiter characters are skipped
              * and only serve as separators between tokens.

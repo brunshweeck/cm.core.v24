@@ -6,7 +6,7 @@
 #define CORE24_OBJECTARRAY_H
 
 #include <core/misc/BasicArray.h>
-#include <core/Class.h>
+#include <core/lang/Class.h>
 
 namespace core {
     namespace misc {

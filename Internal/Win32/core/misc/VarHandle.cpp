@@ -2,12 +2,12 @@
 // Created by bruns on 22/03/2024.
 //
 
-#include <Windows.h>
-#include <core/IllegalArgumentException.h>
+#include <core/lang/Windows.h>
+#include <core/lang/IllegalArgumentException.h>
 #include <core/misc/VarHandle.h>
 
 #ifdef CORE_COMPILER_MSVC
-#include <intrin.h>
+#include <core/lang/intrin.h>
 #endif
 
 

@@ -4,8 +4,8 @@
 
 #include "Spliterators.h"
 
-#include <core/DoubleArray.h>
-#include <core/LongArray.h>
+#include <core/lang/DoubleArray.h>
+#include <core/lang/LongArray.h>
 #include <core/util/Arrays.h>
 #include <core/util/Comparator.h>
 #include <core/util/Iterator.h>

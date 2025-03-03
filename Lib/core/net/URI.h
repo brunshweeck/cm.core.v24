@@ -5,7 +5,7 @@
 #ifndef CORE24_URI_H
 #define CORE24_URI_H
 
-#include <core/String.h>
+#include <core/lang/String.h>
 
 namespace core {
     namespace net {
@@ -468,7 +468,7 @@ namespace core {
                 String scheme; // "" ==> relative URI
                 String fragment;
 
-                // Hierarchical URI components: [//<authority>]<path>[?<query>]
+                // Hierarchical URI components: [//<authority>]<core/lang/pa.h>[?<query>]
                 String authority; // Registry or server
 
                 // Server-based authority: [<userInfo>@]<host>[:<port>]
@@ -1737,7 +1737,7 @@ namespace core {
                 void parse(gbool rsa);
 
             private:
-                // [//authority]<path>[?<query>]
+                // [//authority]<core/lang/pa.h>[?<query>]
                 //
                 // DEVIATION from RFC2396: We allow an empty authority component as
                 // long as it's followed by a non-empty path, query component, or

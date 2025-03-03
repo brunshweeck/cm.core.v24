@@ -5,8 +5,8 @@
 #ifndef CORE24_INTCONSUMER_H
 #define CORE24_INTCONSUMER_H
 
-#include <core/IllegalArgumentException.h>
-#include <core/IllegalStateException.h>
+#include <core/lang/IllegalArgumentException.h>
+#include <core/lang/IllegalStateException.h>
 #include <core/function/Functional.h>
 #include <core/misc/Unsafe.h>
 

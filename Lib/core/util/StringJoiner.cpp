@@ -4,7 +4,7 @@
 
 #include "StringJoiner.h"
 
-#include <core/OutOfMemoryError.h>
+#include <core/lang/OutOfMemoryError.h>
 #include <core/misc/Unsafe.h>
 
 namespace core {

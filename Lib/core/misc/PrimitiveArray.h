@@ -6,7 +6,7 @@
 #define CORE24_PRIMITIVEARRAY_H
 
 #include <core/misc/ValueArray.h>
-#include <core/Class.h>
+#include <core/lang/Class.h>
 
 namespace core {
     namespace misc {

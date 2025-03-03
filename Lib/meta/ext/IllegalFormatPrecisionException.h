@@ -4,7 +4,7 @@
 
 #ifndef ILLEGALFORMATPRECISIONEXCEPTION_H
 #define ILLEGALFORMATPRECISIONEXCEPTION_H
-#include "core/util/IllegalFormatException.h"
+#include <core/util/IllegalFormatException.h>
 
 namespace core {
     namespace ext {

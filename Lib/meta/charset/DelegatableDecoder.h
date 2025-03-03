@@ -5,7 +5,7 @@
 #ifndef CORE24_DELEGATABLEDECODER_H
 #define CORE24_DELEGATABLEDECODER_H
 
-#include <core/Object.h>
+#include <core/lang/Object.h>
 #include <core/charset/CoderResult.h>
 
 namespace core {

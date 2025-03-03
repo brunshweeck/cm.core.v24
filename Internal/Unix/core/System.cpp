@@ -533,4 +533,15 @@ namespace core {
             return -1;
         return st1.st_ino - st2.st_ino;
     }
+
+    TICK_COUNT GetTimeStamp() {
+        timespec ts = {};
+        INT result = clock_gettime(CLOCK_REALTIME, &ts);
+        if (result == -1)
+            Error("Unable to obtain current timestamp").throws($ftrace());
+        TICK_COUNT tc = {};
+        tc.dwSeconds = ts.tv_sec;
+        tc.dwNano = ts.tv_nsec;
+        return tc;
+    }
 } // core

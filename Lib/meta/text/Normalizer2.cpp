@@ -4,9 +4,9 @@
 
 #include "Normalizer2.h"
 
-#include "core/Array.h"
-#include "core/XString.h"
-#include "core/misc/Unsafe.h"
+#include <core/lang/Array.h>
+#include <core/lang/XString.h>
+#include <core/misc/Unsafe.h>
 #include "Normalizer2.Property.h"
 
 namespace core {

@@ -5,7 +5,7 @@
 #ifndef CORE24_CONSUMER_H
 #define CORE24_CONSUMER_H
 
-#include <core/IllegalArgumentException.h>
+#include <core/lang/IllegalArgumentException.h>
 #include <core/function/Functional.h>
 #include <core/misc/Unsafe.h>
 

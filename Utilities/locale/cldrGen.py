@@ -2352,7 +2352,7 @@ namespace core {
         """
         <numbers>
 		    <decimalFormats numberSystem="...">
-                <decimalFormatLength>
+                <core/lang/decimalFormatLeng.h>
                     <decimalFormat>
                         <pattern>...</pattern>
                     </decimalFormat>
@@ -2364,21 +2364,21 @@ namespace core {
                 </decimalFormatLength>
 		    </decimalFormats>
             <scientificFormats numberSystem="...">
-                <scientificFormatLength>
+                <core/lang/scientificFormatLeng.h>
                     <scientificFormat>
                         <pattern>...</pattern>
                     </scientificFormat>
                 </scientificFormatLength>
             </scientificFormats>
             <percentFormats numberSystem="...">
-                <percentFormatLength>
+                <core/lang/percentFormatLeng.h>
                     <percentFormat>
                         <pattern>...</pattern>
                     </percentFormat>
                 </percentFormatLength>
             </percentFormats>
             <currencyFormats numberSystem="...">
-                <currencyFormatLength>
+                <core/lang/currencyFormatLeng.h>
                     <currencyFormat>
                         <pattern>...</pattern>
                     </currencyFormat>

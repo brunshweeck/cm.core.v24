@@ -4,8 +4,8 @@
 
 #include "PatternSyntaxException.h"
 
-#include "core/XString.h"
-#include "core/misc/Unsafe.h"
+#include <core/lang/XString.h>
+#include <core/misc/Unsafe.h>
 
 namespace core {
     namespace regex {

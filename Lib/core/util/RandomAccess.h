@@ -5,7 +5,7 @@
 #ifndef CORE24_RANDOMACCESS_H
 #define CORE24_RANDOMACCESS_H
 
-#include <core/Object.h>
+#include <core/lang/Object.h>
 
 namespace core {
     namespace util {

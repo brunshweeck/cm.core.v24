@@ -4,7 +4,7 @@
 
 #ifndef CORE24_INVALIDMARKEXCEPTION_H
 #define CORE24_INVALIDMARKEXCEPTION_H
-#include <core/IllegalStateException.h>
+#include <core/lang/IllegalStateException.h>
 
 namespace core {
     namespace io {

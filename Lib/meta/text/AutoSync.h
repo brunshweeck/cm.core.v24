@@ -8,20 +8,20 @@
 #include "Version.h"
 
 namespace core {
-    namespace text {
-        class AutoSync final : public Object {
-            concurrent::Lock& lock;
+  namespace text {
+    class AutoSync final : public Object {
+      concurrent::Lock& lock;
 
-        public:
-            AutoSync(concurrent::Lock& lock);
+    public:
+      AutoSync(concurrent::Lock& lock);
 
-            void relock() const;
+      void relock() const;
 
-            void unlock() const;
+      void unlock() const;
 
-            ~AutoSync() override;
-        };
-    } // icu
+      ~AutoSync() override;
+    };
+  } // icu
 } // core
 
 #endif //CORE24_AUTOSYNC_H

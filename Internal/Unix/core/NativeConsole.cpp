@@ -4,16 +4,18 @@
 
 #include "NativeConsole.h"
 
+// C libraries
 #include <cxxabi.h>
 #include <dlfcn.h>
 #include <execinfo.h>
 #include <stdio.h>
-#include <core/Array.h>
-#include <core/ByteArray.h>
+
+// core libraries
+#include <core/lang/Array.h>
+#include <core/lang/ByteArray.h>
+#include <core/misc/Event.h>
 #include <core/misc/Unsafe.h>
 #include <core/util/Arrays.h>
-
-#include "misc/Event.h"
 
 
 namespace core {

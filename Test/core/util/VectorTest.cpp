@@ -35,7 +35,7 @@ TEST_F(VectorTest, try_iterate_all_items) {
     ASSERT_NO_THROW(iterateAndDoNothing(cobaye));
 }
 
-TEST_F(VectorTest, try_iterate_and_delete_all_items) {
-    ASSERT_NO_THROW(iterateAndRemoveAll(cobaye));
+TEST_F(VectorTest, try_iterate_while_deleting_items) {
+    ASSERT_THROW(iterateAndRemoveAll(cobaye), ConcurrentModificationException);
 }
 

@@ -8,7 +8,7 @@
 #include "Arrays.h"
 
 #include <core/function/Predicate.h>
-#include <core/Iterable.h>
+#include <core/lang/Iterable.h>
 
 namespace core {
     namespace util {

@@ -5,7 +5,7 @@
 #ifndef CORE24_STANDARDCHARSETS_H
 #define CORE24_STANDARDCHARSETS_H
 
-#include <core/Object.h>
+#include <core/lang/Object.h>
 
 namespace core {
     namespace charset {

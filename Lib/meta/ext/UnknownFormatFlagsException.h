@@ -4,7 +4,7 @@
 
 #ifndef UNKNOWNFORMATFLAGSEXCEPTION_H
 #define UNKNOWNFORMATFLAGSEXCEPTION_H
-#include "core/util/IllegalFormatException.h"
+#include <core/util/IllegalFormatException.h>
 
 namespace core {
     namespace ext {

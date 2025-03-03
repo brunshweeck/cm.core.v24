@@ -8,48 +8,48 @@
 #include <core/misc/Processor.h>
 
 namespace core {
-    namespace misc {
-        /*
-         * This file is created to help any user, that needs to know
-         * current operating system information, in instantaneous method.
-         */
+  namespace misc {
+    /*
+     * This file is created to help any user, that needs to know
+     * current operating system information, in instantaneous method.
+     */
 
-        /**
-         * The Compiler, must be one of: CORE_COMPILER_?
-         * (where ? represent the name of compiler): <br/>
-         * - COVERITY - Coverity cov-scan <br/>
-         * - SYM      - Digital Mars C/C++ (used to be Symantec C++) <br/>
-         * - MSVC     - Microsoft Visual C/C++, Intel C++ for Windows <br/>
-         * - BOR      - Borland/Turbo C++ <br/>
-         * - WAT      - Watcom C++ <br/>
-         * - GNU      - GNU C++ <br/>
-         * - COMEAU   - Comeau C++ <br/>
-         * - EDG      - Edison Design Group C++ <br/>
-         * - OC       - CenterLine C++ <br/>
-         * - SUN      - Forte Developer, or Sun Studio C++ <br/>
-         * - MIPS     - MIPSpro C++ <br/>
-         * - DEC      - DEC C++ <br/>
-         * - HPACC    - HP aC++ <br/>
-         * - USLC     - SCO OUDK and UDK <br/>
-         * - CDS      - Reliant C++ <br/>
-         * - KAI      - KAI C++ <br/>
-         * - INTEL    - Intel C++ for Linux, Intel C++ for Windows <br/>
-         * - HIGHC    - MetaWare High C/C++ <br/>
-         * - PGI      - Portland Group C++ <br/>
-         * - PGI      - Portland Group C++ <br/>
-         * - GHS      - Green Hills Optimizing C++ Compilers <br/>
-         * - RVCT     - ARM Realview Compiler Suite <br/>
-         * - CLANG    - C++ front-end for the LLVM compiler <br/>
-         */
+    /**
+     * The Compiler, must be one of: CORE_COMPILER_?
+     * (where ? represent the name of compiler): <br/>
+     * - COVERITY - Coverity cov-scan <br/>
+     * - SYM      - Digital Mars C/C++ (used to be Symantec C++) <br/>
+     * - MSVC     - Microsoft Visual C/C++, Intel C++ for Windows <br/>
+     * - BOR      - Borland/Turbo C++ <br/>
+     * - WAT      - Watcom C++ <br/>
+     * - GNU      - GNU C++ <br/>
+     * - COMEAU   - Comeau C++ <br/>
+     * - EDG      - Edison Design Group C++ <br/>
+     * - OC       - CenterLine C++ <br/>
+     * - SUN      - Forte Developer, or Sun Studio C++ <br/>
+     * - MIPS     - MIPSpro C++ <br/>
+     * - DEC      - DEC C++ <br/>
+     * - HPACC    - HP aC++ <br/>
+     * - USLC     - SCO OUDK and UDK <br/>
+     * - CDS      - Reliant C++ <br/>
+     * - KAI      - KAI C++ <br/>
+     * - INTEL    - Intel C++ for Linux, Intel C++ for Windows <br/>
+     * - HIGHC    - MetaWare High C/C++ <br/>
+     * - PGI      - Portland Group C++ <br/>
+     * - PGI      - Portland Group C++ <br/>
+     * - GHS      - Green Hills Optimizing C++ Compilers <br/>
+     * - RVCT     - ARM Realview Compiler Suite <br/>
+     * - CLANG    - C++ front-end for the LLVM compiler <br/>
+     */
 
 
 #if defined(__COVERITY__)
 #define CORE_COMPILER_COVERITY
 #endif
 
-        /**
-         * Symantec C++ is now Digital Mars
-         */
+    /**
+     * Symantec C++ is now Digital Mars
+     */
 #if defined(__DMC__) || defined(__SC__)
 #define CORE_COMPILER_SYM
 
@@ -124,19 +124,19 @@ namespace core {
 
 #if defined(__clang__)
 
-        /**
-         * Clang also masquerades as GCC
-         */
+    /**
+     * Clang also masquerades as GCC
+     */
 #if defined(__apple_build_version__)
 
-        /**
-         * The Clang version reported by Apple Clang in __clang_major__
-         * and __clang_minor__ does _not_ reflect the actual upstream
-         * version of the compiler. To allow consumers to use a single
-         * define to verify the Clang version we hard-code the versions
-         * based on the best available info we have about the actual
-         * version: http://en.wikipedia.org/wiki/Xcode#Toolchain_Versions
-         */
+    /**
+     * The Clang version reported by Apple Clang in __clang_major__
+     * and __clang_minor__ does _not_ reflect the actual upstream
+     * version of the compiler. To allow consumers to use a single
+     * define to verify the Clang version we hard-code the versions
+     * based on the best available info we have about the actual
+     * version: http://en.wikipedia.org/wiki/Xcode#Toolchain_Versions
+     */
 #if __apple_build_version__   >= 13160021 // Xcode 13.3
 #define CORE_COMPILER_CLANG 1300
 
@@ -202,9 +202,9 @@ namespace core {
 #endif
 
 #else
-        /**
-         * Plain GCC
-         */
+    /**
+     * Plain GCC
+     */
 #define CORE_COMPILER_GNU_ONLY CORE_COMPILER_GNU
 #if CORE_COMPILER_GNU >= 405
 #define CORE_ASSUME(expr)  if (expr){} else __builtin_unreachable()
@@ -254,28 +254,28 @@ namespace core {
 #define CORE_ALLOC_SIZE(x) __attribute__((alloc_size(x)))
 #endif
 
-        /* IBM compiler versions are a bit messy. There are actually two products:
-           the C product, and the C++ product. The C++ compiler is always packaged
-           with the latest version of the C compiler. Version numbers do not always
-           match. This little table (I'm not sure, iterator's accurate) should be helpful:
+    /* IBM compiler versions are a bit messy. There are actually two products:
+       the C product, and the C++ product. The C++ compiler is always packaged
+       with the latest version of the C compiler. Version numbers do not always
+       match. This little table (I'm not sure, iterator's accurate) should be helpful:
 
-           C++ product                C product
+       C++ product                C product
 
-           C Set 3.1                  C Compiler 3.0
-           ...                        ...
-           C++ Compiler 3.6.6         C Compiler 4.3
-           ...                        ...
-           Visual Age C++ 4.0         ...
-           ...                        ...
-           Visual Age C++ 5.0         C Compiler 5.0
-           ...                        ...
-           Visual Age C++ 6.0         C Compiler 6.0
+       C Set 3.1                  C Compiler 3.0
+       ...                        ...
+       C++ Compiler 3.6.6         C Compiler 4.3
+       ...                        ...
+       Visual Age C++ 4.0         ...
+       ...                        ...
+       Visual Age C++ 5.0         C Compiler 5.0
+       ...                        ...
+       Visual Age C++ 6.0         C Compiler 6.0
 
-           Now:
-           __xlC__    is the version of the C compiler in hexadecimal notation
-                      is only an approximation of the C++ compiler version
-           __IBMCPP__ is the version of the C++ compiler in decimal notation,
-                      but iterator is not defined on older compilers like C Set 3.1 */
+       Now:
+       __xlC__    is the version of the C compiler in hexadecimal notation
+                  is only an approximation of the C++ compiler version
+       __IBMCPP__ is the version of the C++ compiler in decimal notation,
+                  but iterator is not defined on older compilers like C Set 3.1 */
 #elif defined(__xlC__)
 #define CORE_COMPILER_XLC
 #if __xlC__ < 0x400
@@ -285,11 +285,11 @@ namespace core {
 #define CORE_PACKED            __attribute__((__packed__))
 #endif
 
-        /* Older versions of DEC C++ do not define __EDG__ or __EDG - observed
-           on DEC C++ V5.5-004. New versions do define  __EDG__ - observed on
-           Compaq C++ V6.3-002.
-           This compiler is different enough from other EDG compilers to handle
-           iterator separately anyway. */
+    /* Older versions of DEC C++ do not define __EDG__ or __EDG - observed
+       on DEC C++ V5.5-004. New versions do define  __EDG__ - observed on
+       Compaq C++ V6.3-002.
+       This compiler is different enough from other EDG compilers to handle
+       iterator separately anyway. */
 #elif defined(__DECCXX) || defined(__DECC)
 #define CORE_COMPILER_DEC
 /* Compaq C++ V6 compilers are EDG-based but I'm not sure about older
@@ -297,15 +297,15 @@ namespace core {
 #if defined(__EDG__)
 #define CORE_COMPILER_EDG
 #endif
-        /* Compaq has disabled EDG's _BOOL macro and uses _BOOL_EXISTS instead
-           - observed on Compaq C++ V6.3-002.
-           In any case versions prior to Compaq C++ V6.0-005 do not have bool. */
+    /* Compaq has disabled EDG's _BOOL macro and uses _BOOL_EXISTS instead
+       - observed on Compaq C++ V6.3-002.
+       In any case versions prior to Compaq C++ V6.0-005 do not have bool. */
 #if !defined(_BOOL_EXISTS)
 #error "Compiler not supported"
 #endif
-        /* Spurious (?) error messages observed on Compaq C++ V6.5-014. */
-        /* Apply to all versions prior to Compaq C++ V6.0-000 - observed on
-           DEC C++ V5.5-004. */
+    /* Spurious (?) error messages observed on Compaq C++ V6.5-014. */
+    /* Apply to all versions prior to Compaq C++ V6.0-000 - observed on
+       DEC C++ V5.5-004. */
 #if __DECCXX_VER < 60060000
 #define CORE_BROKEN_TEMPLATE_SPECIALIZATION
 #endif
@@ -320,10 +320,10 @@ namespace core {
 #define CORE_COMPILER_EDG
 #endif
 
-        /* Compilers with EDG front end are similar. To detect them we test:
-           __EDG documented by SGI, observed on MIPSpro 7.3.1.1 and KAI C++ 4.0b
-           __EDG__ documented in EDG online docs, observed on Compaq C++ V6.3-002
-           and PGI C++ 5.2-4 */
+    /* Compilers with EDG front end are similar. To detect them we test:
+       __EDG documented by SGI, observed on MIPSpro 7.3.1.1 and KAI C++ 4.0b
+       __EDG__ documented in EDG online docs, observed on Compaq C++ V6.3-002
+       and PGI C++ 5.2-4 */
 #elif !defined(CORE_SYSTEM_HPUX) && (defined(__EDG) || defined(__EDG__))
 #define CORE_COMPILER_EDG
 /* From the EDG documentation (does not seem to apply to Compaq C++ or GHS C):
@@ -337,7 +337,7 @@ namespace core {
 #error "Compiler not supported"
 #endif
 
-        /* The Comeau compiler is based on EDG and does define __EDG__ */
+    /* The Comeau compiler is based on EDG and does define __EDG__ */
 #if defined(__COMO__)
 #define CORE_COMPILER_COMEAU
 
@@ -403,7 +403,7 @@ namespace core {
 #error "Compiler not supported"
 #endif
 
-        /* The UnixWare 7 UDK compiler is based on EDG and does define __EDG__ */
+    /* The UnixWare 7 UDK compiler is based on EDG and does define __EDG__ */
 #elif defined(__USLC__) && defined(__SCO_VERSION__)
 #define CORE_COMPILER_USLC
 /* The latest UDK 7.1.1b does not need this, but previous versions do */
@@ -411,7 +411,7 @@ namespace core {
 #define CORE_OUTLINE_TEMPLATE inline
 #endif
 
-        /* Never tested! */
+    /* Never tested! */
 #elif defined(CENTERLINE_CLPP) || defined(OBJECTCENTER)
 #define CORE_COMPILER_OC
 
@@ -421,8 +421,8 @@ namespace core {
 #define CORE_COMPILER_CDS
 #endif
 
-        /* VxWorks' DIAB toolchain has an additional EDG type C++ compiler
-           (see __DCC__ above). This one is for C mode files (__EDG is not defined) */
+    /* VxWorks' DIAB toolchain has an additional EDG type C++ compiler
+       (see __DCC__ above). This one is for C mode files (__EDG is not defined) */
 #elif defined(_DIAB_TOOL)
 #define CORE_COMPILER_DIAB
 #define CORE_FUNCTION       __func__
@@ -450,13 +450,13 @@ namespace core {
 #if !defined(_BOOL)
 #error "Compiler not supported"
 #endif
-        /* 4.2 compiler or older */
+    /* 4.2 compiler or older */
 #else
 #error "Compiler not supported"
 #endif
 
-        /* CDS++ does not seem to define __EDG__ or __EDG according to Reliant
-           documentation but nevertheless uses EDG conventions like _BOOL */
+    /* CDS++ does not seem to define __EDG__ or __EDG according to Reliant
+       documentation but nevertheless uses EDG conventions like _BOOL */
 #elif defined(sinix)
 #define CORE_COMPILER_EDG
 #define CORE_COMPILER_CDS
@@ -469,12 +469,12 @@ namespace core {
 #error "This Framework (core) not support this compiler"
 #endif
 
-        /*
-         * SG10's SD-6 feature detection and some useful extensions from Clang and GCC
-         * https://isocpp.org/std/standing-documents/sd-6-sg10-feature-test-recommendations
-         * http://clang.llvm.org/docs/LanguageExtensions.html#feature-checking-macros
-         * Not using wrapper macros, per http://eel.is/c++draft/cpp.cond#7.sentence-2
-         */
+    /*
+     * SG10's SD-6 feature detection and some useful extensions from Clang and GCC
+     * https://isocpp.org/std/standing-documents/sd-6-sg10-feature-test-recommendations
+     * http://clang.llvm.org/docs/LanguageExtensions.html#feature-checking-macros
+     * Not using wrapper macros, per http://eel.is/c++draft/cpp.cond#7.sentence-2
+     */
 #ifndef __has_builtin
 #define __has_builtin(x)             0
 #endif
@@ -494,12 +494,12 @@ namespace core {
 #define __has_include_next(x)        0
 #endif
 
-        /*
-           detecting ASAN can be helpful to disable slow tests
-           clang uses feature, gcc  defines __SANITIZE_ADDRESS__
-           unconditionally check both in case other compilers mirror
-           either of those options
-         */
+    /*
+       detecting ASAN can be helpful to disable slow tests
+       clang uses feature, gcc  defines __SANITIZE_ADDRESS__
+       unconditionally check both in case other compilers mirror
+       either of those options
+     */
 #if __has_feature(address_sanitizer) || defined(__SANITIZE_ADDRESS__)
 #define CORE_ADDRESS_SANITIZER 1
 #endif
@@ -512,63 +512,63 @@ namespace core {
 #endif
 #endif
 
-        /*
-         * C++11 support
-         *
-         *  Paper           Macro                                  SD-6 macro
-         *  N2341           CORE_XCOMPILER_ALIGNAS
-         *  N2341           CORE_XCOMPILER_ALIGNOF
-         *  N2427           CORE_XCOMPILER_ATOMICS
-         *  N2761           CORE_XCOMPILER_ATTRIBUTES               __cpp_attributes = 200809
-         *  N2541           CORE_XCOMPILER_AUTO_FUNCTION
-         *  N1984 N2546     CORE_XCOMPILER_AUTO_TYPE
-         *  N2437           CORE_XCOMPILER_CLASS_ENUM
-         *  N2235           CORE_XCOMPILER_CONSTEXPR                __cpp_constexpr = 200704
-         *  N2343 N3276     CORE_XCOMPILER_DECLTYPE                 __cpp_decltype = 200707
-         *  N2346           CORE_XCOMPILER_DEFAULT_MEMBERS
-         *  N2346           CORE_XCOMPILER_DELETE_MEMBERS
-         *  N1986           CORE_XCOMPILER_DELEGATING_CONSTRUCTORS
-         *  N2437           CORE_XCOMPILER_EXPLICIT_CONVERSIONS
-         *  N3206 N3272     CORE_XCOMPILER_EXPLICIT_OVERRIDES
-         *  N1987           CORE_XCOMPILER_EXTERN_TEMPLATES
-         *  N2540           CORE_XCOMPILER_INHERITING_CONSTRUCTORS
-         *  N2672           CORE_XCOMPILER_INITIALIZER_LISTS
-         *  N2658 N2927     CORE_XCOMPILER_LAMBDA                   __cpp_lambdas = 200907
-         *  N2756           CORE_XCOMPILER_NONSTATIC_MEMBER_INIT
-         *  N2855 N3050     CORE_XCOMPILER_NOEXCEPT
-         *  N2431           CORE_XCOMPILER_NULLPTR
-         *  N2930           CORE_XCOMPILER_RANGE_FOR
-         *  N2442           CORE_XCOMPILER_RAW_STRINGS              __cpp_raw_strings = 200710
-         *  N2439           CORE_XCOMPILER_REF_QUALIFIERS
-         *  N2118 N2844 N3053 CORE_XCOMPILER_RVALUE_REFS            __cpp_rvalue_references = 200610
-         *  N1720           CORE_XCOMPILER_STATIC_ASSERT            __cpp_static_assert = 200410
-         *  N2258           CORE_XCOMPILER_TEMPLATE_ALIAS
-         *  N2659           CORE_XCOMPILER_THREAD_LOCAL
-         *  N2660           CORE_XCOMPILER_THREADSAFE_STATICS
-         *  N2765           CORE_XCOMPILER_UDL                      __cpp_user_defined_literals = 200809
-         *  N2442           CORE_XCOMPILER_UNICODE_STRINGS          __cpp_unicode_literals = 200710
-         *  N2640           CORE_XCOMPILER_UNIFORM_INIT
-         *  N2544           CORE_XCOMPILER_UNRESTRICTED_UNIONS
-         *  N1653           CORE_XCOMPILER_VARIADIC_MACROS
-         *  N2242 N2555     CORE_XCOMPILER_VARIADIC_TEMPLATES       __cpp_variadic_templates = 200704
-         *
-         *
-         * For the C++ standards C++14 and C++17, we use only the SD-6 macro.
-         *
-         * For any future version of the C++ standard, we use only the C++20 feature test macro.
-         * For library features, we assume <version> is present (this header includes iterator).
-         *
-         * For a full listing of feature test macros, see
-         *  https://isocpp.org/std/standing-documents/sd-6-sg10-feature-test-recommendations (by macro)
-         *  https://en.cppreference.com/w/User:D41D8CD98F/feature_testing_macros       (by C++ version)
-         *
-         * C++ extensions:
-         * CORE_XCOMPILER_RESTRICTED_VLA       variable-length arrays, prior to __cpp_runtime_arrays
-         */
+    /*
+     * C++11 support
+     *
+     *  Paper           Macro                                  SD-6 macro
+     *  N2341           CORE_XCOMPILER_ALIGNAS
+     *  N2341           CORE_XCOMPILER_ALIGNOF
+     *  N2427           CORE_XCOMPILER_ATOMICS
+     *  N2761           CORE_XCOMPILER_ATTRIBUTES               __cpp_attributes = 200809
+     *  N2541           CORE_XCOMPILER_AUTO_FUNCTION
+     *  N1984 N2546     CORE_XCOMPILER_AUTO_TYPE
+     *  N2437           CORE_XCOMPILER_CLASS_ENUM
+     *  N2235           CORE_XCOMPILER_CONSTEXPR                __cpp_constexpr = 200704
+     *  N2343 N3276     CORE_XCOMPILER_DECLTYPE                 __cpp_decltype = 200707
+     *  N2346           CORE_XCOMPILER_DEFAULT_MEMBERS
+     *  N2346           CORE_XCOMPILER_DELETE_MEMBERS
+     *  N1986           CORE_XCOMPILER_DELEGATING_CONSTRUCTORS
+     *  N2437           CORE_XCOMPILER_EXPLICIT_CONVERSIONS
+     *  N3206 N3272     CORE_XCOMPILER_EXPLICIT_OVERRIDES
+     *  N1987           CORE_XCOMPILER_EXTERN_TEMPLATES
+     *  N2540           CORE_XCOMPILER_INHERITING_CONSTRUCTORS
+     *  N2672           CORE_XCOMPILER_INITIALIZER_LISTS
+     *  N2658 N2927     CORE_XCOMPILER_LAMBDA                   __cpp_lambdas = 200907
+     *  N2756           CORE_XCOMPILER_NONSTATIC_MEMBER_INIT
+     *  N2855 N3050     CORE_XCOMPILER_NOEXCEPT
+     *  N2431           CORE_XCOMPILER_NULLPTR
+     *  N2930           CORE_XCOMPILER_RANGE_FOR
+     *  N2442           CORE_XCOMPILER_RAW_STRINGS              __cpp_raw_strings = 200710
+     *  N2439           CORE_XCOMPILER_REF_QUALIFIERS
+     *  N2118 N2844 N3053 CORE_XCOMPILER_RVALUE_REFS            __cpp_rvalue_references = 200610
+     *  N1720           CORE_XCOMPILER_STATIC_ASSERT            __cpp_static_assert = 200410
+     *  N2258           CORE_XCOMPILER_TEMPLATE_ALIAS
+     *  N2659           CORE_XCOMPILER_THREAD_LOCAL
+     *  N2660           CORE_XCOMPILER_THREADSAFE_STATICS
+     *  N2765           CORE_XCOMPILER_UDL                      __cpp_user_defined_literals = 200809
+     *  N2442           CORE_XCOMPILER_UNICODE_STRINGS          __cpp_unicode_literals = 200710
+     *  N2640           CORE_XCOMPILER_UNIFORM_INIT
+     *  N2544           CORE_XCOMPILER_UNRESTRICTED_UNIONS
+     *  N1653           CORE_XCOMPILER_VARIADIC_MACROS
+     *  N2242 N2555     CORE_XCOMPILER_VARIADIC_TEMPLATES       __cpp_variadic_templates = 200704
+     *
+     *
+     * For the C++ standards C++14 and C++17, we use only the SD-6 macro.
+     *
+     * For any future version of the C++ standard, we use only the C++20 feature test macro.
+     * For library features, we assume <version> is present (this header includes iterator).
+     *
+     * For a full listing of feature test macros, see
+     *  https://isocpp.org/std/standing-documents/sd-6-sg10-feature-test-recommendations (by macro)
+     *  https://en.cppreference.com/w/User:D41D8CD98F/feature_testing_macros       (by C++ version)
+     *
+     * C++ extensions:
+     * CORE_XCOMPILER_RESTRICTED_VLA       variable-length arrays, prior to __cpp_runtime_arrays
+     */
 
-        /*
-         * Now that we require C++17, we unconditionally expect threadsafe statics mandated since C++11
-         */
+    /*
+     * Now that we require C++17, we unconditionally expect threadsafe statics mandated since C++11
+     */
 #define CORE_XCOMPILER_THREADSAFE_STATICS
 
 #if defined(CORE_COMPILER_CLANG)
@@ -578,13 +578,13 @@ namespace core {
 #define CORE_XDEPRECATED(text) __attribute__ ((__deprecated__(text)))
 #endif
 
-        // Clang supports binary literals in C, C++98 and C++11 modes
-        // It's been supported "since the dawn of time itself" (cf. commit 179883)
+    // Clang supports binary literals in C, C++98 and C++11 modes
+    // It's been supported "since the dawn of time itself" (cf. commit 179883)
 #if __has_extension(cxx_binary_literals)
 #define CORE_XCOMPILER_BINARY_LITERALS
 #endif
 
-        // Variadic macros are supported for gnu++98, c++11, c99 ... since 2.9
+    // Variadic macros are supported for gnu++98, c++11, c99 ... since 2.9
 #if CORE_COMPILER_CLANG >= 209
 #if !defined(__STRICT_ANSI__) || defined(__GXX_EXPERIMENTAL_CXX0X__) \
       || (defined(__cplusplus) && (__cplusplus >= 201103L)) \
@@ -593,9 +593,9 @@ namespace core {
 #endif
 #endif
 
-        /* C++11 features, see http://clang.llvm.org/cxx_status.html */
+    /* C++11 features, see http://clang.llvm.org/cxx_status.html */
 #if __cplusplus >= 201103L || defined(__GXX_EXPERIMENTAL_CXX0X__)
-        /* Detect C++ features using __has_feature(), see http://clang.llvm.org/docs/LanguageExtensions.html#cxx11 */
+    /* Detect C++ features using __has_feature(), see http://clang.llvm.org/docs/LanguageExtensions.html#cxx11 */
 #if __has_feature(cxx_alignas)
 #define CORE_XCOMPILER_ALIGNAS
 #define CORE_XCOMPILER_ALIGNOF
@@ -688,17 +688,17 @@ namespace core {
 #if __has_feature(cxx_variadic_templates)
 #define CORE_XCOMPILER_VARIADIC_TEMPLATES
 #endif
-        /* Features that have no __has_feature() check */
+    /* Features that have no __has_feature() check */
 #if CORE_COMPILER_CLANG >= 209 /* since clang 2.9 */
 #define CORE_XCOMPILER_EXTERN_TEMPLATES
 #endif
 #endif
 
-        /* C++1y features, deprecated macros. Do not update this list. */
+    /* C++1y features, deprecated macros. Do not update this list. */
 #if __cplusplus > 201103L
-        //#if __has_feature(cxx_binary_literals)
-        //#define CORE_XCOMPILER_BINARY_LITERALS  // see above
-        //#endif
+    //#if __has_feature(cxx_binary_literals)
+    //#define CORE_XCOMPILER_BINARY_LITERALS  // see above
+    //#endif
 #if __has_feature(cxx_generic_lambda)
 #define CORE_XCOMPILER_GENERIC_LAMBDA
 #endif
@@ -723,7 +723,7 @@ namespace core {
 #if __has_feature(c_static_assert)
 #define CORE_XCOMPILER_STATIC_ASSERT
 #endif
-#if __has_feature(c_thread_local) && __has_include(<threads.h>)
+#if __has_feature(c_thread_local) && __has_include(<core/lang/threads.h>)
 #if !defined(__FreeBSD__) /* FreeBSD clang fails on __cxa_thread_atexit */
 #define CORE_XCOMPILER_THREAD_LOCAL
 #endif
@@ -739,24 +739,24 @@ namespace core {
 #if defined(CORE_COMPILER_GNU_ONLY)
 #define CORE_XCOMPILER_RESTRICTED_VLA
 #if CORE_COMPILER_GNU >= 403
-        //   GCC supports binary literals in C, C++98 and C++11 modes
+    //   GCC supports binary literals in C, C++98 and C++11 modes
 #define CORE_XCOMPILER_BINARY_LITERALS
 #endif
 #if !defined(__STRICT_ANSI__) || defined(__GXX_EXPERIMENTAL_CXX0X__) \
  || (defined(__cplusplus) && (__cplusplus >= 201103L)) \
  || (defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L))
-        // Variadic macros are supported for gnu++98, c++11, C99 ... since forever (gcc 2.97)
+    // Variadic macros are supported for gnu++98, c++11, C99 ... since forever (gcc 2.97)
 #define CORE_XCOMPILER_VARIADIC_MACROS
 #endif
 #if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
 #if CORE_COMPILER_GNU >= 403
-        /* C++11 features supported in GCC 4.3: */
+    /* C++11 features supported in GCC 4.3: */
 #define CORE_XCOMPILER_DECLTYPE
 #define CORE_XCOMPILER_RVALUE_REFS
 #define CORE_XCOMPILER_STATIC_ASSERT
 #endif
 #if CORE_COMPILER_GNU >= 404
-        /* C++11 features supported in GCC 4.4: */
+    /* C++11 features supported in GCC 4.4: */
 #define CORE_XCOMPILER_AUTO_FUNCTION
 #define CORE_XCOMPILER_AUTO_TYPE
 #define CORE_XCOMPILER_EXTERN_TEMPLATES
@@ -765,35 +765,35 @@ namespace core {
 #define CORE_XCOMPILER_VARIADIC_TEMPLATES
 #endif
 #if CORE_COMPILER_GNU >= 405
-        /* C++11 features supported in GCC 4.5: */
+    /* C++11 features supported in GCC 4.5: */
 #define CORE_XCOMPILER_EXPLICIT_CONVERSIONS
-        /* GCC 4.4 implements initializer_list but does not define typedefs required
-         * by the standard. */
+    /* GCC 4.4 implements initializer_list but does not define typedefs required
+     * by the standard. */
 #define CORE_XCOMPILER_INITIALIZER_LISTS
 #define CORE_XCOMPILER_LAMBDA
 #define CORE_XCOMPILER_RAW_STRINGS
 #define CORE_XCOMPILER_CLASS_ENUM
 #endif
 #if CORE_COMPILER_GNU >= 406
-        /* Pre-4.6 compilers implement a non-final snapshot of N2346, hence default and delete
-         * functions are supported only if they are public. Starting from 4.6, GCC handles
-         * final version - the access modifier is not relevant. */
+    /* Pre-4.6 compilers implement a non-final snapshot of N2346, hence default and delete
+     * functions are supported only if they are public. Starting from 4.6, GCC handles
+     * final version - the access modifier is not relevant. */
 #define CORE_XCOMPILER_DEFAULT_MEMBERS
 #define CORE_XCOMPILER_DELETE_MEMBERS
-        /* C++11 features supported in GCC 4.6: */
+    /* C++11 features supported in GCC 4.6: */
 #define CORE_XCOMPILER_NULLPTR
 #define CORE_XCOMPILER_UNRESTRICTED_UNIONS
 #define CORE_XCOMPILER_RANGE_FOR
 #endif
 #if CORE_COMPILER_GNU >= 407
-        /* GCC 4.4 implemented <atomic> and std::atomic using its old intrinsics.
-         * However, the implementation is incomplete for most platforms until GCC 4.7:
-         * instead, std::atomic would use an external lock.*/
+    /* GCC 4.4 implemented <atomic> and std::atomic using its old intrinsics.
+     * However, the implementation is incomplete for most platforms until GCC 4.7:
+     * instead, std::atomic would use an external lock.*/
 #define CORE_XCOMPILER_ATOMICS
-        /* GCC 4.6.x has problems dealing with noexcept expressions,
-         * so turn the feature on for 4.7 and above, only */
+    /* GCC 4.6.x has problems dealing with noexcept expressions,
+     * so turn the feature on for 4.7 and above, only */
 #define CORE_XCOMPILER_NOEXCEPT
-        /* C++11 features supported in GCC 4.7: */
+    /* C++11 features supported in GCC 4.7: */
 #define CORE_XCOMPILER_NONSTATIC_MEMBER_INIT
 #define CORE_XCOMPILER_DELEGATING_CONSTRUCTORS
 #define CORE_XCOMPILER_EXPLICIT_OVERRIDES
@@ -811,8 +811,8 @@ namespace core {
 #endif
 #endif
 #if CORE_COMPILER_GNU >= 500
-        /* GCC 4.6 introduces constexpr, but iterator's bugged (at least) in the whole
-         * 4.x series, see e.g. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=57694 */
+    /* GCC 4.6 introduces constexpr, but iterator's bugged (at least) in the whole
+     * 4.x series, see e.g. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=57694 */
 #define CORE_XCOMPILER_CONSTEXPR
 #endif
 #endif
@@ -830,8 +830,8 @@ namespace core {
 #define CORE_XCOMPILER_STATIC_ASSERT
 #endif
 #if CORE_COMPILER_GNU >= 409 && defined(__has_include)
-        /* C11 features supported in GCC 4.9: */
-#if __has_include(<threads.h>)
+    /* C11 features supported in GCC 4.9: */
+#if __has_include(<core/lang/threads.h>)
 #define CORE_XCOMPILER_THREAD_LOCAL
 #endif
 #endif
@@ -907,19 +907,19 @@ namespace core {
 #ifdef __cplusplus
 
 #if defined(CORE_SYSTEM_QNX)
-        // By default, QNX 7.0 uses libc++ (from LLVM) and
-        // QNX 6.X uses Dinkumware's libcpp. In all versions,
-        // iterator is also possible to use GNU libstdc++.
+    // By default, QNX 7.0 uses libc++ (from LLVM) and
+    // QNX 6.X uses Dinkumware's libcpp. In all versions,
+    // iterator is also possible to use GNU libstdc++.
 
-        // For Dinkumware, some features must be disabled
-        // (mostly because of library problems).
-        // Dinkumware is assumed when __GLIBCXX__ (GNU libstdc++)
-        // and _LIBCPP_VERSION (LLVM libc++) are both absent.
+    // For Dinkumware, some features must be disabled
+    // (mostly because of library problems).
+    // Dinkumware is assumed when __GLIBCXX__ (GNU libstdc++)
+    // and _LIBCPP_VERSION (LLVM libc++) are both absent.
 #if !defined(__GLIBCXX__) && !defined(_LIBCPP_VERSION)
 
-        // Older versions of libcpp (QNX 650) do not support C++11 features
-        // _HAS_* macros are setValue to 1 by toolchains that actually include
-        // Dinkum C++11 libcpp.
+    // Older versions of libcpp (QNX 650) do not support C++11 features
+    // _HAS_* macros are setValue to 1 by toolchains that actually include
+    // Dinkum C++11 libcpp.
 
 #if !defined(_HAS_CPP0X) || !_HAS_CPP0X
 // Disable C++11 features that depend on library support
@@ -952,15 +952,15 @@ namespace core {
 #endif
 #endif
 
-        // Don't break code that is already using CORE_XCOMPILER_DEFAULT_DELETE_MEMBERS
+    // Don't break code that is already using CORE_XCOMPILER_DEFAULT_DELETE_MEMBERS
 #if defined(CORE_XCOMPILER_DEFAULT_MEMBERS) && defined(CORE_XCOMPILER_DELETE_MEMBERS)
 #define CORE_XCOMPILER_DEFAULT_DELETE_MEMBERS
 #endif
 
-        /*
-         * Compatibility macros for C++11/14 keywords and expressions.
-         * Don't use in new code and port away whenever you have a chance.
-         */
+    /*
+     * Compatibility macros for C++11/14 keywords and expressions.
+     * Don't use in new code and port away whenever you have a chance.
+     */
 #define CORE_ALIGNOF(x)        alignof(x)
 #define CORE_ALIGN(n)          alignas(n)
 #define CORE_NOTHROW           CORE_NOEXCEPT
@@ -988,7 +988,7 @@ namespace core {
 #endif
 
 #if __has_cpp_attribute(nodiscard) && (!defined(CORE_COMPILER_CLANG) || __cplusplus > 201402L) // P0188R1
-        // Can't use [[nodiscard]] with Clang and C++11/14, see https://bugs.llvm.org/show_bug.cgi?id=33518
+    // Can't use [[nodiscard]] with Clang and C++11/14, see https://bugs.llvm.org/show_bug.cgi?id=33518
 #undef CORE_REQUIRED_RESULT
 #define CORE_REQUIRED_RESULT [[nodiscard]]
 #endif
@@ -1017,9 +1017,9 @@ namespace core {
 #define CORE_ENUMERATOR_DEPRECATED CORE_DEPRECATED
 #define CORE_ENUMERATOR_DEPRECATED_X(x) CORE_XDEPRECATED(x)
 
-        /*
-         * Fallback macros to certain compiler features
-         */
+    /*
+     * Fallback macros to certain compiler features
+     */
 
 #ifndef CORE_NORETURN
 #define CORE_NORETURN
@@ -1096,9 +1096,9 @@ namespace core {
 #define CORE_COLD_FUNCTION
 #endif
 
-        /*
-         * Warning/diagnostic handling
-         */
+    /*
+     * Warning/diagnostic handling
+     */
 
 #define CORE_DO_PRAGMA(text)                      _Pragma(#text)
 #if defined(CORE_COMPILER_MSVC) && !defined(CORE_COMPILER_CLANG)
@@ -1166,16 +1166,16 @@ namespace core {
     CORE_WARNING_POP
 #endif
 
-        // The body must be a statement:
+    // The body must be a statement:
 #define CORE_IGNORE_CAST_ALIGN(body) \
     CORE_WARNING_PUSH                \
     CORE_WARNING_DISABLE_GCC("-Wcast-align") \
     body                             \
     CORE_WARNING_POP
 
-        /*
-           Proper for-scoping in MIPSpro CC
-        */
+    /*
+       Proper for-scoping in MIPSpro CC
+    */
 #ifndef CORE_NO_KEYWORDS
 #if defined(CORE_COMPILER_MIPS) || (defined(CORE_COMPILER_HPACC) && defined(__ia64))
 #define for if (0) {} else for
@@ -1200,9 +1200,9 @@ namespace core {
 #endif
 
 
-        /*
-            Sanitize compiler feature availability
-        */
+    /*
+        Sanitize compiler feature availability
+    */
 #if !defined(CORE_PROCESSOR_X86)
 #undef CORE_XCOMPILER_SSE2
 #undef CORE_XCOMPILER_SSE3
@@ -1233,7 +1233,7 @@ namespace core {
 #define CORE_FASTCALL
 #endif
 
-        // enable gcc warnings for printf-style functions
+    // enable gcc warnings for printf-style functions
 #if defined(CORE_COMPILER_GNU) && !defined(__INSURE__)
 #if defined(CORE_COMPILER_MINGW) && !defined(CORE_COMPILER_CLANG)
 #define CORE_XFORMAT(A, B)  __attribute__((format(gnu_printf, (A), (B))))
@@ -1255,8 +1255,8 @@ namespace core {
 #define CORE_ALWAYS_INLINE inline
 #endif
 
-        //defines the type for the WNDPROC on windows
-        //the alignment needs to be forced for sse2 to not crash with mingw
+    //defines the type for the WNDPROC on windows
+    //the alignment needs to be forced for sse2 to not crash with mingw
 #if defined(CORE_SYSTEM_WINDOWS)
 #if defined(CORE_COMPILER_MINGW) && defined(CORE_PROCESSOR_X86_32)
 #define CORE_ENSURE_STACK_ALIGNED __attribute__ ((force_align_arg_pointer))
@@ -1300,11 +1300,11 @@ namespace core {
 #define CORE_INLINE_TEMPLATE inline
 #endif
 
-        /*
-           Avoid some particularly useless warnings from some stupid compilers.
-           To get ALL C++ compiler warnings, define CORE_XCOMPILER_WARNINGS or comment out
-           the line "#define CORE_NO_WARNINGS".
-        */
+    /*
+       Avoid some particularly useless warnings from some stupid compilers.
+       To get ALL C++ compiler warnings, define CORE_XCOMPILER_WARNINGS or comment out
+       the line "#define CORE_NO_WARNINGS".
+    */
 #if !defined(CORE_XCOMPILER_WARNINGS)
 #define CORE_NO_WARNINGS
 #endif
@@ -1362,7 +1362,7 @@ namespace core {
 #else
 #define CORE_HAS_COMPACT_STRINGS 0
 #endif
-    } // misc
+  } // misc
 } // core
 
 #ifdef CORE_COMPILER_MSVC
@@ -1376,13 +1376,15 @@ typedef _C_ldouble_complex _Lcomplex;
 
 #else
 
-// typedef _Complex double _Dcomplex;
-// typedef _Complex float _Fcomplex;
-// typedef _Complex long double _Lcomplex;
+extern "C" {
+  typedef _Complex double _Dcomplex;
+  typedef _Complex float _Fcomplex;
+  typedef _Complex long double _Lcomplex;
+}
 
-typedef __complex__ double _Dcomplex;
-typedef __complex__ float _Fcomplex;
-typedef __complex__ long double _Lcomplex;
+// typedef __complex__ double _Dcomplex;
+// typedef __complex__ float _Fcomplex;
+// typedef __complex__ long double _Lcomplex;
 
 #endif //CORE_COMPILER_MSVC
 

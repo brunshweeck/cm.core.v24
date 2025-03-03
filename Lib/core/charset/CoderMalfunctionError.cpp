@@ -6,16 +6,16 @@
 #include <core/misc/Unsafe.h>
 
 namespace core {
-    namespace charset {
-        CoderMalfunctionError::CoderMalfunctionError(Exception const& cause)
-            : Throwable(cause.toString(), cause), Error(cause) {}
+  namespace charset {
+    CoderMalfunctionError::CoderMalfunctionError(Exception const& cause)
+      : Throwable(cause.toString(), cause), Error(cause) {}
 
-        Object& CoderMalfunctionError::clone() const {
-            try {
-                return UNSAFE::newInstance<CoderMalfunctionError>(*this);
-            } catch (Throwable const& ex) { ex.throws($ftrace()); }
-        }
+    Object& CoderMalfunctionError::clone() const {
+      try {
+        return UNSAFE::newInstance<CoderMalfunctionError>(*this);
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
 
-        void CoderMalfunctionError::selfThrow() const { throw CoderMalfunctionError(*this); }
-    } // charset
+    void CoderMalfunctionError::selfThrow() const { throw CoderMalfunctionError(*this); }
+  } // charset
 } // core

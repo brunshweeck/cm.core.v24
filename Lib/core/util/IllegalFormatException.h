@@ -4,7 +4,8 @@
 
 #ifndef ILLEGALFORMATEXCEPTION_H
 #define ILLEGALFORMATEXCEPTION_H
-#include "core/IllegalArgumentException.h"
+
+#include <core/lang/IllegalArgumentException.h>
 
 namespace core {
     namespace util {

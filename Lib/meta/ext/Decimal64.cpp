@@ -4,7 +4,9 @@
 
 #include "Decimal64.h"
 
-#include "DecimalFormatter.h"
+#include <core/lang/Math.h>
+#include <core/lang/XString.h>
+#include <meta/ext/DecimalFormatter.h>
 
 namespace core {
     namespace ext {

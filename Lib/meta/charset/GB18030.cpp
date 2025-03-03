@@ -2,8 +2,8 @@
 // Created by brunshweeck on 8 sept. 2024.
 //
 
-#include <core/CharArray.h>
-#include <core/ShortArray.h>
+#include <core/lang/CharArray.h>
+#include <core/lang/ShortArray.h>
 #include <core/io/ByteBuffer.h>
 #include <core/io/CharBuffer.h>
 #include <core/misc/Unsafe.h>

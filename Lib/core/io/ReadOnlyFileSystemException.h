@@ -5,7 +5,7 @@
 #ifndef CORE24_READONLYFILESYSTEMEXCEPTION_H
 #define CORE24_READONLYFILESYSTEMEXCEPTION_H
 
-#include "core/UnsupportedOperationException.h"
+#include <core/lang/UnsupportedOperationException.h>
 
 namespace core {
     namespace io {

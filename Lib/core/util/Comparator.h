@@ -5,11 +5,11 @@
 #ifndef CORE24_COMPARATOR_H
 #define CORE24_COMPARATOR_H
 
-#include <core/ClassCastException.h>
-#include <core/XString.h>
-#include <core/function/ToIntFunction.h>
 #include <core/function/ToDoubleFunction.h>
+#include <core/function/ToIntFunction.h>
 #include <core/function/ToLongFunction.h>
+#include <core/lang/ClassCastException.h>
+#include <core/lang/XString.h>
 
 namespace core {
     namespace util {

@@ -7,10 +7,10 @@
 #endif
 
 
-#include <ProcessThreadsApi.h>
-#include <TlHelp32.h>
-#include <Windows.h>
-#include <core/SecurityException.h>
+#include <core/lang/ProcessThreadsApi.h>
+#include <core/lang/TlHelp32.h>
+#include <core/lang/Windows.h>
+#include <core/lang/SecurityException.h>
 #include <core/util/Arrays.h>
 #include <core/misc/Event.h>
 

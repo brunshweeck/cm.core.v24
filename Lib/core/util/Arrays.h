@@ -5,9 +5,8 @@
 #ifndef CORE24_ARRAYS_H
 #define CORE24_ARRAYS_H
 
-#include "Comparator.h"
-
-#include <core/Array.h>
+#include <core/lang/Array.h>
+#include <core/util/Comparator.h>
 
 namespace core {
     namespace util {
@@ -1047,6 +1046,11 @@ namespace core {
                 return binarySearch(a, 0, a.length(), key);
             }
 
+            template <class T, ClassOf(1)::OnlyIfAll<Class<Comparable<T>>::template isSuper<T>()>  = 1>
+            static gint binarySearch(misc::ValueArray<T> const& a, T const& key) {
+                return binarySearch(a, 0, a.length(), key);
+            }
+
             /**
              * Searches a range of
              * the specified array for the specified object using the binary
@@ -1084,7 +1088,7 @@ namespace core {
              * @throws IndexOutOfBoundsException if @code fromIndex < 0 or toIndex > a.length() @endcode
              *
              */
-            template <class T>
+            template <class T, ClassOf(1)::OnlyIfAll<Class<Comparable<T>>::template isSuper<T>()>  = 1>
             static gint binarySearch(Array<T> const& a, gint fromIndex, gint toIndex, T const& key) {
                 try {
                     int low = fromIndex;
@@ -1093,6 +1097,28 @@ namespace core {
                     while (low <= high) {
                         int mid = (low + high) >> 1;
                         Comparable<T> const &midVal = CORE_XCAST(Comparable<T> const, a[mid]);
+                        int cmp = midVal.compareTo(key);
+
+                        if (cmp < 0)
+                            low = mid + 1;
+                        else if (cmp > 0)
+                            high = mid - 1;
+                        else
+                            return mid; // key found
+                    }
+                    return -(low + 1); // key not found.
+                } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            }
+
+            template <class T, ClassOf(1)::OnlyIfAll<Class<Comparable<T>>::template isSuper<T>()>  = 1>
+            static gint binarySearch(misc::ValueArray<T> const& a, gint fromIndex, gint toIndex, T const& key) {
+                try {
+                    int low = fromIndex;
+                    int high = toIndex - 1;
+
+                    while (low <= high) {
+                        int mid = (low + high) >> 1;
+                        Comparable<T> const &midVal = CORE_XCAST(Comparable<T> const, a.get(mid));
                         int cmp = midVal.compareTo(key);
 
                         if (cmp < 0)
@@ -1137,6 +1163,11 @@ namespace core {
              */
             template <class T>
             static gint binarySearch(Array<T> const& a, T const& key, Comparator<T> const& comparator) {
+                return binarySearch(a, 0, a.length(), key, comparator);
+            }
+
+            template <class T>
+            static gint binarySearch(misc::ValueArray<T> const& a, T const& key, Comparator<T> const& comparator) {
                 return binarySearch(a, 0, a.length(), key, comparator);
             }
 
@@ -1185,7 +1216,29 @@ namespace core {
 
                     while (low <= high) {
                         int mid = (low + high) >> 1;
-                        T midVal = a[mid];
+                        T const& midVal = a[mid];
+                        int cmp = comparator.compare(midVal, key);
+                        if (cmp < 0)
+                            low = mid + 1;
+                        else if (cmp > 0)
+                            high = mid - 1;
+                        else
+                            return mid; // key found
+                    }
+                    return -(low + 1); // key not found.
+                } catch (Throwable const& ex) { ex.throws($ftrace()); }
+            }
+
+            template <class T>
+            static gint binarySearch(misc::ValueArray<T> const& a, gint fromIndex, gint toIndex, T const& key,
+                                     Comparator<T> const& comparator) {
+                try {
+                    int low = fromIndex;
+                    int high = toIndex - 1;
+
+                    while (low <= high) {
+                        int mid = (low + high) >> 1;
+                        T const& midVal = a.get(mid);
                         int cmp = comparator.compare(midVal, key);
                         if (cmp < 0)
                             low = mid + 1;
@@ -3947,6 +4000,16 @@ namespace core {
                 return result;
             }
 
+            template <class T>
+            static gint hash(misc::ValueArray<T> const& a) {
+                gint result = 0;
+                gint length = a.length();
+                for (gint i = 0; i < length; ++i) {
+                    result = result * 31 + a.get(i).hash();
+                }
+                return result;
+            }
+
             /**
              * Set all elements of the specified array, using the provided
              * generator function to compute each element.
@@ -5844,6 +5907,20 @@ namespace core {
                     return false;
                 for (int i = 0; i < aLength; ++i) {
                     if (a.get0(i) != a2.get0(i))
+                        return false;
+                }
+                return true;
+            }
+
+            template <class T>
+            static gbool equals(misc::ValueArray<T> const& a, misc::ValueArray<T> const& a2) {
+                if (&a == &a2)
+                    return true;
+                gint aLength = a.length();
+                if (aLength != a2.length())
+                    return false;
+                for (int i = 0; i < aLength; ++i) {
+                    if (a.get(i) != a2.get(i))
                         return false;
                 }
                 return true;

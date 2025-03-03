@@ -4,7 +4,8 @@
 
 #include "IllegalFormatArgumentIndexException.h"
 
-#include "core/misc/Unsafe.h"
+#include <core/lang/Integer.h>
+#include <core/misc/Unsafe.h>
 
 namespace core {
     namespace ext {

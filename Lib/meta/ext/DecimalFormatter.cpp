@@ -4,8 +4,9 @@
 
 #include "DecimalFormatter.h"
 
-#include "Decimal64.h"
-#include "core/IllegalArgumentException.h"
+#include <core/lang/IllegalArgumentException.h>
+#include <core/lang/Trace.h>
+#include <meta/ext/Decimal64.h>
 
 namespace core {
     namespace ext {

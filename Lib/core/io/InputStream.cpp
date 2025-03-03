@@ -2,9 +2,9 @@
 // Created by bruns on 12/10/2024.
 //
 
-#include <core/ArithmeticException.h>
-#include <core/IllegalArgumentException.h>
-#include <core/OutOfMemoryError.h>
+#include <core/lang/ArithmeticException.h>
+#include <core/lang/IllegalArgumentException.h>
+#include <core/lang/OutOfMemoryError.h>
 #include <core/io/EOFException.h>
 #include <core/io/InputStream.h>
 #include <core/io/OutputStream.h>

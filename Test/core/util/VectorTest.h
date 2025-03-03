@@ -11,7 +11,7 @@
 #include <gtest/gtest.h>
 
 #include "../../lib/Printer.h"
-#include "core/util/Vector.h"
+#include <core/util/Vector.h>
 
 using namespace core;
 using namespace core::util;

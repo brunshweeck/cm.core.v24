@@ -5,12 +5,12 @@
 #ifndef CORE24_CONSOLE_H
 #define CORE24_CONSOLE_H
 
-#include <core/Class.h>
+#include <core/lang/Class.h>
 
 #ifdef CORE_SYSTEM_WINDOWS
-#include "../../Internal/Win32/core/NativeConsole.h"
+#include <core/NativeConsole.h>
 #else
-#include "../../Internal/Unix/core/NativeConsole.h"
+#include <core/NativeConsole.h>
 #endif
 
 namespace core {

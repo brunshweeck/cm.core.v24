@@ -2,9 +2,9 @@
 // Created by brunshweeck on 18 août 2024.
 //
 
-#include <core/DoubleArray.h>
-#include <core/IllegalArgumentException.h>
-#include <core/LongArray.h>
+#include <core/lang/DoubleArray.h>
+#include <core/lang/IllegalArgumentException.h>
+#include <core/lang/LongArray.h>
 #include <core/util/HashMap.h>
 #include <meta/random/RandomSupport.h>
 

@@ -5,100 +5,123 @@
 #include "ZoneOffsetTransition.h"
 
 #include <core/time/Duration.h>
+#include <core/time/spi/ZoneOffsetArray.h>
 #include <core/util/List.h>
 
+#include "Instant.h"
+
 namespace core {
-    namespace time {
-        ZoneOffsetTransition::ZoneOffsetTransition(glong epochSecond,
-                                                   ZoneOffset const& offsetBefore,
-                                                   ZoneOffset const& offsetAfter)
-            : epochSeconds(epochSecond),
-              transition(LocalDateTime::ofEpochSecond(epochSecond, 0, offsetBefore)),
-              before(offsetBefore), after(offsetAfter) {}
+  namespace time {
+    ZoneOffsetTransition::ZoneOffsetTransition(const LocalDateTime& transition, const ZoneOffset& offsetBefore,
+                                               const ZoneOffset& offsetAfter)
+      : epochSecond(transition.toEpochSecond(offsetBefore)), transition(transition), offsetBefore_(offsetBefore),
+        offsetAfter_(offsetAfter) {
+      CORE_ASSERT(transition.nano() == 0);
+    }
 
-        ZoneOffsetTransition::ZoneOffsetTransition(LocalDateTime const& transition,
-                                                   ZoneOffset const& offsetBefore,
-                                                   ZoneOffset const& offsetAfter)
-            : epochSeconds(transition.toEpochSecond()),
-              transition(transition), before(offsetBefore), after(offsetAfter) {
-            if (offsetBefore.equals(offsetAfter))
-                IllegalArgumentException("Offsets must not be equal").throws($ftrace());
-            if (transition.nano() != 0)
-                IllegalArgumentException("Nano-of-second must be zero").throws($ftrace());
-        }
+    ZoneOffsetTransition::ZoneOffsetTransition(glong epochSecond, const ZoneOffset& offsetBefore,
+                                               const ZoneOffset& offsetAfter)
+      : epochSecond(epochSecond), transition(LocalDateTime::ofEpochSecond(epochSecond, 0, offsetBefore)),
+        offsetBefore_(offsetBefore), offsetAfter_(offsetAfter) {}
 
-        glong ZoneOffsetTransition::toEpochSeconds() const { return epochSeconds; }
+    ZoneOffsetTransition ZoneOffsetTransition::of(const LocalDateTime& transition, const ZoneOffset& offsetBefore,
+                                                  const ZoneOffset& offsetAfter) {
+      if (offsetBefore.equals(offsetAfter)) {
+        IllegalArgumentException("Offsets must not be equal").throws($ftrace());
+      }
+      if (transition.nano() != 0) {
+        IllegalArgumentException("Nano-of-second must be zero").throws($ftrace());
+      }
+      return ZoneOffsetTransition(transition, offsetBefore, offsetAfter);
+    }
 
-        LocalDateTime ZoneOffsetTransition::dateTimeBefore() const { return transition; }
+    Instant ZoneOffsetTransition::instant() const {
+      return Instant::ofEpochSecond(epochSecond);
+    }
 
-        LocalDateTime ZoneOffsetTransition::dateTimeAfter() const {
-            gint durationSeconds = offsetAfter().totalSeconds() - before.totalSeconds();
-            return transition.plusSeconds(durationSeconds);
-        }
+    glong ZoneOffsetTransition::toEpochSecond() const {
+      return epochSecond;
+    }
 
-        ZoneOffset ZoneOffsetTransition::offsetBefore() const { return before; }
+    LocalDateTime ZoneOffsetTransition::dateTimeBefore() const {
+      return transition;
+    }
 
-        ZoneOffset ZoneOffsetTransition::offsetAfter() const { return after; }
+    LocalDateTime ZoneOffsetTransition::dateTimeAfter() const {
+      try {
+        return transition.plusSeconds(getDurationSeconds());
+      } catch (Throwable const& ex) { ex.throws($ftrace()); }
+    }
 
-        Duration ZoneOffsetTransition::duration() const {
-            return Duration::ofSeconds(offsetAfter().totalSeconds() - before.totalSeconds());
-        }
+    ZoneOffset ZoneOffsetTransition::offsetBefore() const {
+      return offsetBefore_;
+    }
 
-        gbool ZoneOffsetTransition::isGap() const {
-            return after.totalSeconds() > before.totalSeconds();
-        }
+    ZoneOffset ZoneOffsetTransition::offsetAfter() const {
+      return offsetAfter_;
+    }
 
-        gbool ZoneOffsetTransition::isOverlap() const {
-            return after.totalSeconds() < before.totalSeconds();
-        }
+    Duration ZoneOffsetTransition::duration() const {
+      return Duration::ofSeconds(getDurationSeconds());
+    }
 
-        gbool ZoneOffsetTransition::isValidOffset(ZoneOffset const& offset) const {
-            return isGap() ? false : before.equals(offset) || after.equals(offset);
-        }
+    gbool ZoneOffsetTransition::isGap() const {
+      return offsetAfter().totalSeconds() > offsetBefore().totalSeconds();
+    }
 
-        gint ZoneOffsetTransition::compareTo(ZoneOffsetTransition const& otherTransition) const {
-            return Long::compare(epochSeconds, otherTransition.epochSeconds);
-        }
+    gbool ZoneOffsetTransition::isOverlap() const {
+      return offsetAfter().totalSeconds() < offsetBefore().totalSeconds();
+    }
 
-        gbool ZoneOffsetTransition::equals(Object const& other) const {
-            if (this == &other)
-                return true;
-            if (Class<ZoneOffsetTransition>::hasInstance(other)) {
-                ZoneOffsetTransition const& otherTransition = CORE_XCAST(ZoneOffsetTransition const, other);
-                return epochSeconds == otherTransition.epochSeconds &&
-                        before.equals(otherTransition.before) &&
-                        after.equals(otherTransition.after);
-            }
-            return false;
-        }
+    gbool ZoneOffsetTransition::isValidOffset(ZoneOffset const& offset) const {
+      return isGap() ? false : (offsetBefore().equals(offset) || offsetAfter().equals(offset));
+    }
 
-        gint ZoneOffsetTransition::hash() const {
-            return transition.hash() ^ before.hash() ^ Integer::rotateLeft(after.hash(), 16);
-        }
+    gint ZoneOffsetTransition::compareTo(ZoneOffsetTransition const& otherTransition) const {
+      return Long::compare(epochSecond, otherTransition.epochSecond);
+    }
 
-        String ZoneOffsetTransition::toString() const {
-            XString str;
-            str.append("Transition["_Sl)
-               .append(isGap() ? "Gap "_Sl : "Overlap"_Sl)
-               .append(" at ")
-               .append(transition)
-               .append(before)
-               .append(" to ")
-               .append(after)
-               .append(u']');
-            return str.toString();
-        }
+    gbool ZoneOffsetTransition::equals(Object const& other) const {
+      if (this == &other)
+        return true;
+      if (Class<ZoneOffsetTransition>::hasInstance(other)) {
+        ZoneOffsetTransition const& otherTransition = CORE_XCAST(ZoneOffsetTransition const, other);
+        return epochSecond == otherTransition.epochSecond &&
+            offsetBefore_.equals(otherTransition.offsetBefore_) &&
+            offsetAfter_.equals(otherTransition.offsetAfter_);
+      }
+      return false;
+    }
 
-        Object& ZoneOffsetTransition::clone() const {
-            try {
-                return UNSAFE::newInstance<ZoneOffsetTransition>(*this);
-            } catch (Throwable const &ex) { ex.throws($ftrace()); }
-        }
+    gint ZoneOffsetTransition::hash() const {
+      return transition.hash() ^ offsetBefore_.hash() ^ Integer::rotateLeft(offsetAfter_.hash(), 16);
+    }
 
-        util::List<ZoneOffset>& ZoneOffsetTransition::validOffsets() const {
-            if (isGap())
-                return util::List<ZoneOffset>::of();
-            return util::List<ZoneOffset>::of(offsetBefore(), offsetAfter());
-        }
-    } // time
+    String ZoneOffsetTransition::toString() const {
+      XString str;
+      str.append("Transition["_Sl)
+         .append(isGap() ? "Gap "_Sl : "Overlap"_Sl)
+         .append(" at ")
+         .append(transition)
+         .append(offsetBefore_)
+         .append(" to ")
+         .append(offsetAfter_)
+         .append(u']');
+      return str.toString();
+    }
+
+    Object& ZoneOffsetTransition::clone() const {
+      return UNSAFE::newInstance<ZoneOffsetTransition>(*this);
+    }
+
+    gint ZoneOffsetTransition::getDurationSeconds() const {
+      return offsetAfter().totalSeconds() - offsetBefore().totalSeconds();
+    }
+
+    ZoneOffsetArray ZoneOffsetTransition::getValidOffsets() const {
+      if (isGap())
+        return ZoneOffsetArray::of();
+      return ZoneOffsetArray::of(offsetBefore(), offsetAfter());
+    }
+  } // time
 } // core

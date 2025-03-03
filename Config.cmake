@@ -1,19 +1,19 @@
 
 
 IF (EXISTS "Settings.cmake")
-    INCLUDE("Settings.cmake")
-    INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/Lib")
+  INCLUDE("Settings.cmake")
+  INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/Lib")
 ELSE ()
-    INCLUDE("../Settings.cmake")
-    INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}")
+  INCLUDE("../Settings.cmake")
+  INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}")
 ENDIF ()
 
 CONFIGURE_COMPILER()
 
 IF (WIN32)
-    SET(SYSTEM_DIR "Win32")
+  SET(SYSTEM_DIR "Win32")
 ELSE ()
-    SET(SYSTEM_DIR "Unix")
+  SET(SYSTEM_DIR "Unix")
 ENDIF ()
 
 #IF (MSVC)

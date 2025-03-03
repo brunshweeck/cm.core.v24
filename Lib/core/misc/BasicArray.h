@@ -6,7 +6,7 @@
 #define CORE24_BASICARRAY_H
 
 #include <initializer_list>
-#include <core/Class.h>
+#include <core/lang/Class.h>
 
 namespace core {
     namespace misc {
@@ -43,6 +43,31 @@ namespace core {
             CORE_ADD_AS_FRIEND(DoubleArray3D);
             CORE_ADD_AS_FRIEND(StringArray);
             CORE_ADD_AS_FRIEND(io::FileArray);
+
+            CORE_ADD_AS_FRIEND(time::TemporalFieldArray);
+            CORE_ADD_AS_FRIEND(time::TemporalUnitArray);
+            CORE_ADD_AS_FRIEND(time::FormatStyleArray);
+            CORE_ADD_AS_FRIEND(time::SignStyleArray);
+            CORE_ADD_AS_FRIEND(time::TextStyleArray);
+            CORE_ADD_AS_FRIEND(time::DayOfWeekArray);
+            CORE_ADD_AS_FRIEND(time::MonthArray);
+            CORE_ADD_AS_FRIEND(time::YearArray);
+            CORE_ADD_AS_FRIEND(time::DurationArray);
+            CORE_ADD_AS_FRIEND(time::InstantArray);
+            CORE_ADD_AS_FRIEND(time::LocalDateArray);
+            CORE_ADD_AS_FRIEND(time::LocalDateTimeArray);
+            CORE_ADD_AS_FRIEND(time::LocalTimeArray);
+            CORE_ADD_AS_FRIEND(time::MonthDayArray);
+            CORE_ADD_AS_FRIEND(time::OffsetDateTimeArray);
+            CORE_ADD_AS_FRIEND(time::OffsetTimeArray);
+            CORE_ADD_AS_FRIEND(time::PeriodArray);
+            CORE_ADD_AS_FRIEND(time::YearMonthArray);
+            CORE_ADD_AS_FRIEND(time::ZonedDateTimeArray);
+            CORE_ADD_AS_FRIEND(time::ZoneOffsetArray);
+            CORE_ADD_AS_FRIEND(time::ZoneOffsetTransitionArray);
+            CORE_ADD_AS_FRIEND(time::ZoneOffsetTransitionRuleArray);
+            CORE_ADD_AS_FRIEND(time::ZoneRulesArray);
+
             CORE_ADD_TEMPLATES_AS_FRIEND(Array, T);
 
             /**

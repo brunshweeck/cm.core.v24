@@ -5,7 +5,8 @@
 #ifndef CORE24_RANDOMGENERATORPROPERTIES_H
 #define CORE24_RANDOMGENERATORPROPERTIES_H
 
-#include <core/String.h>
+#include <core/lang/Integer.h>
+#include <core/lang/String.h>
 
 namespace core {
     namespace random {

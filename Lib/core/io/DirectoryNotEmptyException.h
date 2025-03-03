@@ -8,30 +8,27 @@
 #include "FileSystemException.h"
 
 namespace core {
-    namespace io {
+  namespace io {
+    /**
+     * Checked exception thrown when a file system operation fails because a
+     * directory is not empty.
+     */
+    class DirectoryNotEmptyException : public FileSystemException {
+    public:
+      /**
+       * Constructs an instance of this class.
+       *
+       * @param   dir
+       *          a string identifying the directory or @c "" if not known
+       */
+      CORE_EXPLICIT DirectoryNotEmptyException(const String& dir);
 
-        /**
-         * Checked exception thrown when a file system operation fails because a
-         * directory is not empty.
-         */
-        class DirectoryNotEmptyException: public FileSystemException {
-        public:
+      Object& clone() const override;
 
-            /**
-             * Constructs an instance of this class.
-             *
-             * @param   dir
-             *          a string identifying the directory or @c "" if not known
-             */
-            CORE_EXPLICIT DirectoryNotEmptyException(const String &dir);
-
-            Object &clone() const override;
-
-        protected:
-            void selfThrow() const override;
-        };
-
-    } // io
+    protected:
+      void selfThrow() const override;
+    };
+  } // io
 } // core
 
 #endif //CORE24_DIRECTORYNOTEMPTYEXCEPTION_H
