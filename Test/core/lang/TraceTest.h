@@ -3,8 +3,8 @@
 // This File has been Created by CMake For Testing in Project CORE-24
 //
 
-#ifndef CORE24_TEST_FILE_H
-#define CORE24_TEST_FILE_H
+#ifndef CORE24_TEST_TRACE_H
+#define CORE24_TEST_TRACE_H
 
 #include <core/misc/Unsafe.h>
 #include <core/time/Chrono.h>
@@ -16,7 +16,7 @@ using namespace core::util;
 using namespace core::time;
 
 
-class FileTest : public virtual Object, public virtual  testing::Test {
+class TraceTest : public virtual Object, public virtual  testing::Test {
 private:
 
     Chrono chronometer;
@@ -38,4 +38,4 @@ public:
     void TestBody() override = 0;
 };
 
-#endif // CORE24_TEST_FILE_H
+#endif // CORE24_TEST_TRACE_H

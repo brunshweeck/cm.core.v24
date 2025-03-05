@@ -74,12 +74,19 @@ namespace core {
    * finer-grain, locale-sensitive String comparison.
    * </p>
    */
-  class String final : public virtual CharSequence, public virtual Comparable<String> {
+  class String final : public virtual CharSequence,
+                       public virtual Comparable<String> {
+
+    // Aliases
     CORE_ALIAS(ARRAY, Class< gbyte >::Pointer);
     CORE_ALIAS(BYTES, Class< gbyte >::Pointer);
     CORE_ALIAS(CHARS, Class< gchar >::Pointer);
     CORE_ALIAS(INTS, Class< gint >::Pointer);
     CORE_ALIAS(UNSAFE, misc::Unsafe);
+
+    CORE_ALIAS(Charset, charset::Charset);
+
+    // According Access
     CORE_ADD_AS_FRIEND(XString);
     CORE_ADD_AS_FRIEND(util::StringJoiner);
 
@@ -246,7 +253,7 @@ namespace core {
      * <p>
      * The behavior of this constructor when the given bytes are not valid
      * in the given charset is unspecified.  The
-     * @b charset::CharsetDecoder class should be used when more control
+     * @b CharsetDecoder class should be used when more control
      * over the decoding process is required.
      * </p>
      * <p>
@@ -286,7 +293,7 @@ namespace core {
      *         The @em charset to be used to
      *         decode the @c bytes
      */
-    CORE_EXPLICIT String(ByteArray const& bytes, charset::Charset const& charset);
+    CORE_EXPLICIT String(ByteArray const& bytes, Charset const& charset);
 
     /**
      * Constructs a new @c String by decoding the specified subarray of
@@ -297,7 +304,7 @@ namespace core {
      * <p>
      * The behavior of this constructor when the given bytes are not valid
      * in the default charset is unspecified.  The
-     * @b charset::CharsetDecoder class should be used when more control
+     * @b CharsetDecoder class should be used when more control
      * over the decoding process is required.
      * </p>
      * <p>
@@ -328,7 +335,7 @@ namespace core {
      * <p>
      * The behavior of this constructor when the given bytes are not valid
      * in the default charset is unspecified.  The
-     * @b charset::CharsetDecoder class should be used when more control
+     * @b CharsetDecoder class should be used when more control
      * over the decoding process is required.
      * </p>
      * <p>
@@ -579,12 +586,12 @@ namespace core {
      * control over the encoding process is required.
      * </p>
      * @param  charset
-     *         The @em charset::Charset to be used to encode
+     *         The @em Charset to be used to encode
      *         the @c String
      *
      * @return  The resultant byte array
      */
-    ByteArray toBytes(charset::Charset const& charset) const;
+    ByteArray toBytes(Charset const& charset) const;
 
     /**
      * Encodes this @c String into a sequence of bytes using the
@@ -593,7 +600,7 @@ namespace core {
      *
      * <p>
      * The behavior of this method when this string cannot be encoded in
-     * the default charset is unspecified.  The @b charset::CharsetEncoder
+     * the default charset is unspecified.  The @b CharsetEncoder
      * class should be used when more control over the encoding process is required.
      * </p>
      * @return  The resultant byte array
@@ -2179,6 +2186,22 @@ namespace core {
     static String valueOf(gdouble d);
 
     /**
+     * Returns the string representation of the @c enum argument.
+     * <p>
+     * The representation is exactly the one returned by the
+     * @c Enum<?>::toString method of one argument.
+     * </p>
+     * @tparam E The type of given enum value
+     * @param   value   a @c enum value.
+     * @return  a  string representation of the @c enum argument.
+     */
+    template <class E, ClassOf(1)::OnlyIf<Class<E>::isEnum()> = 1>
+    static String valueOf(E value) {
+      CORE_ALIAS(Clazz, typename Class<E>::Object);
+      return String::valueOf((Clazz)value);
+    }
+
+    /**
      * Returns a string whose value is the concatenation of this
      * string repeated @c count times.
      * <p>
@@ -2374,8 +2397,8 @@ namespace core {
     // %s (require #include <core/lang/Enum.h>)
     template <class E, ClassOf(1)::OnlyIf<Class<E>::isEnum()>  = 1>
     static gbool formatArg(Object& fmt, E const& arg) {
-      CORE_ALIAS(Enum, typename Class<E>::Object);
-      return formatArg(fmt, (E) arg);
+      CORE_ALIAS(Clazz, typename Class<E>::Object);
+      return formatArg(fmt, (Clazz) arg);
     }
 
     // %s %h
@@ -2398,16 +2421,16 @@ namespace core {
     template <class T, ClassOf(1)::OnlyIf<Class<T>::isString()> CaptureString = 1>
     String& operator+=(String& lhs, T&& rhs) { return lhs = lhs.concat(rhs); }
 
-    template <class E, ClassOf(1)::OnlyIf<Class<E>::isEnum()> CaptureString = 1>
+    template <class E, ClassOf(1)::OnlyIf<Class<E>::isEnum()> CaptureEnum = 1>
     String operator+(E&& lhs, String const& rhs) {
-      CORE_ALIAS(Enum, typename Class<E>::Object);
-      return ((Enum) lhs) + rhs;
+      CORE_ALIAS(Clazz, typename Class<E>::Object);
+      return ((Clazz) lhs) + rhs;
     }
 
-    template <class E, ClassOf(1)::OnlyIf<Class<E>::isEnum()> CaptureString = 1>
+    template <class E, ClassOf(1)::OnlyIf<Class<E>::isEnum()> CaptureEnum = 1>
     String& operator+=(String& lhs, E&& rhs) {
-      CORE_ALIAS(Enum, typename Class<E>::Object);
-      return lhs + ((Enum) rhs);
+      CORE_ALIAS(Clazz, typename Class<E>::Object);
+      return lhs + ((Clazz) rhs);
     }
   }
 } // core

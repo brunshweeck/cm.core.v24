@@ -9,17 +9,16 @@
 #include <core/misc/Unsafe.h>
 #include <core/time/Chrono.h>
 #include <gtest/gtest.h>
-
-#include "../../lib/Printer.h"
-#include <core/util/Vector.h>
+#include <lib/Printer.h>
 
 using namespace core;
 using namespace core::util;
 using namespace core::time;
 
 
-class VectorTest : public virtual Object, public virtual testing::Test {
+class VectorTest : public virtual Object, public virtual  testing::Test {
 private:
+
     Chrono chronometer;
 
     // $test(before)
@@ -30,26 +29,13 @@ private:
     // $test(after)
     void TearDown() final {
         glong duration = chronometer.elapsedTime();
-        out.printf("Elapsed time: %d ms%n", duration);
+        // out.printf("Elapsed time: %d ms%n", duration);
     }
 
 public:
+
     // $test(body)
     void TestBody() override = 0;
-
-    static void iterateAndDoNothing(Vector<Integer>& cobaye) {
-        for (auto& item : cobaye) {
-            CORE_IGNORE(item);
-        }
-    }
-
-    static void iterateAndRemoveAll(Vector<Integer>& cobaye) {
-        for (auto& item : cobaye) {
-            cobaye.remove(item);
-        }
-    }
 };
-
-static Vector<Integer> cobaye;
 
 #endif // CORE24_TEST_VECTOR_H

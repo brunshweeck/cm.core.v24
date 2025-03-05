@@ -6,8 +6,8 @@
 #define CORE_PRINTER_H
 
 #include <native/Console.h>
-
 #include <core/lang/Throwable.h>
+#include <core/lang/Enum.h>
 #include <core/misc/Unsafe.h>
 #include <core/util/Locale.h>
 

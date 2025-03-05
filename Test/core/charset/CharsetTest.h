@@ -9,16 +9,16 @@
 #include <core/misc/Unsafe.h>
 #include <core/time/Chrono.h>
 #include <gtest/gtest.h>
-
-#include "../../lib/Printer.h"
+#include <lib/Printer.h>
 
 using namespace core;
 using namespace core::util;
 using namespace core::time;
 
 
-class CharsetTest : public virtual Object, public virtual testing::Test {
+class CharsetTest : public virtual Object, public virtual  testing::Test {
 private:
+
     Chrono chronometer;
 
     // $test(before)
@@ -29,10 +29,11 @@ private:
     // $test(after)
     void TearDown() final {
         glong duration = chronometer.elapsedTime();
-        out.printf("Elapsed time: %d ms%n", duration);
+        // out.printf("Elapsed time: %d ms%n", duration);
     }
 
 public:
+
     // $test(body)
     void TestBody() override = 0;
 };

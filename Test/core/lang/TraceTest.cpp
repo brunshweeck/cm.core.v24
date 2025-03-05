@@ -2,9 +2,9 @@
 //
 // This File has been Created by CMake For Testing in Project CORE-24
 //
-#include "FileTest.h"
+#include "TraceTest.h"
 
-TEST_F(FileTest, test1) {
+TEST_F(TraceTest, test1) {
     // body of your test
 }
 

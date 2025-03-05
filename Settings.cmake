@@ -283,19 +283,30 @@ FUNCTION(INSTALL_PROJECT_ PROJECT SOURCE_DIR TARGET)
       DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 ENDFUNCTION()
 
-FUNCTION(CREATE_CLASS_TEST CLASS DIRECTORY)
+FUNCTION(CREATE_CLASS_TEST CLASS DIRECTORY GENERATE)
   STRING(TOUPPER "${CLASS}" UPPER_NAME)
-  IF (EXISTS "${DIRECTORY}")
-    # do nothing
-  ELSE ()
-    FILE(MAKE_DIRECTORY ${DIRECTORY})
-  ENDIF ()
-  IF (EXISTS "${DIRECTORY}/${CLASS}Test.cpp")
-    # do nothing
-  ELSE ()
-    FILE(WRITE
-        "${DIRECTORY}/${CLASS}Test.h"
-        "//
+  IF (${GENERATE})
+    IF (EXISTS "${DIRECTORY}")
+      MESSAGE("Directory ${DIRECTORY} Already Exists")
+    ELSEIF (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${DIRECTORY}")
+      MESSAGE("Directory ${DIRECTORY} Already Exists")
+    ELSE ()
+      MESSAGE("Creating Directory ${DIRECTORY}")
+      FILE(MAKE_DIRECTORY ${DIRECTORY})
+    ENDIF ()
+    IF (EXISTS "${DIRECTORY}/${CLASS}Test.cpp")
+      MESSAGE("File ${DIRECTORY}/${CLASS}Test.cpp Already Exists")
+    ELSEIF (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${DIRECTORY}/${CLASS}Test.cpp")
+      MESSAGE("File ${DIRECTORY}/${CLASS}Test.cpp Already Exists")
+    ELSEIF (EXISTS "${DIRECTORY}/${CLASS}Test.h")
+      MESSAGE("File ${DIRECTORY}/${CLASS}Test.h Already Exists")
+    ELSEIF (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${DIRECTORY}/${CLASS}Test.h")
+      MESSAGE("File ${DIRECTORY}/${CLASS}Test.h Already Exists")
+    ELSE ()
+      MESSAGE("Creating header and source Files For class ${CLASS}Test ...")
+      FILE(WRITE
+          "${DIRECTORY}/${CLASS}Test.h"
+          "//
 //
 // This File has been Created by CMake For Testing in Project ${PROJECT_NAME}
 //
@@ -306,8 +317,7 @@ FUNCTION(CREATE_CLASS_TEST CLASS DIRECTORY)
 #include <core/misc/Unsafe.h>
 #include <core/time/Chrono.h>
 #include <gtest/gtest.h>
-
-// #include \"../lib/Printer.h\"
+#include <lib/Printer.h>
 
 using namespace core;
 using namespace core::util;
@@ -338,9 +348,9 @@ public:
 
 #endif // CORE24_TEST_${UPPER_NAME}_H
 ")
-    FILE(WRITE
-        "${DIRECTORY}/${CLASS}Test.cpp"
-        "
+      FILE(WRITE
+          "${DIRECTORY}/${CLASS}Test.cpp"
+          "
 //
 // This File has been Created by CMake For Testing in Project ${PROJECT_NAME}
 //
@@ -351,6 +361,7 @@ TEST_F(${CLASS}Test, test1) {
 }
 
 ")
+    ENDIF ()
   ENDIF ()
 
   LIST(APPEND LIBRARIES "GTest::gtest")

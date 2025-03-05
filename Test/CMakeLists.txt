@@ -14,18 +14,20 @@
 
 INCLUDE("${PROJECT_SOURCE_DIR}/Config.cmake")
 
+INCLUDE_DIRECTORIES(".")
+
 #[[ Base ]]
-CREATE_CLASS_TEST(String "${CMAKE_CURRENT_SOURCE_DIR}/core")
-CREATE_CLASS_TEST(Trace "${CMAKE_CURRENT_SOURCE_DIR}/core")
+CREATE_CLASS_TEST(String "core/lang" ON)
+CREATE_CLASS_TEST(Trace "core/lang" OFF)
 
 #[[ Charsets ]]
-CREATE_CLASS_TEST(Charset "${CMAKE_CURRENT_SOURCE_DIR}/core/charset")
+CREATE_CLASS_TEST(Charset "core/charset" ON)
 
 #[[ I/O]]
-CREATE_CLASS_TEST(File "${CMAKE_CURRENT_SOURCE_DIR}/core/io")
+CREATE_CLASS_TEST(File "core/io" ON)
 
 #[[ Collections ]]
-CREATE_CLASS_TEST(Vector "${CMAKE_CURRENT_SOURCE_DIR}/core/util")
+CREATE_CLASS_TEST(Vector "core/util" ON)
 #CREATE_CLASS_TEST(ArrayList "${CMAKE_CURRENT_SOURCE_DIR}/core/util")
 #CREATE_CLASS_TEST(TreeMap "${CMAKE_CURRENT_SOURCE_DIR}/core/util")
 
