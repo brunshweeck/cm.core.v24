@@ -130,7 +130,7 @@ namespace core {
       Thread& thread = *new Thread();
       UNSAFE::storeReference(thread);
       threads.add(thread);
-      // Initialize Field Holder
+      // Initialize Field BaseLocale
       thread.holder.priority = ThreadSupport::GetThreadPriority(threadID);
       thread.holder.daemon = false;
       thread.holder.status = CORE_CAST(gint, State::RUNNABLE);
@@ -154,7 +154,7 @@ namespace core {
     Thread& thread = *new Thread();
     UNSAFE::storeReference(thread);
     threads.add(thread);
-    // Initialize Field Holder
+    // Initialize Field BaseLocale
     thread.holder.priority = ThreadSupport::GetThreadPriority(threadID);
     thread.holder.daemon = false;
     thread.holder.status = CORE_CAST(gint, State::RUNNABLE);
@@ -360,7 +360,7 @@ namespace core {
         if (ThreadSupport::SetThreadName(tid, genName))
           t.name = genName;
       }
-      // Initialize Fields Holder
+      // Initialize Fields BaseLocale
       t.holder.priority = ThreadSupport::GetThreadPriority(tid);
       t.holder.daemon = false;
       t.holder.status = CORE_CAST(gint, State::NEW);

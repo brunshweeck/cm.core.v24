@@ -127,7 +127,7 @@ namespace core {
             };
         }
 
-        void Locale::Holder::initDefault() {
+        void Locale::BaseLocale::initDefault() {
             LCID lcid = 0;
             lcid = GetUserDefaultLCID();
             CharArray out = CharArray(256);

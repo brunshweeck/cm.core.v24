@@ -12,7 +12,7 @@
 
 namespace core {
     namespace util {
-        void Locale::Holder::initDefault() {
+        void Locale::BaseLocale::initDefault() {
             char const *LC_ALL = getenv("LC_ALL");
             if (!LC_ALL || *LC_ALL == '\0') LC_ALL = NULL;
 
